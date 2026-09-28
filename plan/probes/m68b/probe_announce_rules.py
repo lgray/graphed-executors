@@ -13,6 +13,8 @@ Run: python3 probe_announce_rules.py > probe_announce_rules.txt   (POSIX)
     x10 -> exit 3 naming 7 after exactly one child start each run (free() binds with SO_REUSEADDR)
  L8 attached, http.server child in the cwd that held graphed-secret: after the announce GET /graphed-secret -> 404,
     the file is gone from the cwd, and the beats still take 200
+ L9 the job dir also holds a stand-in ticket cache (user.cc) and an input dir `models/`: the child runs in service/,
+    GET /user.cc -> 404, GET /models/m.txt -> 200 (the input moved in; the argv names it relatively)
 """
 
 import json
@@ -173,3 +175,26 @@ def l8(p):
 
 run("L8 secret not served by the child", cfg(ports=[lo, lo + 2], url=url, secret="graphed-secret", lease_s=3, beat_s=1),
     until=l8)
+
+os.makedirs("models", exist_ok=True)
+open("models/m.txt", "w").write("model")
+open("user.cc", "w").write("TGT")
+open("graphed-secret", "w").write(SECRET)
+r, url, rec = receiver("recv-secret")
+lo = free_base(3)
+
+
+def l9(p):
+    time.sleep(4)
+    port = json.loads(open(rec).read().splitlines()[0])["fields"][1].rpartition(":")[2]
+    for path in ("/user.cc", "/models/m.txt"):
+        try:
+            with urllib.request.urlopen("http://127.0.0.1:%s%s" % (port, path), timeout=5) as resp:
+                print("   GET %s -> %s %r" % (path, resp.status, resp.read()))
+        except urllib.error.HTTPError as exc:
+            print("   GET %s -> %s" % (path, exc.code))
+    r.terminate()
+
+
+run("L9 child cwd holds only the inputs", cfg(ports=[lo, lo + 2], url=url, secret="graphed-secret", lease_s=3, beat_s=1,
+                                              inputs=["models"]), until=l9)

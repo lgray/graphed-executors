@@ -178,3 +178,10 @@ Wording and small constraints from review r13-B2 (`plan-services-m68b-r13-b2.md`
   - The control's "`services={}`" means the row's `services` field on that copy, not the `services=` kwarg.
 - **L606, the ids leg.** To discriminate "name order" from declaration order and "among those specs" from an index over all specs, declare `driver` before `a b` and add an image-less CPU spec whose name sorts first. That spec gets no node and does not shift the ids.
 - **Evidence r13-B2:** `probes/m68b/probe_r13_dag_held_service.{py,txt}` and `probe_r13_dag_held_service_prm.py` (htcondor/mini 25.13.2; `DAGMAN_USE_STRICT = 1` default).
+
+## decisions (round 7)
+- The service child runs in `service/`, into which `announce.py` moves the recipe's inputs, and a `ServiceJob` drops `MY.SendCredential`. Reason: both — the subdir keeps anything condor puts in scratch (lxplus's ticket cache, `m67-driverless.txt`; job/machine ads) out of the served cwd, including files we cannot foresee (probe_announce_rules L9); dropping the credential means there is no ticket to leak at all. Acceptance of a credential-less job at lxplus is site check (1)'s.
+- `RunHandle(dag=True)` projects `DAG_JobsHeld`; `wait()` keeps m67's terminal set, so a held driver node times out naming `held`. Reason: a real schedd returns only projected attributes (probe_r13_dag_held_service); `held` stays releasable, as in m67's contract.
+- Every `svc<i>.sub` carries `periodic_remove = JobStatus == 5` (after the profile keys, before `extra_submit`). Reason: a held SERVICE node at DAG end makes DAGMan exit 1 under `DAGMAN_USE_STRICT`, removed it does not (probe_r13_dag_held_service; `_prm` variant).
+- `release_service` forgets the announce key before popping, and every `host_service` failure path forgets it. Reason: no record can reappear after release; D10's "releases what it started" covers the registered secret.
+- The simulated-GPU pool line moves to commit 1 with `test-htcondor` running `tests/frozen/m68b`. Reason: B2's live file must find the GPU whenever it lands; B1's timeout leg is unaffected (it asks for two).

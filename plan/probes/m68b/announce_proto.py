@@ -4,7 +4,8 @@
 
 service.json: {"argv": [...], "env": {}, "check": "http:/"|"tcp"|"grpc:...", "ports": [lo, hi],
                "key": str, "url": str | null, "watch": <dag dir> | null, "secret": <file>,
-               "python": str, "timeout_s": float, "lease_s": float, "beat_s": float}
+               "python": str, "timeout_s": float, "lease_s": float, "beat_s": float, "inputs": [basename, ...]}
+The child starts in ./service/, into which the recipe's inputs are moved; a relative {python} is made absolute.
 Start: `timeout_s` is the whole budget. A child that exits moves on to the next port only when its port is no
 longer free (another process took it after the scan); otherwise exit 3 at once naming its returncode. A child
 alive but not ready at the deadline is killed: exit 3 naming the last reason.
@@ -28,6 +29,7 @@ import urllib.error
 import urllib.request
 
 SIG_HEADER = "X-Graphed-Sig"
+RUN_DIR = "service"
 
 
 def log(msg):
@@ -95,8 +97,9 @@ def start(cfg, ident):
         if not free(cand):
             log("port %d taken, next" % cand)
             continue
-        argv = [a.format(port=cand, host=ident, python=cfg["python"]) for a in cfg["argv"]]
-        child = subprocess.Popen(argv, env={**os.environ, **cfg.get("env", {})})
+        python = os.path.abspath(cfg["python"]) if os.sep in cfg["python"] else cfg["python"]
+        argv = [a.format(port=cand, host=ident, python=python) for a in cfg["argv"]]
+        child = subprocess.Popen(argv, env={**os.environ, **cfg.get("env", {})}, cwd=RUN_DIR)
         while True:
             if child.poll() is not None:
                 if free(cand):
@@ -122,6 +125,12 @@ def main():
         # attached: the announce secret lives in memory only, gone from the cwd the child may serve
         secret_mem = open(cfg["secret"]).read().strip()
         os.unlink(cfg["secret"])
+    # the child runs in RUN_DIR holding only the recipe's inputs: nothing else in scratch (a ticket cache, the
+    # job ad, our files) is in the cwd it may serve
+    os.makedirs(RUN_DIR, exist_ok=True)
+    for name in cfg.get("inputs", []):
+        if os.path.exists(name):
+            os.rename(name, os.path.join(RUN_DIR, name))
     child, port = start(cfg, ident)
     if child is None:
         log("not ready: %s" % port)
