@@ -1,0 +1,20 @@
+S SiteProfile fields: ['name', 'submit', 'spool', 'ship_env', 'sandbox_root', 'schedd_query', 'driver_ports', 'service_ports', 'worker_ports', 'jobs_can_submit']
+S _SELF_SUBMIT_ROOT = {'lxplus': '/afs'}
+S jobs_can_submit: {'lpc': False, 'lxplus': True, 'generic': True}
+S generic pilots=condor log_dir=/tmp/..: bindings reached: every refusal passed
+S lxplus pilots=condor log_dir=/tmp/..: refused: site 'lxplus' submits pilots from a job only with an initialdir under /afs: pass log_dir=<a directory under /afs> (got /tmp/tmp0u9sn_ql)
+S lpc pilots=condor: refused: site 'lpc' does not let a job submit jobs, so its driver cannot: use pilots='local'
+S custom (generic copy) pilots=condor log_dir=/tmp/..: bindings reached: every refusal passed
+S six-kwarg profile pilots=condor: refused: site 'bare' has no worker_ports: pilots a driver job submits cannot reach its task server; use pilots='local'
+S order in submit_driverless: jobs_can_submit @ 1202 worker_ports @ 1884 _SELF_SUBMIT_ROOT @ 2115
+W PureWindowsPath('C:/Users/x').is_relative_to('/') = False
+W PurePosixPath('/tmp/x').is_relative_to('/') = True
+W PurePosixPath('/afs/cern.ch/u').is_relative_to('/afs') = True
+T unsigned plain-text /announce -> (403, [])
+T signed plain-text /announce -> (400, ["_pickle.UnpicklingError: invalid load key, 'k'."])
+T signed pickle to /announce -> (200, b'')
+T signed pickle ('p', 0, True, b'') to /whatever (falls to /result) -> (200, b'')
+P pilot reads the secret as: ['driver = _Driver(url, bytes.fromhex(Path(secret_path).read_text().strip()))']
+P launch.write_secret writes: ['path.write_text(secret.hex())']
+P CLOSE_WAIT_S = 20.0 (CondorPilots.stop waits up to this for alive() == 0 before Remove)
+P python 3.12.3 os posix

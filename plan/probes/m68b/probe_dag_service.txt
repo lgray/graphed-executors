@@ -1,0 +1,30 @@
+condor $CondorVersion: 25.13.2 2026-08-19 BuildID: 943576 PackageID: 25.13.2-1 GitSHA: 589a5b38 $
+from_dag description:
+   My.IsDaemonCore = True
+   My.OtherJobRemoveRequirements = "DAGManJobId =?= $(cluster)"
+   arguments = "-f -l . -Lockfile /home/submituser/m68b-dag-R/run.dag.lock -Dag /home/submituser/m68b-dag-R/run.dag -CsdVersion $CondorVersion:' '25.13.2' '2026-08-19' 'BuildID:' '943576' 'PackageID:' '25.13.2-1' 'GitSHA:' '589a5b38' '$ -dagman /usr/bin/condor_dagman -AutoRescue 1"
+   environment = "_CONDOR_DAGMAN_LOG=/home/submituser/m68b-dag-R/run.dag.dagman.out _CONDOR_MAX_DAGMAN_LOG=0"
+   error = /home/submituser/m68b-dag-R/run.dag.lib.err
+   executable = /usr/bin/condor_dagman
+   getenv = CONDOR_CONFIG,_CONDOR_*,PATH,PYTHONPATH,PERL*,PEGASUS_*,TZ,HOME,USER,LANG,LC_ALL,ASAN_OPTIONS,LSAN_OPTIONS,BEARER_TOKEN,BEARER_TOKEN_FILE
+   log = /home/submituser/m68b-dag-R/run.dag.dagman.log
+   on_exit_remove = (ExitSignal =?= 11 || (ExitCode =!= UNDEFINED && ExitCode >=0 && ExitCode <= 2))
+   output = /home/submituser/m68b-dag-R/run.dag.lib.out
+   remove_kill_sig = SIGUSR1
+   universe = scheduler
+[R] DAGMan cluster 9, JobUniverse 7
+[R]   node web cluster 10 JobStatus 3 ExitCode 143 RemoveReason 'removed because <OtherJobRemoveRequirements = DAGManJobId =?= 9> fired when job (9.0) was removed'
+[R]   node driver cluster 11 JobStatus 4 ExitCode 1 RemoveReason None
+[R]   node driver cluster 12 JobStatus 4 ExitCode 0 RemoveReason None
+[R] DAGMan history: JobStatus 4 ExitCode 0 JobUniverse 7
+[R] SERVICE clusters: 1; driver clusters: 2
+[R] driver start 0: url http://f406f3a35fff:10000, announce ['web', 'f406f3a35fff:10001', 'f406f3a35fff'], GET 200
+[R] driver start 1: url http://f406f3a35fff:10000, announce ['web', 'f406f3a35fff:10001', 'f406f3a35fff'], GET 200
+[R] announces received: [10000, 10000]
+[X] DAGMan cluster 13, JobUniverse 7
+[X]   node web cluster 14 JobStatus 3 ExitCode 143 RemoveReason 'removed because <OtherJobRemoveRequirements = DAGManJobId =?= 13> fired when job (13.0) was removed'
+[X]   node driver cluster 15 JobStatus 4 ExitCode 3 RemoveReason None
+[X] DAGMan history: JobStatus 4 ExitCode 1 JobUniverse 7
+[X] SERVICE clusters: 1; driver clusters: 1
+[X] driver start 0: url http://f406f3a35fff:10000, announce ['web', 'f406f3a35fff:10002', 'f406f3a35fff'], GET 200
+[X] announces received: [10000]

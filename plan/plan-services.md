@@ -54,9 +54,9 @@ preservation; §7 orders the PRs.
 - **D3 condor placement.** Attached runs: driver-hosted = a subprocess beside the driver; cluster-hosted = a second
   one-job cluster (`ServiceJob`) announcing its endpoint to the task server. Driverless runs: driver-hosted = a
   subprocess inside the driver job (the LPC managed path, next to `LocalPilots` on the fat slot; reachable from
-  self-submitted pilots through `worker_ports`); cluster-hosted = a DAG SERVICE node DAGMan removes at DAG end
-  (measured on both sites), allowed only where the DAG dir is a path jobs share (`DagmanProfile.dag_root`: lxplus
-  `/afs`, generic; LPC none, P3) and refused naming that datum.
+  self-submitted pilots through `worker_ports`); cluster-hosted = a DAG SERVICE node DAGMan removes when the DAG
+  ends (`probes/m68b/probe_dag_service.txt`), allowed only where the DAG dir lies under the site's
+  `SiteProfile.job_root` (lxplus `/afs`, generic `/`, LPC none; §3.3) and refused naming that field.
 - **D4 reachability is site data + a runtime check.** `service_ports` (login-node ports workers reach, for attached
   driver-hosted services) and `worker_ports` (worker↔worker); `service_hosts` derives from them; `services` (kind →
   endpoint) is the site's hosted-service table. Measured: LPC `worker_ports=(10000, 10100)` (inside the measured open
@@ -112,8 +112,9 @@ preservation; §7 orders the PRs.
   named by the service outlives its run and the next run of that name reads it
   (`probes/lifetime/probe_percall_key_r17.txt`); `release_service(key)` stops that call's service and drops its record.
   `host_service` returns the minted `scheme://host:port` and the service's
-  `host_identity()` only after `check_ready` passed where the service runs (condor: `announce.py`; dask and parsl: the
-  actor), since a task may use it at once (`probe_ready_identity.txt`). `SubmitCapabilities` and the `SubmitBackend`
+  `host_identity()` only after a readiness check passed where the service runs (condor: `announce.py`'s stdlib
+  self-check, `check_ready`'s rule for `http:` and a connect for `tcp` and `grpc:`, §3.3; dask and parsl:
+  `check_ready` in the actor), since a task may use it at once (`probe_ready_identity.txt`). `SubmitCapabilities` and the `SubmitBackend`
   Protocol are untouched (their frozen m42/m46/m66 pins stay green unmodified); the engine checks the attribute, then
   calls. Each implementation owns its rendezvous: condor (m68b) its task server's `/announce`; dask (m70)
   scheduler-mediated `distributed.Variable`/`Event`; parsl (m70) the existing `EscalatingHttpTransport` plane (§3.4).
@@ -414,63 +415,133 @@ called (`probes/class/probe_resolve_traversal_r16.txt`).
 ### 3.3 executors m68b — condor cluster-hosted services, DAG driverless, lxplus GPU/Triton (PR stacked on m68a)
 | Mechanism | By hand | Rung |
 |---|---|---|
-| readiness, cluster-hosted | the job curls itself, tells the driver | (6) `service.sh` + stdlib-only `announce.py` (python3 is in every image measured; no venv in a Triton image; a `grpc:` check self-checks TCP only, the probe runs the gRPC one) + `/announce` |
+| readiness, cluster-hosted | the job curls itself, tells the driver | (6) `service.sh` + stdlib-only `announce.py` owning the service's child (no venv in a Triton image): in-job port, self-check, signed announce; the task server's `/announce` |
 | managed on the cluster | a second pilot cluster | (2) `CondorPilots` shape, another executable, behind D10 |
-| driverless with services | `condor_submit_dag` | (3) `Submit.from_dag` + SERVICE nodes (measured) |
-| teardown | `condor_rm` | (2) m66 `stop()`, the DAG's removal of its SERVICE node |
+| driverless with services | `condor_submit_dag` | (3) stock `htcondor2.Submit.from_dag` + SERVICE nodes (`probes/m68b/probe_dag_service.txt`) |
+| where job-made files live | a path in a README | (2) `SiteProfile.job_root` beside `jobs_can_submit`, the one field m67's self-submit and the DAG read |
+| teardown | `condor_rm` | (2) `act(Remove)` at once (a service never drains); DAGMan's removal of its SERVICE node |
 
-**`htcondor_backend/services.py`** (~200) + `server.py` (+40) + `backend.py` (+15) + `driverless.py` (+130)
-- `ServiceJob(spec, …)`: one cluster of one job: `executable=service.sh`, `arguments="<url> graphed-secret <key>
-  <port>"`, `transfer_input_files=graphed-secret,announce.py[,env.tgz]` **merged** with the recipe's `inputs` (never
-  replaced; `env.tgz` by the m66 recipe on `ship_env` sites iff the recipe has no `image` — an imaged recipe runs its
-  own interpreter and ships no env), the profile keys, then `request_cpus/request_memory/request_gpus` from
-  `resources` and `MY.SingularityImage` from `image`, `transfer_output_files="service.out"`; `service.sh`: unpacks
-  `env.tgz` when shipped and renders `{python}` as `./env/bin/python` exactly as `pilot.sh` resolves it (the image's
-  `python3` otherwise), the argv rendered with the port in the background, then `python3 announce.py <url> <secret>
-  <key> <host:port> [<check>]`, which self-checks what stdlib can (`http:` as `check_ready`; `tcp`/`grpc:` a
-  connect), POSTs a signed plain-text `key host:port identity` (a stdlib copy of `host_identity`) to `/announce`,
-  then `wait`s. `alive()`/ `stop()` as `CondorPilots`.
-- `TaskServer`: `/announce` (signed plain text, no pickle) records `services[key]` and wakes `wait_announce(key,
-  timeout)`, which pops the record it returns; unsigned stays 403 before any parse; `lease` is unchanged.
-- `HTCondorBackend`: `host_service`/`release_service` exist iff `"cluster" in profile.service_hosts` (bound as
-  instance attributes at construction, absent otherwise; `release_service(key)` removes that key's cluster and drops any late record under it); `host_service(spec, scope)` starts a `ServiceJob` under the key it mints (D10) and returns
-  `(endpoint, identity, key)`: the endpoint minted (D2) and the identity from `wait_announce(key, spec.timeout_s)` (the
-  announce route is the task server's, which the login-port datum requires).
-- **DAG driverless.** A cluster-hosted recipe makes the submission a DAG: `JOB driver driver.sub` + `SERVICE <name>
-  <name>.sub` (the wrapper polls `driver.url`, which the driver job writes into the DAG dir) + `RETRY driver 2
-  UNLESS-EXIT 3`; refused unless `DagmanProfile.dag_root` is set, naming it. `run.json.announce_only` lists the
-  DAG-hosted names: a SERVICE node's key is its name, and the in-job set resolves each from `wait_announce(name, …)` as a provided endpoint (checked like leg 2) and
-  never runs leg 3 for it, so no second `ServiceJob` is submitted from the job. `DagmanProfile(executable,
-  transfer_executable, drop_getenv, spool_inputs, dag_root)`: lpc = (`/usr/bin/condor_dagman`, `false`,
-  `("CONDOR_CONFIG",)`, `True`, `None`), lxplus = (`/usr/bin/condor_dagman`, `false`, `()`, `False`, `/afs`), generic
-  = stock `from_dag` with the shared dir. `RunHandle` tracks the DAGMan cluster (`JobUniverse 7`); `result()` reads
-  the driver node's `result.pkl`.
+**`htcondor_backend/services.py`** (~230) + `announce.py` (~110) + `server.py` (+40) + `backend.py` (+50) + `sites.py`
+(+10) + `driverless.py` (+150) + `driver.py` (+35)
+- **`SiteProfile.job_root: str | None = None`** (after `jobs_can_submit`): the tree the site's schedd and every job
+  read directly, so a job-submitted cluster's `initialdir` and a DAG's directory must lie under it. lpc `None` (none;
+  its jobs cannot submit either), lxplus `"/afs"`, generic `"/"` = every path (the one-host pool). "Under" is
+  `root == "/" or Path(os.path.abspath(p)).is_relative_to(root)` (`PureWindowsPath("C:/x").is_relative_to("/")` is
+  False, and m67's all-OS generic self-submit case stays green). `driverless._SELF_SUBMIT_ROOT` is deleted:
+  `submit_driverless(pilots="condor")` reads `profile.job_root` after its `jobs_can_submit` and `worker_ports`
+  refusals, as today; `None` refuses naming `job_root` (today a profile outside the dict self-submits unchecked:
+  fail closed), a dir outside refuses naming the root (lxplus: `/afs`, as m67's test reads). A DAG reads the same
+  field the same way (`probes/m68b/probe_code_premises.txt` S, W).
+- `ServiceJob(spec, launcher: CondorPilots, *, url, secret, key)`: one cluster of one job on the launcher's schedd
+  through `launcher._submit` (the profile's spool holds), `initialdir` a fresh `<launcher.log_dir>/service-<key>/`
+  holding `service.sh`, `service.json`, `graphed-secret` (`write_secret`) and `announce.py`. Keys: `CondorPilots`'
+  base keys (`transfer_output_files='""'`), `executable=service.sh`, `arguments="service.json"` (secret and url
+  travel in files), `output`/`error`/`log` = `service.{out,err,log}`, `transfer_input_files=announce.py,
+  service.json,graphed-secret[,<launcher.log_dir>/env.tgz]` **merged** with the recipe's `inputs` made absolute
+  against the driver's cwd (never replaced; `abspath` drops a trailing separator, so a directory lands in scratch
+  under its basename and the argv names it so, `probes/m68b/probe_service_job.txt` C; `env.tgz` the pilots' own
+  tarball, not rebuilt, on `ship_env` sites iff the recipe has no `image`), `request_cpus` = `resources["cpus"]`
+  (default 1), `request_memory` = `resources["memory_mb"]` (default the launcher's), `request_gpus` iff
+  `resources["gpus"] > 0`, `JobBatchName=graphed-service-<key>`, then the profile keys, `MY.SingularityImage` from
+  `image` (over the profile's), the launcher's `extra_submit`. `service.json` = `{argv, env, check, ports:
+  profile.worker_ports, key, url, watch: null, python, timeout_s, lease_s}`, `url`/`secret` the backend's task
+  server's. The interpreter (`python`, and what `service.sh` execs) is `CondorPilots._stage`'s for an image-less recipe (`./env/bin/python` on a `ship_env` site,
+  else the driver's `sys.executable`) and `python3` for an imaged one; `service.sh` unpacks `env.tgz` when present,
+  exits 3 naming the interpreter when `command -v` misses it, then `exec`s it on `announce.py service.json`.
+  `alive()` as `CondorPilots`; `stop()` = `act(Remove)` at once (a service never exits by itself, so
+  `CondorPilots.stop`'s 20 s drain, `probe_code_premises.txt` P, is skipped; the removal ends the child,
+  `probe_service_job.txt` B).
+- `announce.py` (stdlib only, parses as python 3.9; prototype `probes/m68b/announce_proto.py`): identity = a stdlib
+  copy of `host_identity()`. For each port of `ports` in order: skip it unless a bind succeeds; render the argv
+  (`{port}`, `{host}` = the identity, `{python}`), `Popen` it, poll the self-check and `child.poll()` until
+  `timeout_s`; ready = the self-check passing with the child alive; a child that exits (the port was taken after
+  the scan) moves to the next port; none ready → exit 3 naming the last reason (`probe_service_job.txt` A: first
+  port the task server's, second a listener's, the third announced). The self-check dials `identity:port`, the
+  endpoint it announces: `http:<path>` by `check_ready`'s rule (2xx, content-type not `application/grpc*`), `tcp`
+  and `grpc:` by a connect (the worker probe runs the gRPC check, §3.1). It then POSTs the UTF-8 text `key
+  host:port identity`, signed with the hex secret as pilots read it, to `<url>/announce`, retried each second
+  until 200. Attached mode then re-POSTs the same body every `POLL_S` as the pilots' beat: a 403 (another server
+  on that port) or no answer for `lease_s` (`service.json`, the server's `LEASE_S` at `host_service` time) is an
+  orphaned service, as for a pilot: it terminates the child and exits 0, so a crashed driver frees the slot. DAG
+  mode (`watch` = the DAG dir) has no orphan rule (DAGMan owns the node): each second it reads `<watch>/driver.url`
+  and `<watch>/graphed-secret` and announces again whenever that pair changes (a retried driver rebinds the same
+  url with a new secret, `probe_dag_service.txt` R). SIGTERM terminates and reaps the child; otherwise the exit
+  code is the child's.
+- `TaskServer`: `do_POST` checks the signature (403 before any parse, as today), then routes `/announce` before
+  `pickle.loads` (today a signed plain-text body is a 400 `UnpicklingError`, `probe_code_premises.txt` T): exactly
+  three whitespace-separated fields `key host:port identity` with an integer port, else 400 and nothing recorded;
+  it records `(host:port, identity)` under `key` and wakes `wait_announce(key, timeout) -> tuple[str, str] | None`,
+  which pops the record it returns (`None` after `timeout`). Other paths route as today (`/result` the
+  fallthrough); `lease` is unchanged; a record under a released key stays unread (keys are per call).
+- `HTCondorBackend`, attached: `host_service`/`release_service` are instance attributes iff the launcher is a
+  `CondorPilots` and `"cluster" in self.service_hosts` (absent otherwise: a `LocalPilots` or `("driver",)` backend
+  refuses a GPU recipe naming the attribute, §3.1). `host_service(spec, scope)` mints the D10 key, starts a
+  `ServiceJob` (its removal registered when `schedd.submit` returns) and calls `wait_announce(key, …)` in `POLL_S`
+  slices with `job.alive()` between: an announce → `(f"{scheme}://{host:port}", identity, key)`, scheme by D2; the
+  job gone or held (other than spooling, code 16) → removed, `RuntimeError` naming the key, `JobStatus` and
+  `ExitCode`/`HoldReason`; `spec.timeout_s` passed → removed, `TimeoutError` naming the timeout and `JobStatus`
+  (a GPU request no slot matches stays idle, `probe_service_job.txt` D). `release_service(key)` = that key's
+  `ServiceJob.stop()` and a pop of its record.
+- In a driver job (`in_job=`, §3.1), `HTCondorBackend(..., announced=run.json.announce_only)` binds
+  `host_service`/`release_service` iff `announced` is non-empty, submitting nothing: a name outside it →
+  `ValueError` naming `announce_only` (a driver job starts no `ServiceJob`); else `wait_announce(spec.name,
+  spec.timeout_s)` → `(scheme://host:port, identity, spec.name)`, `None` → `TimeoutError` naming the SERVICE node;
+  `release_service(name)` pops the record and stops nothing (DAGMan removes the node at DAG end). Keying by name is
+  sound here: the task server lives for one driver start, which runs one plan. So a DAG-hosted name resolves by
+  §3.1's leg 3 cluster-hosted (a GPU or imaged recipe is never driver-hosted), and its status carries `leg=
+  "managed", host="cluster"` and the announced identity, which the worker probe compares.
+- **DAG driverless.** `submit_driverless` puts a spec of `plan.services` in `announce_only` iff it has a `launch`,
+  no `services=` endpoint names it, and the driver job cannot host it (`launch.image` or `resources.gpus > 0`; a
+  driver job's `service_hosts` is `("driver",)`, §3.1). A non-empty `announce_only` makes the submission a DAG in
+  `log_dir`, refused before any bindings call unless `worker_ports` is set and `job_root` holds `log_dir` (each
+  naming its field; lpc names `job_root`). Files: `driver.sub` (m67's description less `max_retries`/`retry_until`),
+  one `<name>.sub` per name (`ServiceJob`'s keys with `watch` = the DAG dir, `key` = the name, `url` null, no
+  secret transferred), `run.dag` = `JOB driver driver.sub`, `SERVICE <name> <name>.sub` each, `RETRY driver 2
+  UNLESS-EXIT 3`; submitted as `schedd.submit(htcondor2.Submit.from_dag(<run.dag>, {}))`, stock and never spooled
+  (the dir is under `job_root`, which the schedd reads). `run.json` gains `dag_dir` (absolute) and `announce_only`.
+  In the job, `driver._runner` with `announce_only` builds the task server as for `pilots="condor"` (host the slot's
+  `Machine`, ports the row's `worker_ports`: the SERVICE node dials it from another node) and, once it listens and
+  before `wait_for_pilots`, writes `graphed-secret` then `driver.url` into `dag_dir`, each through a temporary file
+  and `os.replace`. `RunHandle(..., dag: bool = False)` (m67 saved handles load) tracks the DAGMan cluster
+  (`JobUniverse 7`, exit 0 once the driver node succeeds, 1 once it fails for good → `done`/`failed`); `result()`
+  reads `result.pkl` where the driver node's output transfer lands it, the DAG dir, and never retrieves. The stock
+  description's `OtherJobRemoveRequirements = DAGManJobId =?= $(cluster)` removes each SERVICE node when DAGMan
+  leaves the queue, and its `RemoveReason` names that (`probe_dag_service.txt` R, X).
 - **lxplus GPU/Triton run (evidence).** The analysis declares `recipes.triton("triton",
-  image="/cvmfs/unpacked.cern.ch/nvcr.io/nvidia/tritonserver:24.11-py3", model_repository="models/")` (§3.1's gRPC
-  argv, `inputs=("models/",)`, `resources={"gpus": 1}`) with `models/graphed_identity/` = P9's ONNX files verbatim
+  image="/cvmfs/unpacked.cern.ch/nvcr.io/nvidia/tritonserver:24.11-py3", model_repository="models")` (§3.1's gRPC
+  argv, `inputs=("models",)`, `resources={"gpus": 1}`) with `models/graphed_identity/` = P9's ONNX files verbatim
   (24.11-py3 ships the `onnxruntime` backend, `probes/services-lxplus/p3-triton-image/transcript.txt`) and the §3
   params with `service="triton"`; `htcondor_runner(site="lxplus", n_pilots=2, image=coffea…,
-  extra_submit={"+JobFlavour": '"espresso"'})` resolves it by leg 3 cluster-hosted from CPU pilots. Expected: the full
-  run (P7 measured the ports; this run shows gRPC over them); transcript `probes/site-lxplus/m68-triton.txt`
-  (announce, the probe's `grpc:` check from another host, infer bit-for-bit over `tritonclient.grpc`). A second run
-  with `services=` a user-held `ServiceSet`'s endpoints shows leg 1 on the same plan.
+  extra_submit={"+JobFlavour": '"espresso"'})` resolves it by leg 3 cluster-hosted from CPU pilots.
 
-Frozen `tests/frozen/m68b/` (harness: m68a's `services_harness.py` copied):
+Site checks (owner, after the PR's CI is green; not blocking the freeze): (1) the lxplus run above →
+`probes/site-lxplus/m68-triton.txt`: the announce (with the image's `python3 --version` and which identity form it
+carried, `Machine` or `getfqdn`), the probe's `grpc:` check from another host, infer bit-for-bit over
+`tritonclient.grpc`, then a second run with `services=` a user-held `ServiceSet`'s endpoints (leg 1, same plan);
+(2) the same plan driverless from an `/afs` `log_dir` → `probes/site-lxplus/m68b-dag.txt`: the stock `from_dag`
+submit accepted unspooled, the SERVICE node reading `driver.url`/`graphed-secret` on AFS, `fs listacl` of the DAG
+dir, the node removed at DAG end.
+
+Frozen `tests/frozen/m68b/` (harness: m68a's `services_harness.py` copied; the live file needs the CI pool's one
+simulated GPU, `probes/m68b/sim_gpu.config`, `probe_sim_gpu.txt`):
 | File | Property | Witness | Fixture |
 |---|---|---|---|
-| `test_announce_route.py` (all OS) | unsigned `/announce` → 403, nothing recorded; signed → recorded, `wait_announce` returns, and a second `wait_announce` of that key times out; malformed signed → 400; `/result` fallthrough intact | marker | m66 auth harness copy |
-| `test_cluster_service_job.py` (all OS) | `hasattr(backend, "host_service")` follows `service_hosts`; `ServiceJob.submit_description` merges `transfer_input_files`, renders `resources`/`image`, ships `env.tgz` for an image-less recipe and not for an imaged one, keeps the secret out of `arguments`; `service.sh`/`announce.py` text, `{python}` rendered as `./env/bin/python`; `announce.py` imports stdlib only, self-checks a `grpc:` spec by connect and an `http:` spec by `check_ready`'s rule, and announces `key host:port identity`; ci `test-htcondor` runs `tests/frozen/m68b` | pure functions on data | — |
-| `test_driverless_dag.py` (all OS) | `DagmanProfile` values; DAG text (`JOB driver`, one `SERVICE` per service, `RETRY driver 2 UNLESS-EXIT 3`, no `max_retries` in the node sub); the DAG submit description per profile; a GPU recipe on generic writes the DAG dir, the description and `announce_only=[name]`, and the in-job set makes zero `host_service` calls for it (spy) while resolving it from the announce; on lpc refused naming `dag_root` | recorder; spy | recorded `from_dag` description (`probes/services-lpc/p1-dag/transcript-p1g-*.txt`) |
-| `test_cluster_services_live.py` (minicondor) | (a) a cluster-hosted `recipes.http_server` announces the pool host's `Machine`; every probe answer carries it, equal to `backend.host_identity()`, so the probe passes; a pilot task GETs it; the run's end removes the service cluster, `close()` empties the queue, history shows both clusters; two sequential runs on one runner each get their own service cluster, and run 2's task GET is answered by run 2's child; a queued `submit` overlapping a direct `run` gets two service clusters, and each run's end removes only its own; (b) driverless DAG with the `http_server` SERVICE: universe-7 ad, the service job's `RemoveReason` matches `DAGManJobId`, `result()` bit-for-bit | ads, history, pids | the pool |
+| `test_announce_route.py` (all OS) | unsigned `/announce` → 403, nothing recorded; signed `key host:port identity` → 200, `wait_announce(key, t)` returns `(host:port, identity)` as the body carried, and a second call returns `None` after `t`; a signed body that is not exactly those three fields (two, four, a non-integer port) → 400, nothing recorded; a signed pickle to `/result` still settles its task | marker | m66 auth harness copy |
+| `test_cluster_service_job.py` (all OS) | `hasattr(backend, "host_service")` iff a `CondorPilots` launcher and `"cluster" in service_hosts`; `ServiceJob` keys: inputs merged (a recipe's `models/` named as absolute `…/models`), `request_*` from `resources` (no `request_gpus` at 0), `MY.SingularityImage` over the profile's, the launcher's `env.tgz` named for an image-less recipe on a `ship_env` profile and not for an imaged one, `arguments == "service.json"`, no secret or url in any value, `service.json` `ports == profile.worker_ports`; `service.sh` execs `./env/bin/python`, `sys.executable` or `python3` per case; `announce.py` imports stdlib only and parses with `feature_version=(3, 9)`; run as a subprocess against a real `TaskServer` on a `{python} -m http.server {port}` spec: with the range's first port held by a listener it announces the next, identity = `host_identity()`; an `http:` spec on a server answering 200 `application/grpc` never announces and exits 3; a child that exits at once → exit 3; with `lease_s` shortened, shutting the server down after the announce ends the child and exits 0; DAG mode: after announcing to a first server through the watch files, both files replaced by a second server's → the second receives the announce, and the secret alone replaced (same url) → announced again; SIGTERM reaps the child; ci `test-htcondor` runs `tests/frozen/m68b` | text; subprocess exit codes; server records | — |
+| `test_driverless_dag.py` (all OS) | `SITES` `job_root` (lpc `None`, lxplus `"/afs"`, generic `"/"`); `driverless` has no `_SELF_SUBMIT_ROOT`; `pilots="condor"` on a generic copy with `job_root=None` refused naming `job_root`, lxplus outside `/afs` naming `/afs`; `announce_only` holds a GPU or imaged launch, not an image-less CPU one nor a `services=` name; DAG text (`JOB driver`, one `SERVICE` per name, `RETRY driver 2 UNLESS-EXIT 3`), no `max_retries`/`retry_until` in any node sub, `from_dag` called on the DAG path and `submit` without spool (recorder); refused before any bindings call: lpc naming `job_root`, a generic copy without `worker_ports` naming it, lxplus outside `/afs`; `driver._runner` with `announce_only` writes `graphed-secret` before `driver.url` (an `os.replace` spy) with a url on the ad's `Machine` and a `worker_ports` port; that backend's `host_service` returns `(endpoint, the announced identity, "web")` after a signed announce, refuses another name naming `announce_only`, and a `ServiceSet` over it logs `leg="managed", host="cluster"` with that identity; `RunHandle(dag=True)` maps DAGMan ads (ExitCode 0/1) to `done`/`failed`, its `result()` makes no `retrieve` call, and an m67 saved handle loads with `dag=False` | recorder; spies; log record | `data/from_dag-generic.txt` (the stock description in `probes/m68b/probe_dag_service.txt`) |
+| `test_cluster_services_live.py` (minicondor) | (a) a generic copy with `service_ports=None` (`("cluster",)`): a cluster-hosted `recipes.http_server` announces the pool host's `Machine`; every probe answer carries it, equal to `backend.host_identity()`, so the probe passes; a pilot task GETs it; the run's end removes the service cluster, `close()` empties the queue, history shows both clusters; two sequential runs on one runner each get their own service cluster, and run 2's task GET is answered by run 2's child; a queued `submit` overlapping a direct `run` gets two service clusters, and each run's end removes only its own; (b) failure paths on that copy: `resources={"gpus": 2}` with `timeout_s=20` raises `TimeoutError` naming the timeout and `JobStatus` 1, and the queue is empty after; a recipe whose child exits at once raises `RuntimeError` naming the job's status before `timeout_s`, queue empty; (c) driverless on generic with `http_server` given `resources={"gpus": 1}` and a plan whose tasks GET it and whose `resolve_services` puts the body into the value (m68a's `test_driverless_endpoints` shape): a universe-7 DAGMan ad, one SERVICE cluster (`NumJobStarts` 1, `AssignedGPUs` set), `result()` holds the body, the SERVICE job's `RemoveReason` names `DAGManJobId`, the queue is empty | ads, history, pids, result | the pool |
 
-Fails on: an announce before readiness, a secret in a job ad, a DAG without SERVICE, two retry owners, a dropped input
-or env transfer, a service outliving its run, a run reading or releasing another run's service, a second `ServiceJob` from the
-driver job.
+Fails on: an announce before readiness or without an identity, a port chosen off the node that binds it, a secret in
+a job ad, a DAG without SERVICE, two retry owners, a retried driver the SERVICE node never re-announces to, a
+dropped input or env transfer, a directory input landed without its name, a timed-out, dead or orphaned
+`ServiceJob` left running or queued, a service outliving its run, a run reading or releasing another run's
+service, a second `ServiceJob` from the driver job, a site root read from two places.
 
-Commits (≤2k each; freeze `test(services): frozen m68b` ~800 first): 1. `feat(htcondor): cluster-hosted services and
-/announce` — `htcondor_backend/services.py`, server, backend, `service.sh`/`announce.py` (~500); 2. `feat(htcondor):
-driverless DAG with SERVICE nodes` — driverless, driver, `DagmanProfile` (~300); 3. `ci+docs(m68b)` — m68b dir,
-`htcondor.rst` "Cluster-hosted services" + the lxplus GPU walk-through, changelog (~150)
+Commits (≤2k each; freeze `test(services): frozen m68b` ~900 first): 1. `feat(htcondor): cluster-hosted services
+and /announce` — `htcondor_backend/services.py`, `announce.py`, `service.sh` text, server, attached backend (~600);
+2. `feat(htcondor): job_root and driverless DAG with SERVICE nodes` — sites, driverless, driver, in-job backend
+(~350); 3. `ci+docs(m68b)` — m68b dir and the simulated-GPU pool line, `htcondor.rst` "Cluster-hosted services"
+(with `job_root`) + the lxplus GPU walk-through, changelog (~170)
 
 ### 3.4 m70 — cluster-hosted services on dask and parsl (graphed-executors PR, stacked on m68b)
 One engine change and one implementation per backend; the engine's three legs, probe and teardown are m68a's, and each
@@ -665,22 +736,25 @@ histserv recipe docs` (`run_lpc.py`, `docs/htcondor.rst` "histserv-backed histog
   running `recipes.triton`'s argv at port 8001 on `tests/frozen/m68a/data/triton_models/`, whose `graphed_identity` is
   a python-backend identity with P9's name and I/O (the backend graphed CI's `scorer` runs on this image; graphed's
   disk-free step included), waited on by `check_ready`, + `pip install "tritonclient[grpc]" histserv
-  grpcio-health-checking` (`histserv` from the m69b PR on: no m68a file imports it), runs `tests/frozen/m66 m67 m68a m68b m69b tests/extra/m6*` (each PR the dirs it has);
+  grpcio-health-checking` (`histserv` from the m69b PR on: no m68a file imports it), from the m68b PR on adds
+  `probes/m68b/sim_gpu.config`'s two lines to the runner's pool config (one simulated GPU), runs `tests/frozen/m66 m67 m68a m68b m69b tests/extra/m6*` (each PR the dirs it has);
   `.coveragerc-htcondor` sources add `graphed_executors.submit.services`; diff-cover include adds
   `src/graphed_executors/submit/services.py`. The all-OS `test` job installs `histserv grpcio-health-checking` (not on
-  3.14t: no `cp314t` grpcio, P-d) and runs the no-bindings files of m67/m68a/m68b/m69b (the histserv subprocess and
+  3.14t: no `cp314t` grpcio, P-d) and runs the no-bindings files of m67/m68a/m68b/m69b (m68b: `test_announce_route`,
+  `test_cluster_service_job`, `test_driverless_dag`) (the histserv subprocess and
   the in-process gRPC servers on every OS; a Windows bind failure is a finding, not a skip). **`test-dask`** adds
   `tests/frozen/m68a/test_scope_dask_memory.py` to its explicit file list; it and **`test-parsl`** (existing legs) add `tests/frozen/m70` and their backend's `_service.py`/`transport_peer.py` deltas
   to their coverage sources.
 - **graphed**: the main matrix runs `tests/frozen/preserve/m68` on the fake transports; the `triton` job (already `-p
   8001`, `GRAPHED_TRITON_GRPC`) adds the live service-ref test on both wires.
 - **Site runs are evidence transcripts only:** LPC and lxplus driverless (m67), LPC EAF Triton by leg 2 (m68a), lxplus
-  GPU/Triton (m68b, owner-permitted), LPC H→γγ with login-node / in-job histserv (m69b).
+  GPU/Triton attached and driverless DAG (m68b's two site checks, owner-run), LPC H→γγ with login-node / in-job
+  histserv (m69b).
 
 ## 7. PR / commit partition
 Executors: m69a on `main` (~1.1k examples, ~2k fixture/test lines, two fixture binaries), and stacked PRs on
-`lane/htcondor` (#34): m67 (~900 src+ci, ~1.3k tests) → m68a (~1.2k src+ci+docs, ~1.3k tests) → m68b (~950, ~800
-tests) → m70 (~500 src, ~800 tests); m69b (~500 examples, ~600 tests) stacks on m68a, independent of m68b and m70.
+`main` (`lane/htcondor` #34 merged as `eefc0f3`, m67 as `b966a28`): m68a (~1.2k src+ci+docs, ~1.3k tests) → m68b
+(~1.1k src+ci+docs, ~900 tests) → m70 (~500 src, ~800 tests); m69b (~500 examples, ~600 tests) stacks on m68a, independent of m68b and m70.
 graphed: the m68 PR (~360 src, ~850 tests, docs) and the resolve walk (§3.2, ~150). graphed-histogram: one PR (m69b, ~660 src, ~1k tests). At m66's
 measured estimate-to-shipped ratio (journal) every commit above stays under 2k. Order: m69a and m67 start now; graphed
 m68 PR and the resolve walk before executors m68a (installed by ref, floored at the release that holds both); m68b after m68a, m70 after m68b; histogram m69b
@@ -690,7 +764,7 @@ PR before executors m69b, which branches after m69a is merged into `main` and `m
 ## 8. Docs
 Each milestone's docs commit names its pages (§2, §3.1–§3.4, §5); beyond those: `htcondor.rst` "Services" (surface,
 legs, wires and checks, site table, placement, probe, "unreachable"); `design.rst` "Cluster hosting" (m70); README
-rows, `api.rst`. graphed `architecture.rst` "Service surface" and the preserve page's "services in a bundle";
+rows, `api.rst` (m68b: `SiteProfile.job_root`). graphed `architecture.rst` "Service surface" and the preserve page's "services in a bundle";
 graphed-histogram `design.rst` "Remote (histserv) backing".
 
 ## 9. Risks (premise → evidence) and owner items
@@ -698,14 +772,17 @@ graphed-histogram `design.rst` "Remote (histserv) backing".
   no image line in its `.sub`); whether the inner jobs start, and whether the Kerberos cache is usable inside the
   container for that submit, are unmeasured → measured by one spooled one-liner submitted from an image job with
   `SendCredential` (`NumJobStarts == 1` on the inner job) before the m67 lxplus site check.
-- `$_CONDOR_MACHINE_AD` inside the container: present at LPC (P2); lxplus unmeasured → the m67 site check.
+- `$_CONDOR_MACHINE_AD` inside the container: present at LPC (P2) and in lxplus's coffea image
+  (`probes/site-lxplus/m67-driverless.txt`); inside the lxplus Triton image unmeasured: absent, `announce.py`
+  announces the container's `getfqdn()`, which the self-check must resolve, and the probe still passes on answers
+  from pilots on other nodes; m68b's site check (1) records which form was announced.
 - The EAF Triton at LPC is reachable from a batch worker (P8) and serves `graphed_identity` (P9) → the lpc row.
   Readiness stays the server's (`ServerIsReady`, P-e): the served set changes under users (P8: `resnet50` `NOT_FOUND`
   minutes after READY), so a check-time model probe proves nothing at infer time and would put Triton's model RPC in
   the core; a missing model fails the first infer with Triton's `NOT_FOUND` inside the `StageError`. EAF's inference
   access policy is unmeasured; TLS uses default roots (P8).
-- `python3` in the Triton image (`announce.py`): nvcr 24.11-py3 ships it (python backend); absent, the wrapper exits 3
-  naming it.
+- `python3` ≥ 3.9 in the Triton image (`announce.py`): nvcr 24.11-py3 ships it (python backend; the version is
+  site check (1)'s); absent, `service.sh` exits 3 naming it.
 - dask GPU placement: worker `resources` selection is unmeasured on a real GPU cluster; the m70 frozen test
   measures it on a `LocalCluster(resources=…)`, the site run is Phase 2.
 - parsl hosted actors on a multi-node HTEX share the peers' single-machine `HOST` ceiling; not in m70.
@@ -717,6 +794,9 @@ graphed-histogram `design.rst` "Remote (histserv) backing".
   from GitHub runners (`test-hgg`'s higgs_dna install) is unmeasured → freeze commit A's first CI run measures it.
 - histserv Double/Int64 dense dtypes: only Weight measured; the m69b frozen test discriminates. histserv under many
   pilots and the Windows start-up: unmeasured.
-- **Owner:** lxplus submissions (m67 site check, m68b GPU run); re-cut of the six diagnostic histograms if wanted.
+- A DAG dir on AFS holds `graphed-secret`, which the directory's ACL guards, not the file mode; m68b's site check
+  (2) records `fs listacl`. The stock `from_dag` description passes `getenv` including `CONDOR_CONFIG`
+  (`probe_dag_service.txt`); at lxplus it is accepted or not by site check (2), and a refusal there is a finding.
+- **Owner:** lxplus submissions (m67 site check, m68b's two site checks); re-cut of the six diagnostic histograms if wanted.
   A service that fails mid-run surfaces in plan code (a task, a bind hook, `resolve_services`) and exits 3 (D6):
   retrying it would need task errors to carry their cause, a decision not taken here.
