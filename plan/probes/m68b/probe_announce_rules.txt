@@ -7,25 +7,25 @@ L2 never ready, 3 ports, timeout_s 2
 L3 port taken after the scan (http:/ check)
    -> exit 0 after 16.6s
    port 23200 taken after the scan (child exited 1), next
-   ready pid=4594 body='k localhost:23201 localhost'
+   ready pid=6314 body='k localhost:23201 localhost'
    announced to http://localhost:23000
    orphaned (None, last 200 10.0s ago): stopping the service
    announced ports: ['23201'] (range starts 23200)
 L4 no 200 ever (closed url), lease_s 3
-   child pid while waiting: ['4600']
+   child pid while waiting: ['6320']
    child pid after exit: []
    -> exit 0 after 4.1s
-   ready pid=4600 body='k localhost:23000 localhost'
+   ready pid=6320 body='k localhost:23400 localhost'
    orphaned (None, last 200 3.0s ago): stopping the service
 L5 403 (another server's secret)
    -> exit 0 after 0.6s
-   port 23000 taken, next
-   ready pid=4606 body='k localhost:23001 localhost'
+   port 23400 taken, next
+   ready pid=6327 body='k localhost:23401 localhost'
    orphaned (403, last 200 0.0s ago): stopping the service
 L6 beats, then the server stops, lease_s 3, beat_s 1
    -> exit 0 after 7.6s
-   port 23000 taken, next
-   ready pid=4610 body='k localhost:23001 localhost'
-   announced to http://localhost:23400
+   ready pid=6331 body='k localhost:23400 localhost'
+   announced to http://localhost:23600
    orphaned (None, last 200 3.0s ago): stopping the service
    announces received before the stop: 5
+L7 503 once then exit 7, 5 ports, 10 runs: child starts per run [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] ; (exit, names 7): [(3, True)]

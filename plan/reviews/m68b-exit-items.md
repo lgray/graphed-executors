@@ -58,3 +58,7 @@ Wording and small constraints from review r9 (`plan-services-m68b-r9.md`). None 
 - §3.3 L539, site check (2): "the stock `from_dag` submit accepted unspooled" should read `from_dag(<abs run.dag>, {"usedagdir": True, "force": True})` accepted unspooled. The DAG is no longer submitted with stock options. §9 L821's "stock `from_dag` description" (`getenv`) still holds under those options, as `probe_dag_service.txt` shows.
 - `data/from_dag-generic.txt` (from `probe_dag_service.txt`) embeds the DAG dir's absolute path and the pool's `CsdVersion` string in `arguments`, `environment`, `error`, `log` and `output`. The test compares after substituting both, or regenerates them, rather than byte-for-byte.
 - Evidence added by r9: `probes/m68b/probe_r9_timewait.{py,txt}` (POSIX, no pool): a plain-bind "is the port free" test sees a server-side `TIME_WAIT` from the service's own `http:` self-check as taken. `probe_announce_rules.py` re-run locally reproduces L1–L6 (port numbers differ).
+
+## decisions (round 3)
+- "Free" (the scan and the after-exit check) is a bind with `SO_REUSEADDR` succeeding. Reason: a listener still refuses it, while the server-side `TIME_WAIT` left by the service's own self-check does not, so a child that answered once and died is not restarted per port (probe_r9_timewait; probe_announce_rules L7: one start in 10/10 runs).
+- `data/from_dag-generic.txt` is compared after substituting the DAG dir and `CsdVersion`. Reason: both are embedded in the description and differ per run and pool.

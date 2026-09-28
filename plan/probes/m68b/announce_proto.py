@@ -60,7 +60,9 @@ def self_check(check, host, port):
 
 
 def free(port):
+    """A bind with SO_REUSEADDR: refused by a listener, not by a TIME_WAIT the self-check itself left behind."""
     s = socket.socket()
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     try:
         s.bind(("", port))
         return True

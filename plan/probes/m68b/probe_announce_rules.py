@@ -9,6 +9,8 @@ Run: python3 probe_announce_rules.py > probe_announce_rules.txt   (POSIX)
  L4 attached, url on a closed port, lease_s 3 -> the ready child is reaped and exit 0 after ~lease_s (no 200 ever)
  L5 attached, a server with another secret (403) -> child reaped, exit 0 at once
  L6 attached, beats every beat_s; the server stops -> child reaped, exit 0 within ~lease_s
+ L7 a child that answers the http: check once with 503 (leaving a server-side TIME_WAIT), then exits 7, 5-port range,
+    x10 -> exit 3 naming 7 after exactly one child start each run (free() binds with SO_REUSEADDR)
 """
 
 import json
@@ -118,3 +120,25 @@ r, url, rec = receiver("secret")
 run("L6 beats, then the server stops, lease_s 3, beat_s 1", cfg(ports=[lo, lo + 2], url=url, lease_s=3, beat_s=1),
     until=lambda p: (time.sleep(5), r.terminate()))
 print("   announces received before the stop:", len(open(rec).read().splitlines()))
+
+ONCE = os.path.join(work, "once.py")
+open(ONCE, "w").write(
+    "import http.server, sys\n"
+    "port, count = int(sys.argv[1]), sys.argv[2]\n"
+    "open(count, 'a').write('start\\n')\n"
+    "class H(http.server.BaseHTTPRequestHandler):\n"
+    "    def do_GET(self):\n"
+    "        self.send_response(503); self.end_headers()\n"
+    "    def log_message(self, *a): pass\n"
+    "srv = http.server.HTTPServer(('', port), H)\n"
+    "srv.handle_request(); srv.server_close(); sys.exit(7)\n")
+starts, codes = [], []
+for i in range(10):
+    lo = free_base(5)
+    count = os.path.join(work, "count-%d" % i)
+    json.dump(cfg(argv=["{python}", ONCE, "{port}", count], ports=[lo, lo + 4], check="http:/", timeout_s=60),
+              open("svc.json", "w"))
+    p = subprocess.run([PY, PROTO, "svc.json"], capture_output=True, text=True)
+    starts.append(len(open(count).read().splitlines()))
+    codes.append((p.returncode, "exited 7" in p.stdout))
+print("L7 503 once then exit 7, 5 ports, 10 runs: child starts per run", starts, "; (exit, names 7):", sorted(set(codes)))
