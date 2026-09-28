@@ -153,3 +153,28 @@ Wording, fixture notes and small constraints from review r12-B2 (`plan-services-
 - `RunHandle(dag=True)` reports `held` for a running DAGMan job with `DAG_JobsHeld > 0`. Reason: a held node leaves DAGMan at `JobStatus 2` indefinitely (probe_r12_dag_held_node); m67's contract has `held`.
 - Spooled `ServiceJob.stop()` retrieves a completed job before removal. Reason: keeps `announce.py`'s exit reason for `host_service`'s error.
 - `test-htcondor` running `tests/frozen/m68b` moves to commit 1 (B1). Reason: B1 must be gated on its own.
+
+## r13-B1 exit items
+Wording and small constraints from review r13-B1 (`plan-services-m68b-r13-b1.md`, a delta round). None of them makes the round unclean.
+
+- **L506, the stale clause.** "A record under a released key stays unread" no longer holds: after `forget_announce`, that key's announces get 403 and nothing is recorded.
+  - **L516–517, the release order.** `release_service` pops the record, then forgets the key. A beat that arrives between the two leaves a record behind. Forget first, then pop, and drop the stale clause.
+- **L510–515, the failure paths.** When `host_service` fails (timeout, dead or held job, or `schedd.submit` raising), it removes the job but does not `forget_announce` the key. D10's "releases what it started" covers the registered announce secret too. Say that these paths also call `forget_announce([key])`.
+- **L499–501, a body with no key.** Say that a body that is not UTF-8, or is empty, gets 403 with nothing recorded, because no key means no secret to verify against. It is not a 400.
+- **L604, the order of the unlink.** "After the announce … the file is gone" also passes when `announce.py` unlinks the file only after the child is ready. To pin "before starting the child" (L436), have the leg's child record `test -e graphed-secret` at start.
+- **Evidence r13-B1:** `probe_announce_rules.py`, re-run locally, reproduces L1–L8. M29-B1 cites the existing `probes/site-lxplus/m67-driverless.txt`, which shows `KRB5CCNAME=FILE:/srv/lgray.cc` in the scratch dir.
+
+## r13-B2 exit items
+Wording and small constraints from review r13-B2 (`plan-services-m68b-r13-b2.md`, a delta round). The design findings are M41-B2 and M42-B2 in that review; the items below do not make the round unclean.
+
+- **L420–422 and L600, the simulated-GPU pool line.** B1's commit 1 now makes `test-htcondor` run `tests/frozen/m68b`, but the pool line arrives only in B2's commit 3. B2's live file (`http_server` with `resources={"gpus": 1}`) needs the GPU, so commit 2 is red in CI.
+  - Move the pool line to B2's commit 0 or 2.
+  - Change L600's "The live files need" to "`test_driverless_dag_live.py` needs". B1's live file requests no GPU that must match.
+- **L559–560, L614 and L880, the pilots' secret on the shared tree.** With `pilots="condor"`, m67's in-job `CondorPilots` writes the pilots' secret to `<dag_dir>/pilots/graphed-secret` (`run["log_dir"] = out/pilots`, `launch.py:200-202`), under the same ACL.
+  - Reword the rationale to say the SERVICE node gets only an announce secret.
+  - Change "Fails on: a pilots' secret in the DAG dir" to "…in `dag_dir/graphed-secret`, which the SERVICE node reads".
+  - §9: the DAG dir also holds the pilots' secret in `pilots/`, as m67's lxplus self-submit already does. Site check (2)'s `fs listacl` covers it.
+- **L606, the lpc copy.** `submit_driverless` takes a site name, so the copy is registered with `monkeypatch.setitem(SITES, "lpc", dataclasses.replace(...))`, the pattern of m67's `test_driverless_payload.py:199`. m67's lpc test (L209) is a refusal, not a submit.
+  - The control's "`services={}`" means the row's `services` field on that copy, not the `services=` kwarg.
+- **L606, the ids leg.** To discriminate "name order" from declaration order and "among those specs" from an index over all specs, declare `driver` before `a b` and add an image-less CPU spec whose name sorts first. That spec gets no node and does not shift the ids.
+- **Evidence r13-B2:** `probes/m68b/probe_r13_dag_held_service.{py,txt}` and `probe_r13_dag_held_service_prm.py` (htcondor/mini 25.13.2; `DAGMAN_USE_STRICT = 1` default).

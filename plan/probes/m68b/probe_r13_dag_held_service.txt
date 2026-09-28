@@ -1,0 +1,12 @@
+# r13-B2 probe (htcondor/mini 25.13.2, container r13b2-pool): DAG (JOB driver sleeping 200 s then exit 0 + SERVICE svc0 held at input transfer + RETRY driver 2 UNLESS-EXIT 3), from_dag usedagdir/force, unspooled.
+# DAGMan ad polled with and without DAG_JobsHeld in the projection. dagman.out: '0 job proc(s) currently held' after svc0's ULOG_JOB_HELD; at DAG end 'Warning: Number of counted held job processes (0) is not equivalent to Node svc0's internal count of held job processes count (1)' + 'ERROR: Warning is fatal error because of DAGMAN_USE_STRICT setting', rescue001 written, EXITING WITH STATUS 1.
+t=  0s DAGMan JobStatus=1 DAG_JobsHeld=None | in m67-projected ad: False
+t=  6s DAGMan JobStatus=2 DAG_JobsHeld=0 | in m67-projected ad: False
+t=217s DAGMan history: [{'JobStatus': 4, 'ExitCode': 1}]
+node history: [{'n': 'svc0', 's': 3, 'x': None, 'rr': 'Removed by DAGMan (by user submituser)'}, {'n': 'driver', 's': 4, 'x': 0, 'rr': None}]
+## variant: svc0.sub also carries periodic_remove = JobStatus == 5 (probe_r13_dag_held_service_prm.py)
+t=  0s DAGMan JobStatus=1 DAG_JobsHeld=None | in m67-projected ad: False
+t=  3s DAGMan JobStatus=2 DAG_JobsHeld=0 | in m67-projected ad: False
+t=214s DAGMan history: [{'JobStatus': 4, 'ExitCode': 0}]
+node history: [{'n': 'driver', 's': 4, 'x': 0, 'rr': None}, {'n': 'svc0', 's': 3, 'x': None, 'rr': "The job attribute PeriodicRemove expression 'JobStatus == 5' evaluated to TRUE"}]
+# condor_config_val -v DAGMAN_USE_STRICT: 1 (<Default>)
