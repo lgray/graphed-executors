@@ -11,6 +11,8 @@ Run: python3 probe_announce_rules.py > probe_announce_rules.txt   (POSIX)
  L6 attached, beats every beat_s; the server stops -> child reaped, exit 0 within ~lease_s
  L7 a child that answers the http: check once with 503 (leaving a server-side TIME_WAIT), then exits 7, 5-port range,
     x10 -> exit 3 naming 7 after exactly one child start each run (free() binds with SO_REUSEADDR)
+ L8 attached, http.server child in the cwd that held graphed-secret: after the announce GET /graphed-secret -> 404,
+    the file is gone from the cwd, and the beats still take 200
 """
 
 import json
@@ -27,7 +29,8 @@ RECV = os.path.join(HERE, "receiver_proto.py")
 PY = sys.executable
 work = tempfile.mkdtemp(prefix="m68b-rules-")
 os.chdir(work)
-open("secret", "w").write(os.urandom(32).hex())
+SECRET = os.urandom(32).hex()
+open("secret", "w").write(SECRET)
 open("other", "w").write(os.urandom(32).hex())
 RACER = os.path.join(work, "racer.py")
 open(RACER, "w").write(
@@ -55,6 +58,8 @@ def free_base(n):
 
 def run(label, cfg, until=None):
     print(label)
+    if not os.path.exists("secret"):
+        open("secret", "w").write(SECRET)
     json.dump(cfg, open("svc.json", "w"))
     t = time.monotonic()
     p = subprocess.Popen([PY, PROTO, "svc.json"], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True)
@@ -91,7 +96,8 @@ def receiver(secret_file):
     return r, r.stdout.readline().strip(), rec
 
 
-r, url, rec = receiver("secret")
+open("recv-secret", "w").write(SECRET)
+r, url, rec = receiver("recv-secret")
 lo = free_base(4)
 run("L3 port taken after the scan (http:/ check)", cfg(argv=["{python}", RACER, "{port}", str(lo)], ports=[lo, lo + 3],
                                                        url=url, check="http:/", lease_s=2),
@@ -116,7 +122,8 @@ run("L4 no 200 ever (closed url), lease_s 3", cfg(ports=[lo, lo + 2], url="http:
 r, url, rec = receiver("other")
 run("L5 403 (another server's secret)", cfg(ports=[lo, lo + 2], url=url, lease_s=30))
 r.terminate()
-r, url, rec = receiver("secret")
+open("recv-secret", "w").write(SECRET)
+r, url, rec = receiver("recv-secret")
 run("L6 beats, then the server stops, lease_s 3, beat_s 1", cfg(ports=[lo, lo + 2], url=url, lease_s=3, beat_s=1),
     until=lambda p: (time.sleep(5), r.terminate()))
 print("   announces received before the stop:", len(open(rec).read().splitlines()))
@@ -138,7 +145,31 @@ for i in range(10):
     count = os.path.join(work, "count-%d" % i)
     json.dump(cfg(argv=["{python}", ONCE, "{port}", count], ports=[lo, lo + 4], check="http:/", timeout_s=60),
               open("svc.json", "w"))
+    open("secret", "w").write(SECRET)
     p = subprocess.run([PY, PROTO, "svc.json"], capture_output=True, text=True)
     starts.append(len(open(count).read().splitlines()))
     codes.append((p.returncode, "exited 7" in p.stdout))
 print("L7 503 once then exit 7, 5 ports, 10 runs: child starts per run", starts, "; (exit, names 7):", sorted(set(codes)))
+
+import urllib.request, urllib.error
+open("graphed-secret", "w").write(SECRET)
+r, url, rec = receiver("recv-secret")
+lo = free_base(3)
+
+
+def l8(p):
+    time.sleep(4)
+    port = json.loads(open(rec).read().splitlines()[0])["fields"][1].rpartition(":")[2]
+    try:
+        urllib.request.urlopen("http://127.0.0.1:%s/graphed-secret" % port, timeout=5)
+        print("   GET /graphed-secret -> 200 (exposed)")
+    except urllib.error.HTTPError as exc:
+        print("   GET /graphed-secret ->", exc.code)
+    print("   graphed-secret still in the cwd:", os.path.exists("graphed-secret"))
+    time.sleep(3)
+    print("   announces taking 200 so far:", len(open(rec).read().splitlines()))
+    r.terminate()
+
+
+run("L8 secret not served by the child", cfg(ports=[lo, lo + 2], url=url, secret="graphed-secret", lease_s=3, beat_s=1),
+    until=l8)

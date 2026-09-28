@@ -8,7 +8,7 @@ service.json: {"argv": [...], "env": {}, "check": "http:/"|"tcp"|"grpc:...", "po
 Start: `timeout_s` is the whole budget. A child that exits moves on to the next port only when its port is no
 longer free (another process took it after the scan); otherwise exit 3 at once naming its returncode. A child
 alive but not ready at the deadline is killed: exit 3 naming the last reason.
-Attached mode (url set): the lease clock starts when the child is ready; a 403 on any POST, or no 200 for
+Attached mode (url set): the secret file is read into memory and unlinked before the child starts; the lease clock starts when the child is ready; a 403 on any POST, or no 200 for
 `lease_s`, is an orphan: terminate the child, exit 0. After the first 200 it re-POSTs every `beat_s`.
 DAG mode (watch set): read <watch>/driver.url and <watch>/graphed-secret each second and announce again whenever
 that (url, secret) pair changes; no orphan rule (DAGMan owns the node).
@@ -117,6 +117,11 @@ def start(cfg, ident):
 def main():
     cfg = json.load(open(sys.argv[1]))
     ident = host_identity()
+    secret_mem = None
+    if not cfg.get("watch"):
+        # attached: the announce secret lives in memory only, gone from the cwd the child may serve
+        secret_mem = open(cfg["secret"]).read().strip()
+        os.unlink(cfg["secret"])
     child, port = start(cfg, ident)
     if child is None:
         log("not ready: %s" % port)
@@ -145,7 +150,7 @@ def main():
                     last = (url, secret)
             time.sleep(1.0)
             continue
-        status = post(cfg["url"], open(cfg["secret"]).read().strip(), body)
+        status = post(cfg["url"], secret_mem, body)
         if status == 200:
             if not announced:
                 log("announced to %s" % cfg["url"])

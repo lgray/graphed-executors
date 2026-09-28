@@ -144,3 +144,12 @@ Wording, fixture notes and small constraints from review r12-B2 (`plan-services-
 - §8 names `api.rst` (`SiteProfile.job_root`) and README rows for m68b, but commit 3 (L596-599) lists only `htcondor.rst` and the changelog. Add `api.rst` there, or drop it from §8 if autodoc picks the field up.
 - r11's item "`run.get("announce_only") or []`" is superseded by the plan's `or {}` (L534). `announce_only` is a mapping.
 - Evidence r12-B2: `probes/m68b/probe_r12_dag_held_node.{py,txt}`. On a DAG whose driver node never writes `result.pkl`, the node is held, by input transfer (a missing executable) or by output transfer (a `kill -9`ed driver with `transfer_output_files=result.pkl`). DAGMan stays at `JobStatus 2` with `DAG_JobsHeld = 1` and does not fail the DAG within 400 s. See M40-B2.
+
+## decisions (round 6)
+- A per-call announce secret (valid only on `/announce`, only for its keys) replaces the pilots' secret in every `ServiceJob` and in the DAG dir; `announce.py` also reads it into memory and unlinks it before starting the child. Reason: the pilots' secret signs pickles, and a service serving its cwd exposed it (probe_r12_b1_secret_served, probe_r12_b1_pool); the scoped secret removes the code-execution path, and the unlink stops even a forged announce (probe_announce_rules L8). Both, as defence in depth.
+- `/announce` is verified by looking up the key's announce secret from the plain-text body before any pickle parse. Reason: parsing text is safe, and the key selects the secret.
+- Announces wait on their own `Condition`. Reason: `add()` wakes one waiter with `notify()`; a `wait_announce` could otherwise swallow a pilot's wake-up.
+- `ServiceJob.files(dir)` builds files and keys without submitting; B2's SERVICE nodes use it with `watch`, each in `service-svc<i>/`. Reason: several SERVICE nodes cannot share one `service.json`; B2 needs B1's keys without a submit.
+- `RunHandle(dag=True)` reports `held` for a running DAGMan job with `DAG_JobsHeld > 0`. Reason: a held node leaves DAGMan at `JobStatus 2` indefinitely (probe_r12_dag_held_node); m67's contract has `held`.
+- Spooled `ServiceJob.stop()` retrieves a completed job before removal. Reason: keeps `announce.py`'s exit reason for `host_service`'s error.
+- `test-htcondor` running `tests/frozen/m68b` moves to commit 1 (B1). Reason: B1 must be gated on its own.

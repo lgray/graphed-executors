@@ -1,31 +1,39 @@
 L1 exits at once, 20 ports
    -> exit 3 after 0.6s
-   not ready: child exited 7 on port 23000
+   not ready: child exited 7 on port 23800
 L2 never ready, 3 ports, timeout_s 2
    -> exit 3 after 2.1s
    not ready: not ready within timeout_s=2: ConnectionRefusedError(111, 'Connection refused')
 L3 port taken after the scan (http:/ check)
    -> exit 0 after 16.6s
-   port 23200 taken after the scan (child exited 1), next
-   ready pid=6314 body='k localhost:23201 localhost'
-   announced to http://localhost:23000
+   port 24000 taken after the scan (child exited 1), next
+   ready pid=11672 body='k localhost:24001 localhost'
+   announced to http://localhost:23800
    orphaned (None, last 200 10.0s ago): stopping the service
-   announced ports: ['23201'] (range starts 23200)
+   announced ports: ['24001'] (range starts 24000)
 L4 no 200 ever (closed url), lease_s 3
-   child pid while waiting: ['6320']
+   child pid while waiting: ['11675']
    child pid after exit: []
    -> exit 0 after 4.1s
-   ready pid=6320 body='k localhost:23400 localhost'
+   ready pid=11675 body='k localhost:23000 localhost'
    orphaned (None, last 200 3.0s ago): stopping the service
 L5 403 (another server's secret)
    -> exit 0 after 0.6s
-   port 23400 taken, next
-   ready pid=6327 body='k localhost:23401 localhost'
+   port 23000 taken, next
+   ready pid=11681 body='k localhost:23001 localhost'
    orphaned (403, last 200 0.0s ago): stopping the service
 L6 beats, then the server stops, lease_s 3, beat_s 1
    -> exit 0 after 7.6s
-   ready pid=6331 body='k localhost:23400 localhost'
-   announced to http://localhost:23600
+   ready pid=11685 body='k localhost:23000 localhost'
+   announced to http://localhost:23200
    orphaned (None, last 200 3.0s ago): stopping the service
    announces received before the stop: 5
 L7 503 once then exit 7, 5 ports, 10 runs: child starts per run [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] ; (exit, names 7): [(3, True)]
+L8 secret not served by the child
+   GET /graphed-secret -> 404
+   graphed-secret still in the cwd: False
+   announces taking 200 so far: 7
+   -> exit 0 after 9.6s
+   ready pid=11714 body='k localhost:26000 localhost'
+   announced to http://localhost:25800
+   orphaned (None, last 200 3.0s ago): stopping the service
