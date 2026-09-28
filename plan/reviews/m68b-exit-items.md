@@ -51,3 +51,10 @@ Wording, notes and small implementer constraints from review r8 (`plan-services-
 - Attached orphan clock starts when the child is ready; 403 on any POST or no 200 for `lease_s` (first announce included) → terminate child, exit 0. Reason: a driver that died while the job was idle otherwise leaves a GPU service to its walltime (probe_announce_rules L4–L6); pilots' clock also starts at construction.
 - `lease_s`/`beat_s` travel in `service.json` (the server's `LEASE_S`/`POLL_S` at `host_service` time). Reason: `announce.py` is stdlib-only and cannot import `server`.
 - `test_cluster_service_job`'s subprocess legs are POSIX-only. Reason: Windows has no catchable SIGTERM and can refuse `os.replace` on an open file; `announce.py` only runs in Linux jobs.
+
+## r9 exit items
+Wording and small constraints from review r9 (`plan-services-m68b-r9.md`). None of them makes a round unclean.
+
+- §3.3 L539, site check (2): "the stock `from_dag` submit accepted unspooled" should read `from_dag(<abs run.dag>, {"usedagdir": True, "force": True})` accepted unspooled. The DAG is no longer submitted with stock options. §9 L821's "stock `from_dag` description" (`getenv`) still holds under those options, as `probe_dag_service.txt` shows.
+- `data/from_dag-generic.txt` (from `probe_dag_service.txt`) embeds the DAG dir's absolute path and the pool's `CsdVersion` string in `arguments`, `environment`, `error`, `log` and `output`. The test compares after substituting both, or regenerates them, rather than byte-for-byte.
+- Evidence added by r9: `probes/m68b/probe_r9_timewait.{py,txt}` (POSIX, no pool): a plain-bind "is the port free" test sees a server-side `TIME_WAIT` from the service's own `http:` self-check as taken. `probe_announce_rules.py` re-run locally reproduces L1–L6 (port numbers differ).
