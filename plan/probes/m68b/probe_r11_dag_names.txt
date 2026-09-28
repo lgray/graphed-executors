@@ -1,0 +1,9 @@
+# r11 review: a DAG whose SERVICE node is named like the driver node (htcondor/mini 25.13.2, from_dag
+# {"usedagdir": True, "force": True}, schedd.submit). run.dag:
+#   JOB driver driver.sub
+#   SERVICE driver driver.sub
+#   RETRY driver 2 UNLESS-EXIT 3
+DAGMan 1 [{'ExitCode': 1, 'JobStatus': 4}]
+09/28/26 15:16:50 ERROR: Node driver already exists in DAG.
+09/28/26 15:16:50 Processing error at run.dag:2
+09/28/26 15:16:50 Running: /usr/bin/condor_rm -const DAGManJobId==1 -reason Startup' 'Error:' 'DAGMan' 'failed' 'to' 'parse' 'DAG' 'file' ...

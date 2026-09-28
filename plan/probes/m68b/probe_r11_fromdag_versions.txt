@@ -1,0 +1,28 @@
+# r11 review: Submit.from_dag(<dir>/run.dag, {usedagdir, force}) description, <DIR> substituted.
+# (1) htcondor/mini system bindings 25.13.2:
+$CondorVersion: 25.13.2 2026-08-19 BuildID: 943576 PackageID: 25.13.2-1 GitSHA: 589a5b38 $
+universe = scheduler
+executable = /usr/bin/condor_dagman
+getenv = CONDOR_CONFIG,_CONDOR_*,PATH,PYTHONPATH,PERL*,PEGASUS_*,TZ,HOME,USER,LANG,LC_ALL,ASAN_OPTIONS,LSAN_OPTIONS,BEARER_TOKEN,BEARER_TOKEN_FILE
+output = <DIR>/run.dag.lib.out
+error = <DIR>/run.dag.lib.err
+log = <DIR>/run.dag.dagman.log
+remove_kill_sig = SIGUSR1
+My.OtherJobRemoveRequirements = "DAGManJobId =?= $(cluster)"
+My.IsDaemonCore = True
+on_exit_remove = (ExitSignal =?= 11 || (ExitCode =!= UNDEFINED && ExitCode >=0 && ExitCode <= 2))
+arguments = "-f -l . -Lockfile <DIR>/run.dag.lock -Dag <DIR>/run.dag -CsdVersion $CondorVersion:' '25.13.2' '2026-08-19' 'BuildID:' '943576' 'PackageID:' '25.13.2-1' 'GitSHA:' '589a5b38' '$ -dagman /usr/bin/condor_dagman -UseDagDir -AutoRescue 1 -force"
+environment = "_CONDOR_DAGMAN_LOG=<DIR>/run.dag.dagman.out _CONDOR_MAX_DAGMAN_LOG=0"
+queue
+
+# (2) PyPI wheel htcondor==25.14.1 (the CI pin htcondor>=25.13 resolves to it), host python 3.11, CONDOR_CONFIG=/dev/null:
+#     without condor_dagman on PATH: htcondor2_impl.HTCondorException: Failed to locate condor_dagman executable in PATH
+#     with a stub condor_dagman on PATH, diff against (1) after replacing the dagman path:
+1c1
+< $CondorVersion: 25.13.2 2026-08-19 BuildID: 943576 PackageID: 25.13.2-1 GitSHA: 589a5b38 $
+---
+> $CondorVersion: 25.14.1 2026-09-24 BuildID: UW_Python_Wheel_Build $
+12c12
+< arguments = "-f -l . -Lockfile <DIR>/run.dag.lock -Dag <DIR>/run.dag -CsdVersion $CondorVersion:' '25.13.2' '2026-08-19' 'BuildID:' '943576' 'PackageID:' '25.13.2-1' 'GitSHA:' '589a5b38' '$ -dagman DAGMAN -UseDagDir -AutoRescue 1 -force"
+---
+> arguments = "-f -l . -Lockfile <DIR>/run.dag.lock -Dag <DIR>/run.dag -CsdVersion $CondorVersion:' '25.14.1' '2026-09-24' 'BuildID:' 'UW_Python_Wheel_Build' '$ -dagman DAGMAN -UseDagDir -AutoRescue 1 -force"

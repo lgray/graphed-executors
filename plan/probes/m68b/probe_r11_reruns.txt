@@ -1,0 +1,81 @@
+# r11 re-runs on htcondor/mini 25.13.2 (probe_service_job.py, probe_dag_service.py) and locally (probe_announce_rules.py)
+## probe_service_job.py
+condor $CondorVersion: 25.13.2 2026-08-19 BuildID: 943576 PackageID: 25.13.2-1 GitSHA: 589a5b38 $
+FULL_HOSTNAME 7001ea9caed8
+slot Machine ['7001ea9caed8']
+A receiver (task-server stand-in) at http://7001ea9caed8:10000
+A a listener holds 10001
+A submitted service cluster 1
+A announce record: {"path": "/announce", "fields": ["nonce1-0123456789abcdef", "7001ea9caed8:10002", "7001ea9caed8"], "ok": true, "port": 10000}
+A announced port 10002 (10000 receiver, 10001 listener)
+A identity == FULL_HOSTNAME: True
+A job ad {'JobStatus': 2, 'RemoteHost': 'slot1_1@7001ea9caed8', 'Args': 'announce_proto.py service.json'}
+A arguments carry no secret: True
+B GET http://7001ea9caed8:10002/ -> 200 text/html; charset=utf-8
+B service child pid(s) while running: 184
+B queue empty after remove: True
+B child pid(s) after remove: ''
+B history {'JobStatus': 3, 'RemoveReason': None, 'VacateReason': 'Claim deactivated'}
+C transfer_input_files='models' -> scratch has: ['./models', './models/graphed_identity', './models/graphed_identity/config.pbtxt', './models/graphed_identity/1', './models/graphed_identity/1/model.onnx', './find']
+C transfer_input_files='models/' -> scratch has: ['./graphed_identity', './graphed_identity/config.pbtxt', './graphed_identity/1', './graphed_identity/1/model.onnx', './find']
+C os.path.abspath('models/') = '/models'
+D request_gpus=2 after 20s: {'JobStatus': 1, 'NumJobStarts': 0, 'RequestGPUs': 2} TotalGPUs in slot ads: [0]
+D queue empty after remove: True
+## probe_dag_service.py (node lines)
+[R] DAGMan cluster 5, JobUniverse 7
+[R]   node web cluster 6 JobStatus 3 ExitCode 143 RemoveReason 'removed because <OtherJobRemoveRequirements = DAGManJobId =?= 5> fired when job (5.0) was removed'
+[R]   node driver cluster 7 JobStatus 4 ExitCode 1 RemoveReason None
+[R]   node driver cluster 8 JobStatus 4 ExitCode 0 RemoveReason None
+[R] DAGMan history: JobStatus 4 ExitCode 0 JobUniverse 7
+[R] SERVICE clusters: 1; driver clusters: 2
+[R] driver start 0: url http://7001ea9caed8:10000, announce ['web', '7001ea9caed8:10001', '7001ea9caed8'], GET 200
+[R] driver start 1: url http://7001ea9caed8:10000, announce ['web', '7001ea9caed8:10001', '7001ea9caed8'], GET 200
+[R] announces received: [10000]
+[X] DAGMan cluster 9, JobUniverse 7
+[X]   node web cluster 10 JobStatus 3 ExitCode 143 RemoveReason 'removed because <OtherJobRemoveRequirements = DAGManJobId =?= 9> fired when job (9.0) was removed'
+[X]   node driver cluster 11 JobStatus 4 ExitCode 3 RemoveReason None
+[X] DAGMan history: JobStatus 4 ExitCode 1 JobUniverse 7
+[X] SERVICE clusters: 1; driver clusters: 1
+[X] driver start 0: url http://7001ea9caed8:10000, announce ['web', '7001ea9caed8:10001', '7001ea9caed8'], GET 200
+[X] announces received: [10000]
+[U] reusing /home/submituser/m68b-dag-X, which holds: ['run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.metrics', 'run.dag.nodes.log', 'run.dag.rescue001']
+[U] DAGMan cluster 12, JobUniverse 7
+[U]   node web cluster 13 JobStatus 3 ExitCode 143 RemoveReason 'removed because <OtherJobRemoveRequirements = DAGManJobId =?= 12> fired when job (12.0) was removed'
+[U]   node driver cluster 14 JobStatus 4 ExitCode 0 RemoveReason None
+[U] DAGMan history: JobStatus 4 ExitCode 0 JobUniverse 7
+[U] SERVICE clusters: 1; driver clusters: 1
+[U] driver start 0: url http://7001ea9caed8:10001, announce ['web', '7001ea9caed8:10000', '7001ea9caed8'], GET 200
+[U] announces received: [10001]
+[U] files after: ['run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.metrics', 'run.dag.nodes.log', 'run.dag.rescue001.old']
+## probe_announce_rules.py
+L1 exits at once, 20 ports
+   -> exit 3 after 0.6s
+   not ready: child exited 7 on port 23000
+L2 never ready, 3 ports, timeout_s 2
+   -> exit 3 after 2.1s
+   not ready: not ready within timeout_s=2: ConnectionRefusedError(111, 'Connection refused')
+L3 port taken after the scan (http:/ check)
+   -> exit 0 after 16.6s
+   port 23200 taken after the scan (child exited 1), next
+   ready pid=8198 body='k localhost:23201 localhost'
+   announced to http://localhost:23000
+   orphaned (None, last 200 10.0s ago): stopping the service
+   announced ports: ['23201'] (range starts 23200)
+L4 no 200 ever (closed url), lease_s 3
+   child pid while waiting: ['8206']
+   child pid after exit: []
+   -> exit 0 after 4.1s
+   ready pid=8206 body='k localhost:23400 localhost'
+   orphaned (None, last 200 3.0s ago): stopping the service
+L5 403 (another server's secret)
+   -> exit 0 after 0.6s
+   port 23400 taken, next
+   ready pid=8217 body='k localhost:23401 localhost'
+   orphaned (403, last 200 0.0s ago): stopping the service
+L6 beats, then the server stops, lease_s 3, beat_s 1
+   -> exit 0 after 7.6s
+   ready pid=8221 body='k localhost:23400 localhost'
+   announced to http://localhost:23600
+   orphaned (None, last 200 3.0s ago): stopping the service
+   announces received before the stop: 5
+L7 503 once then exit 7, 5 ports, 10 runs: child starts per run [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] ; (exit, names 7): [(3, True)]

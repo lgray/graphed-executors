@@ -70,3 +70,29 @@ Wording and small constraints from review r10 (`plan-services-m68b-r10.md`). Non
 - `data/from_dag-generic.txt` substitution: `arguments` carries `CsdVersion` in its shell-escaped form (`$CondorVersion:' '25.13.2' '2026-08-19' …$`), not the raw string, and the DAG dir also appears in `-Lockfile`/`-Dag`. The test substitutes both forms, or rebuilds the expected text from the pool's `htcondor2.version()` and the tmp dir.
 - Docs (`htcondor.rst` "Cluster-hosted services"): with "free" decided by a `SO_REUSEADDR` bind, a recipe's server that binds *without* `SO_REUSEADDR` can fail on a port that holds only a `TIME_WAIT` (for example one left by another job's task server on the same node). `announce.py` then exits 3 naming the returncode instead of moving on. The shipped recipes bind with it: `http.server` sets `allow_reuse_address`, and gRPC/Triton set it by default. The m66 `TaskServer` sets it on POSIX (`server.py:81`). Say that a custom recipe's server must do the same.
 - Evidence r10: `probe_announce_rules.py` re-run locally reproduces L1–L7. L7 gives `[1]*10` child starts and exit 3 naming 7. `announce_proto.py` `free()` now sets `SO_REUSEADDR` (L62-71).
+
+## r11 exit items
+Wording, notes and small constraints from review r11 (`plan-services-m68b-r11.md`, a whole-unit read). None of them makes a round unclean.
+
+- `driver._runner` reads `announce_only` and `dag_dir` with defaults (`run.get("announce_only") or []`, `run.get("dag_dir")`). m68a's frozen `test_services_sites.py` builds `driver._runner({"site": s, "pilots": "local", …})` by hand, and m67 `run.json` files predate both keys.
+- `data/from_dag-generic.txt` comparison:
+  - It needs real bindings *and* `condor_dagman` on PATH. The htcondor 25.14.1 wheel without it raises "Failed to locate condor_dagman executable in PATH" (`probes/m68b/probe_r11_fromdag_versions.txt`).
+  - So that part of the all-OS `test_driverless_dag` runs only where the pool is (test-htcondor) and skips elsewhere. The recorder legs stay all-OS.
+  - Its `CsdVersion` is the bindings' own `htcondor2.version()`, not the pool's. For the PyPI wheel it is `25.14.1 … BuildID: UW_Python_Wheel_Build`.
+  - The `condor_dagman` path (`executable`, `-dagman`) is local. Substitute it too.
+  - Measured: 25.13.2 and 25.14.1 are otherwise identical.
+- `RunHandle(dag=True).result()` "makes no `retrieve` call" discriminates from m67 only on a `spool=True` site (lxplus) with the DAGMan ad still in the queue at `JobStatus` 4. m67 retrieves only when `in_queue and spool` (`driverless.py:99-100`).
+- §3.3 L475-477, DAG mode: "announces again whenever that pair changes" should read "announces each new pair until it takes a 200", as `announce_proto.py:141-145` does (`last` is set only on 200). Then a torn read (new url, old secret → 403) or a refused POST is retried.
+- `probe_dag_service.py`'s driver stand-in (`dag_driver_node.py`) matches an announce record by port only.
+  - In the r11 re-run of R, both driver starts bound 10000. `announces.jsonl` held a single record, and the second start took the first start's record.
+  - The committed transcript's `[10001, 10001]` still witnesses the same-url re-announce. The discriminating check is the frozen leg "the secret alone replaced (same url) → announced again".
+  - If the probe is re-run, match per attempt (by record count or by secret).
+- `announce.py` must *run* under python 3.9/3.10, not only parse. Ruff's `UP` rules at `target-version = "py311"` would push 3.11 forms: UP041 rewrites `socket.timeout` to `TimeoutError`, which is a different class on 3.9, and UP017 gives `datetime.UTC`. So:
+  - use `from __future__ import annotations`;
+  - catch `OSError`, not `socket.timeout`;
+  - use no 3.10+ stdlib names.
+  The frozen `feature_version=(3, 9)` parse check covers syntax only.
+- `test_cluster_service_job`'s subprocess legs also run on macOS. There, the identity falls back to `socket.getfqdn()`, which the self-check dials, and that name is unmeasured on the macOS runners. The legs set `$_CONDOR_MACHINE_AD` in the subprocess env to a file with a resolvable `Machine` (for example `localhost`), and compare against `host_identity()` read under the same env.
+- The "under `job_root`" test applies to the directory actually used. With `log_dir=None`, generic (`"/"`) accepts the temporary dir and any other root refuses, as m67 refuses `None` for lxplus today.
+- r10's items still stand: "stock" `from_dag` at L420 and L526.
+- Evidence r11: `probes/m68b/probe_r11_coverage.txt`, `probe_r11_dag_names.txt`, `probe_r11_fromdag_versions.txt`, `probe_r11_reruns.txt` (re-runs of `probe_service_job`, `probe_dag_service` and `probe_announce_rules`).

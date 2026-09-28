@@ -1,0 +1,10 @@
+# r11 review: does test-htcondor's coverage (source = a package name, as .coveragerc-htcondor) measure a
+# subprocess that runs a module file by path? coverage 7.16.2, python 3.11, COVERAGE_PROCESS_START + a
+# `import coverage; coverage.process_startup()` .pth (as ci.yml test-htcondor), rc: [run] branch, parallel,
+# source = pkg.sub; file src/pkg/sub/ann.py (7 statements, a __main__ guard).
+== python src/pkg/sub/ann.py a            (by path, as service.sh runs announce.py)
+No data to report.
+== python /tmp/.../ann_copy.py a           (a transferred copy, as in a job's scratch)
+No data to report.
+== python -m pkg.sub.ann a                 (positive control)
+src/pkg/sub/ann.py            7      1      4      2    73%
