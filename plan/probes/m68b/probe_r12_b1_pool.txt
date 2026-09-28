@@ -1,0 +1,4 @@
+condor 25.13.2 announced 0f244e794cde:10001
+GET / -> 200 listing names graphed-secret: True
+GET /graphed-secret -> 200 equals the task server's secret: True
+queue empty after remove: True

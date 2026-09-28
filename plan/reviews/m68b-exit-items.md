@@ -105,3 +105,42 @@ Wording, notes and small constraints from review r11 (`plan-services-m68b-r11.md
 - Subprocess legs set `$_CONDOR_MACHINE_AD` with `Machine = localhost`. Reason: a CI runner's `getfqdn` (macOS) is not known to resolve.
 - The `from_dag` fixture comparison runs only in `test-htcondor` and substitutes DAG dir, bindings' `CsdVersion` and `condor_dagman` path. Reason: the wheel lacks `condor_dagman` (probe_r11_fromdag_versions); the rest is identical across 25.13.2/25.14.1.
 - m68b split into B1 (attached hosting, commit 1 + its freeze) and B2 (DAG, job_root, lxplus, commits 2–3 + its freeze), CI/docs/§7 with B2. Reason: non-convergence rule; each part reviewable on its own.
+
+## r12-B1 exit items
+Wording, notes and small implementer constraints from review r12-B1 (`plan-services-m68b-r12-b1.md`). None of them makes a round unclean.
+
+- **`TaskServer` wake-ups.**
+  - Today `add()` wakes one waiter with `self._cond.notify()` (`server.py:139`, also `:246`), and the waiters are the pilots' `lease` calls.
+  - If `wait_announce` waits on the same `Condition`, it can take a notify meant for a pilot. That pilot then idles until its `POLL_S` (10 s) long-poll ends, and no frozen test sees the delay.
+  - So give announces their own `Condition`, or wake with `notify_all` on both sides.
+- **`ServiceJob` `initialdir`.**
+  - If the implementer reuses `CondorPilots.submit_description(url, 1, base)`, it resets `initialdir` to the launcher's `log_dir` *after* `base` (`launch.py:167-169`).
+  - It would also put `arguments=f"{url} …"` in the ad unless `base` overrides it.
+  - So `test_cluster_service_job`'s keys leg should also pin `initialdir == …/service-<key>`. Today only the live leg would catch the error, as a held job.
+- **`MY.SingularityImage` from a recipe's `image`** is written quoted, `f'"{image}"'`, as the profile templates it (`sites.py` lpc/lxplus). The keys leg compares it in that form.
+- **`request_cpus`/`request_memory`/`request_gpus`** come from `Launch.resources`, which is `Mapping[str, float]` and is not coerced (graphed `services.py:46`). Render them as integers (`str(int(v))`), and pin that with an integer in the keys leg.
+- **The subprocess legs' env** is `{**os.environ, "_CONDOR_MACHINE_AD": …}`, not a fresh dict. Otherwise `COVERAGE_PROCESS_START` is dropped and `announce.py` records nothing (`ci.yml:297`, `probe_r11_coverage.txt`).
+- **Live (a), "run 2's task GET is answered by run 2's child".** A witness that discriminates is `GET /service.json` from the task: its `key` carries run 2's `run_nonce`. Both runs can take the same port once run 1's job is removed, so the endpoint alone does not tell the children apart. This still holds under M28-B1 (a), which unlinks only the secret.
+- **Spooled sites (lpc, lxplus).**
+  - `stop()`'s immediate `act(Remove)` discards the `service.out`/`.err` of a job that exited 3, because they come back only via `retrieve`.
+  - So `host_service`'s dead-job `RuntimeError` (L492–494) carries no reason from `announce.py`, such as a bad model or a timeout.
+  - Either retrieve before removing when the job sits at `JobStatus` 4 on a spooled profile, as `CondorPilots.stop` does (`launch.py:272-273`), or name `service-<key>/` in the error. Say which in the docs.
+- **The coverage witness** "≥ 90% from `tests/frozen/m68b`" cannot be read off `test-htcondor`'s combined report, which also runs m66/m67/m68a and the extras. Read it as "`announce.py` ≥ 90% in the per-file gate, with the frozen m68b legs executing it".
+  - Also note that no listed subprocess leg uses a `tcp` or `grpc:` check. The connect branch of the self-check is covered only by extras, which the per-file gate allows.
+- **Order of work.** `tests/frozen/m68b` joins `test-htcondor` only in B2's commit 3 (L420, L596). Until then, B1's live legs and its coverage do not run in CI, so B1 cannot be gated on its own.
+- **Evidence r12-B1:**
+  - `probes/m68b/probe_r12_b1_pool.{py,txt}` (htcondor/mini 25.13.2): a `ServiceJob`-shaped `http.server` job serves `/graphed-secret`, and the body equals the task server's secret.
+  - `probes/m68b/probe_r12_b1_secret_served.{py,txt}` (local): the same exposure, a signature accepted with the stolen secret, and a control giving 404.
+  - `probe_announce_rules.py`, run locally, reproduces L1–L7.
+
+## r12-B2 exit items
+Wording, fixture notes and small constraints from review r12-B2 (`plan-services-m68b-r12-b2.md`, a whole-part read of B2). None of them makes the round unclean.
+
+- `test_driverless_dag` lpc legs (L580): on `SITES["lpc"]` itself neither leg can run. `launcher._refuse()` (`launch.py:179-192`, called at `driverless.py:167`) refuses a tmp `log_dir` outside `sandbox_root` naming `3DayLifetime` before any `job_root` check, and a `log_dir` under `/uscmst1b_scratch/...` cannot be created on a runner. The row should say that both legs, "submits one plain job" and the `services={}` control "refused naming `job_root`", run on `dataclasses.replace(SITES["lpc"], sandbox_root=<tmp>)`, with `image=` and a fake venv as m67's lpc test does. Otherwise the control's message depends on an ordering the plan does not state.
+- B2's file list and commit 2 (L499, L595) leave out `htcondor_backend/services.py`. Writing `svc<i>.sub` from "`ServiceJob`'s keys with `watch` = the DAG dir, `url` null, no secret" needs B1's `ServiceJob` to build its files and keys without submitting, with a `watch` argument and no secret. B1's `service.json` pins `watch: null`. Also, `lease_s`/`beat_s` are "the server's at `host_service` time", but no server exists when `submit_driverless` runs. Use `server.LEASE_S`/`POLL_S` (watch mode has no orphan rule, so neither is read). Name the file in commit 2.
+- `svc<i>`, "`i` its index in name order" (L515): say whether `i` counts only the specs that become SERVICE nodes or all of `plan.services`. Both readings pass every frozen leg, and "only the SERVICE specs" is the natural one.
+- A reused DAG `log_dir` keeps the previous DAG's `service-svc0/`, so B1's "a fresh `<log_dir>/service-<key>/`" is not fresh in DAG mode, where the key is always `svc0`, `svc1` and so on. Clear or overwrite it with the other stale files before submit (L532).
+- Site check (2) (L564) and the lxplus walk-through: with `inputs=("models",)` made absolute against the submitter's cwd, the DAG refuses unless that cwd's `models/` is under `/afs`. Say "from an `/afs` cwd and `log_dir`".
+- §8 names `api.rst` (`SiteProfile.job_root`) and README rows for m68b, but commit 3 (L596-599) lists only `htcondor.rst` and the changelog. Add `api.rst` there, or drop it from §8 if autodoc picks the field up.
+- r11's item "`run.get("announce_only") or []`" is superseded by the plan's `or {}` (L534). `announce_only` is a mapping.
+- Evidence r12-B2: `probes/m68b/probe_r12_dag_held_node.{py,txt}`. On a DAG whose driver node never writes `result.pkl`, the node is held, by input transfer (a missing executable) or by output transfer (a `kill -9`ed driver with `transfer_output_files=result.pkl`). DAGMan stays at `JobStatus 2` with `DAG_JobsHeld = 1` and does not fail the DAG within 400 s. See M40-B2.

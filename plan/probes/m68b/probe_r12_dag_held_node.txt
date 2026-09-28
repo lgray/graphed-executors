@@ -1,0 +1,15 @@
+# r12-B2 probe (htcondor/mini 25.13.2, container r12b2-pool): a DAG (JOB driver + SERVICE svc0 + RETRY driver 2 UNLESS-EXIT 3, from_dag usedagdir/force, unspooled) whose driver node never writes result.pkl.
+# run 1: driver.sub executable missing -> held at input transfer; run 2: driver.sh does 'kill -9 $$' -> held at output transfer (transfer_output_files=result.pkl). Neither fails the DAG within 400 s.
+## run 1
+DAGMan 1 history: [] after 403s (still queued)
+Hold reason (driver node): Transfer input files failure ... reading from file .../driver.sh: (errno 2) No such file or directory
+## run 2
+DAGMan 4 history: [] after 403s
+node history: []
+result.pkl now holds: (True, "PREVIOUS RUN'S VALUE")
+condor_q (DAGMan 4, SERVICE 5, driver 6): ClusterId DAGNodeName JobStatus HoldReason
+4 undefined 2 undefined
+5 svc0 2 undefined
+6 driver 5 12
+DAGMan 4 ad:
+JobStatus = 2 JobUniverse = 7 DAG_JobsHeld = 1 DAG_NodesFailed = 0 DAG_Status = 0
