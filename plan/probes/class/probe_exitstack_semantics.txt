@@ -1,0 +1,2 @@
+logged=False: raised,calls = ('RuntimeError', ['a', 'b'])
+logged=True: raised,calls = ('Refusal', ['a', 'b'])

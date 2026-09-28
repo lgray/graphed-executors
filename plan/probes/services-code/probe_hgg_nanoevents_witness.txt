@@ -1,0 +1,8 @@
+EVENTS coffea.nanoevents._graphed.GraphedNanoArray | graphed.Array subclass True
+PHOTON GraphedNanoArray | has metric_table True | has delta_r True
+METADATA {'dataset': 'MC', 'filename': 'nano_hgg_v15.root', 'version': 'latest'}
+SOURCE 0 uproot._graphed._GraphedTTreeSource
+CONTROL hasattr(Photon, 'no_such_method_xyz') False
+PHOTON typestr tail eters={"__doc__": "nPhoton/I", "collection_name": "Photon"}]
+RAW uproot.graphed type Array | raw sources ['uproot._graphed._GraphedTTreeSource']
+RAW .Photon raises GraphedTypeError

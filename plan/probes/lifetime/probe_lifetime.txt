@@ -1,0 +1,6 @@
+A per-run fail=False: value=200 child alive after run returns=False
+A per-run fail=True: value='raised plan error' child alive after run returns=False
+A control (child not on a stack): alive after scope=True
+B warm: two runs values=[200, 200] distinct pids=1 alive between runs=True
+B warm: child alive after set closes (runner open)=False
+B order=['set.release', 'backend.close']

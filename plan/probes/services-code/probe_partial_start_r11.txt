@@ -1,0 +1,1 @@
+parent rc 1 | managed child 72472 alive after parent exit: True

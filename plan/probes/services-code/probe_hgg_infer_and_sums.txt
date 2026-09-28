@@ -1,0 +1,7 @@
+GRAPHED_TYPE coffea.nanoevents._graphed GraphedNanoArray | hasattr GenPart True
+INFER_NANO_VERSION graphed 15
+INFER_NANO_VERSION eager 15
+SUMS 200 np.float32(1368.0582) np.float32(1368.0582) str_equal True float32 float32
+SUMS 4180 np.float32(-3742.9006) np.float32(-3742.9006) str_equal True float32 float32
+SUMS 100000 np.float32(-34368.734) np.float32(-34368.734) str_equal True float32 float32
+SUM_MISMATCHES 0

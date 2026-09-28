@@ -1,0 +1,2 @@
+first-cover: A on tcp://127.0.0.1:54451, B on tcp://127.0.0.1:54451 (same=True); B not ready within 5s timeout; plan task ran pid=10360
+skip-hosting: A on tcp://127.0.0.1:54451, B on tcp://127.0.0.1:54452 (same=False); B ready after 0.01s; plan task ran pid=10361

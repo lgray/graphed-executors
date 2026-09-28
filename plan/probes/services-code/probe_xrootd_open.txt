@@ -1,0 +1,6 @@
+# lane .venv has no uproot (ModuleNotFoundError); run with hdna.venv (uproot 5.7.6, fsspec-xrootd 0.5.5, xrootd 6.1.1), no X509 proxy at /tmp/x509up_u501
+security protocol 'ztn' disallowed for non-TLS connections.
+URL root://cms-xrd-global.cern.ch//store/data/Run2024C/EGamma0/NANOAOD/MINIv6NANOv15-v1/2540000/3151ab41-a5bd-48f1-be40-449b760a60e6.root
+ERROR OSError Failed to open file: [ERROR] Operation expired
+perl -e 'alarm 90; exec @ARGV' hdna.venv/bin/python probe_xrootd_open.py   0.28s user 0.10s system 0% cpu 1:12.51 total
+rc=0

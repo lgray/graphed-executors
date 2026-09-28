@@ -1,0 +1,6 @@
+_result_blob     Natural     -> loads raises TypeError: Natural.__init__() missing 3 required positional arguments: 'endpoint', 'worker', and 'reason'
+_result_blob     ArgsForm    -> ArgsForm fields='refused' str="service 't' at grpc://h:1 unreachable from w1: refused"
+_result_blob     Unavailable -> Unavailable fields={'user': 'none given', 'site': 'none', 'managed': 'no launch'} str="service 't' unavailable: user: none given; site: none; managed: no launch"
+round_trip_blob  Natural     -> RuntimeError fields=None str="Natural did not pickle (Natural.__init__() missing 3 required positional arguments: 'endpoint', 'worker', and 'reason'): t: refused"
+round_trip_blob  ArgsForm    -> ArgsForm fields='refused' str="service 't' at grpc://h:1 unreachable from w1: refused"
+round_trip_blob  Unavailable -> Unavailable fields={'user': 'none given', 'site': 'none', 'managed': 'no launch'} str="service 't' unavailable: user: none given; site: none; managed: no launch"

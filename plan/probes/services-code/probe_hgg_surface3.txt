@@ -1,0 +1,15 @@
+/Users/lgray/vibe-coding/lanes/notebook/.venv/lib/python3.12/site-packages/coffea/nanoevents/schemas/nanoaod.py:298: RuntimeWarning: Missing cross-reference index for LowPtElectron_electronIdx => Electron
+  warnings.warn(
+/Users/lgray/vibe-coding/lanes/notebook/.venv/lib/python3.12/site-packages/coffea/nanoevents/schemas/nanoaod.py:298: RuntimeWarning: Missing cross-reference index for LowPtElectron_genPartIdx => GenPart
+  warnings.warn(
+/Users/lgray/vibe-coding/lanes/notebook/.venv/lib/python3.12/site-packages/coffea/nanoevents/schemas/nanoaod.py:298: RuntimeWarning: Missing cross-reference index for LowPtElectron_photonIdx => Photon
+  warnings.warn(
+/Users/lgray/vibe-coding/lanes/notebook/.venv/lib/python3.12/site-packages/coffea/nanoevents/schemas/nanoaod.py:298: RuntimeWarning: Missing cross-reference index for FatJet_genJetAK8Idx => GenJetAK8
+  warnings.warn(
+/Users/lgray/vibe-coding/lanes/notebook/.venv/lib/python3.12/site-packages/coffea/nanoevents/schemas/nanoaod.py:337: RuntimeWarning: Branch Photon_mass already exists but its values will be replaced with 0.0
+  warnings.warn(
+/Users/lgray/vibe-coding/lanes/notebook/.venv/lib/python3.12/site-packages/coffea/nanoevents/schemas/nanoaod.py:337: RuntimeWarning: Branch Photon_charge already exists but its values will be replaced with 0.0
+  warnings.warn(
+LUMIMASK_GRAPHED FAIL AttributeError shape
+CORRECTIONLIB_DIRECT_EVALUATE FAIL ValueError setting an array element with a sequence.
+GAK_APPLY_CORRECTION OK GraphedNanoArray

@@ -1,0 +1,6 @@
+name key, run 2 get -> http://h:1 (run 1, dead)
+name key, run 2 actor stop wait -> True
+call key k2 get -> timeout (waits for its own announce)
+call key k2 stop wait -> False
+k1 after delete get -> timeout (record gone)
+k1 after clear stop wait -> False

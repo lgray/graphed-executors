@@ -1,0 +1,2 @@
+teardown=True raised=Unavailable pid_alive=False port_free=True
+teardown=False raised=Unavailable pid_alive=True port_free=False

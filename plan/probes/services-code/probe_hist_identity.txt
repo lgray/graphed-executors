@@ -1,0 +1,16 @@
+DESCRIPTOR {'kind': 'histogram', 'content_hash': 'sha256:937f6b0d71d2e2757af0cb23b8f5fe32392a86398785a62f57d2bb6f0c75a770', 'framework': 'boost_histogram', 'version': '1.8.1', 'io_schema': 'uhi', 'preprocessing_ref': None}
+PARAMS_KEYS ['n_axes', 'sampled', 'spec', 'weighted']
+DESCRIPTOR_FIELD kind               distinct_node=True
+DESCRIPTOR_FIELD content_hash       distinct_node=True
+DESCRIPTOR_FIELD framework          distinct_node=True
+DESCRIPTOR_FIELD version            distinct_node=True
+DESCRIPTOR_FIELD io_schema          distinct_node=True
+DESCRIPTOR_FIELD preprocessing_ref  distinct_node=True
+NEW_PARAM backing          distinct_node=True  same_params_interned=True
+STORAGE_WEIGHT_vs_DOUBLE_IR_DIFFER True
+EVALUATOR_SWAP_IR_IDENTICAL True
+PARAM_BACKING_IR_DIFFER True
+PLAN_EXTERNALS_KEYS ['sha256:937f6b0d7…|{"n_axes":1,"sampled":false,"spec":"{\\"a']
+PLAN_EXTERNALS_TYPES ['BackedFill'] backing_on_worker_object ['histserv://host:50051']
+CAPTURE_ID_EQUAL (aggregate.py:121, ir+partition) True
+OPSPEC_IDENTITY_DIFFER (DurablePlan.task_id input) True

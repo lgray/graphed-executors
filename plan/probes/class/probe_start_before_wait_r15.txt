@@ -1,0 +1,3 @@
+probe submit (no wait first): no answer after 3 s, done = False
+control, run's wait: RuntimeError after 2.0s: 0 of 1 pilots connected after 2s; see the pilot logs in None
+closed

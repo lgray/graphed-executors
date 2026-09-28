@@ -1,0 +1,2 @@
+round-trips: InferenceServerException [StatusCode.UNAVAILABLE] model not ready
+round trip fails: TypeError InferenceServerException.__init__() missing 1 required positional argument: 'msg'

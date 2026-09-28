@@ -1,0 +1,4 @@
+A before runner.run: (1, 'OSError')
+A inside runner.run: (3, 'OSError')
+B raise_stop=False: close raised None, port freed True
+B raise_stop=True: close raised RuntimeError, port freed False

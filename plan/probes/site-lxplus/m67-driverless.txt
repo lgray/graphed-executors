@@ -1,0 +1,333 @@
+# m67 driverless site check, lxplus, 2026-09-25 (scripts in m67/: premise.sh premise-run.sh legs.sh leg.py m66site.py; bundle = git archive of graphed-executors m67 @ 9450e3d)
+
+## 1. §9 premise run 1 (VOID: probe loop broke on the spooling hold, HoldReasonCode 16, and removed the inner job before it started)
+### 2026-09-25T16:55:00Z lxplus941.cern.ch pool='tweetybird04.cern.ch, tweetybird03.cern.ch' schedd=bigbird26.cern.ch
+OUTER_CLUSTER=12748257
+### control: condor_q rows on outer 12748257 right after submit:
+1
+### 2026-09-25T16:57:19Z outer after 10 polls, status=''
+--- premise.out
+== 2026-09-25T16:56:54Z container hostname=b9p16p0041.cern.ch pwd=/srv
+== env
+HOME=/pool/condor/dir_3556761
+KRB5CCNAME=FILE:/srv/lgray.cc
+_CONDOR_JOB_AD=/srv/.job.ad
+_CONDOR_MACHINE_AD=/srv/.machine.ad
+_CONDOR_SCRATCH_DIR=/srv
+MACHINE_AD exists: Machine = "b9p16p0041.cern.ch"
+== files
+ls: cannot access '/etc/condor/condor_config': No such file or directory
+/afs/cern.ch/user/l/lgray
+/etc/krb5.conf
+== klist
+Ticket cache: FILE:/srv/lgray.cc
+Default principal: lgray@CERN.CH
+
+== python
+/usr/local/bin/python
+htcondor2 $CondorVersion: 25.13.2 2026-08-21 $
+[16:56:59Z] locate bigbird26.cern.ch via 'tweetybird04.cern.ch, tweetybird03.cern.ch'
+[16:57:00Z] INNER_CLUSTER 12748258
+[16:57:00Z] inner ad {'ClusterId': 12748258, 'JobStatus': 5, 'HoldReason': 'Spooling input data files', 'ServerTime': 1790355420, 'NumJobStarts': 0}
+[16:57:05Z] inner rows left in condor_q: 0
+[16:57:05Z] inner history: [{'ClusterId': 12748258, 'JobStatus': 3, 'HoldReason': <Value.Undefined: 2>, 'NumJobStarts': 0}]
+== 2026-09-25T16:57:05Z end
+--- premise.err
+### outer history
+12748257 4 0 1 slot1_12@b9p16p0041.cern.ch
+### condor_q rows on outer 12748257 + control (-totals line):
+0
+Total for all users: 27168 jobs; 21980 completed, 0 removed, 1741 idle, 3341 running, 106 held, 0 suspended
+### condor_q rows on inner 12748258:
+0
+/afs/cern.ch/user/l/lgray/graphed-m67-premise
+rm: cannot remove '/afs/cern.ch/user/l/lgray/graphed-m67-premise': Directory not empty
+rc=0
+
+## 2. §9 premise run 2 (fixed: break only on a hold other than code 16)
+### 2026-09-25T16:57:41Z lxplus941.cern.ch pool='tweetybird04.cern.ch, tweetybird03.cern.ch' schedd=bigbird26.cern.ch
+OUTER_CLUSTER=12748259
+### control: condor_q rows on outer 12748259 right after submit:
+1
+### 2026-09-25T17:02:14Z outer after 19 polls, status=''
+--- premise.out
+== 2026-09-25T17:01:01Z container hostname=b9p19p0571.cern.ch pwd=/srv
+== env
+HOME=/pool/condor/dir_2571450
+KRB5CCNAME=FILE:/srv/lgray.cc
+_CONDOR_JOB_AD=/srv/.job.ad
+_CONDOR_MACHINE_AD=/srv/.machine.ad
+_CONDOR_SCRATCH_DIR=/srv
+MACHINE_AD exists: Machine = "b9p19p0571.cern.ch"
+== files
+ls: cannot access '/etc/condor/condor_config': No such file or directory
+/afs/cern.ch/user/l/lgray
+/etc/krb5.conf
+== klist
+Ticket cache: FILE:/srv/lgray.cc
+Default principal: lgray@CERN.CH
+
+== python
+/usr/local/bin/python
+htcondor2 $CondorVersion: 25.13.2 2026-08-21 $
+[17:01:03Z] locate bigbird26.cern.ch via 'tweetybird04.cern.ch, tweetybird03.cern.ch'
+[17:01:03Z] INNER_CLUSTER 12748261
+[17:02:04Z] inner ad {'ExitCode': 0, 'ClusterId': 12748261, 'JobStatus': 4, 'HoldReason': <Value.Undefined: 2>, 'ServerTime': 1790355724, 'NumJobStarts': 1, 'HoldReasonCode': <Value.Undefined: 2>, 'LastRemoteHost': 'slot1_47@b9p22p0624.cern.ch'}
+[17:02:04Z] retrieved; inner.out: inner-hi
+[17:02:09Z] inner rows left in condor_q: 0
+[17:02:09Z] inner history: [{'ExitCode': 0, 'ClusterId': 12748261, 'JobStatus': 3, 'HoldReason': <Value.Undefined: 2>, 'NumJobStarts': 1, 'HoldReasonCode': <Value.Undefined: 2>, 'LastRemoteHost': 'slot1_47@b9p22p0624.cern.ch'}]
+== 2026-09-25T17:02:09Z end
+--- premise.err
+### outer history
+12748259 4 0 1 slot1_21@b9p19p0571.cern.ch
+### condor_q rows on outer 12748259 + control (-totals line):
+0
+Total for all users: 27177 jobs; 21980 completed, 0 removed, 2372 idle, 2719 running, 106 held, 0 suspended
+### condor_q rows on inner 12748261:
+0
+rm: cannot remove '/afs/cern.ch/user/l/lgray/graphed-m67-premise': Directory not empty
+/afs/cern.ch/user/l/lgray/graphed-m67-premise
+rc=0
+
+## 3. legs (a) pilots=condor 12748262 and (b) pilots=local 12748263; collect = RunHandle.load in a separate process
+lxplus941.cern.ch
++ IMAGE=/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-almalinux9-noml:2026.9.0-py3.12
+++ mktemp -d /tmp/m67site.XXXX
++ T=/tmp/m67site.AR1u
++ A=/afs/cern.ch/user/l/lgray/graphed-m67-site
++ rm -rf /afs/cern.ch/user/l/lgray/graphed-m67-site
++ mkdir -p /afs/cern.ch/user/l/lgray/graphed-m67-site
++ cd /tmp/m67site.AR1u
++ mkdir src
++ tar xzf - -C src
++ mv src/m66site.py src/leg.py .
++ /usr/bin/myschedd.sh
++ printf '#!/bin/bash\ncat %s/myschedd.out\n' /tmp/m67site.AR1u
++ chmod +x myschedd.sh
+++ id -u
++ apptainer exec --pwd /tmp/m67site.AR1u /cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-almalinux9-noml:2026.9.0-py3.12 /bin/bash -c '
+set -x
+python -m venv --system-site-packages /tmp/m67site.AR1u/venv && /tmp/m67site.AR1u/venv/bin/pip install -q '\''/tmp/m67site.AR1u/src[htcondor]'\'' 2>&1 | grep -v notice
+/tmp/m67site.AR1u/venv/bin/pip list 2>/dev/null | grep -iE '\''^(graphed|graphed-executors|htcondor) '\''
+/tmp/m67site.AR1u/venv/bin/python /tmp/m67site.AR1u/leg.py submit a /afs/cern.ch/user/l/lgray/graphed-m67-site; /tmp/m67site.AR1u/venv/bin/python /tmp/m67site.AR1u/leg.py submit b /afs/cern.ch/user/l/lgray/graphed-m67-site
+/tmp/m67site.AR1u/venv/bin/python /tmp/m67site.AR1u/leg.py collect a /afs/cern.ch/user/l/lgray/graphed-m67-site > /tmp/m67site.AR1u/collect-a.txt 2>&1 & /tmp/m67site.AR1u/venv/bin/python /tmp/m67site.AR1u/leg.py collect b /afs/cern.ch/user/l/lgray/graphed-m67-site > /tmp/m67site.AR1u/collect-b.txt 2>&1; wait
+cat /tmp/m67site.AR1u/collect-a.txt /tmp/m67site.AR1u/collect-b.txt
+'
++ python -m venv --system-site-packages /tmp/m67site.AR1u/venv
++ /tmp/m67site.AR1u/venv/bin/pip install -q '/tmp/m67site.AR1u/src[htcondor]'
++ grep -v notice
+
++ /tmp/m67site.AR1u/venv/bin/pip list
++ grep -iE '^(graphed|graphed-executors|htcondor) '
+graphed                   0.0.6
+graphed-executors         0.0.4
+htcondor                  25.13.2
++ /tmp/m67site.AR1u/venv/bin/python /tmp/m67site.AR1u/leg.py submit a /afs/cern.ch/user/l/lgray/graphed-m67-site
+[17:02:37Z] leg a: submitted pilots=condor in 4.3s: RunHandle(site='lxplus', schedd='bigbird26.cern.ch', cluster=12748262, log_dir=PosixPath('/afs/cern.ch/user/l/lgray/graphed-m67-site/a'), submitted_at=1790355757.0060227)
+[17:02:37Z] leg a: run.json: { "pilots": "condor", "n_pilots": 2, "site": "lxplus", "image": "/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-almalinux9-noml:2026.9.0-py3.12", "log_dir": "/afs/cern.ch/user/l/lgray/graphed-m67-site/a/pilots", "request_memory_mb": 2048, "min_pilots": 1, "retries": 3, "max_in_flight": 2, "schedd_locate": [  "tweetybird04.cern.ch, tweetybird03.cern.ch",  "bigbird26.cern.ch" ], "user_modules": [  "m66site.py" ]}
++ /tmp/m67site.AR1u/venv/bin/python /tmp/m67site.AR1u/leg.py submit b /afs/cern.ch/user/l/lgray/graphed-m67-site
+[17:02:41Z] leg b: submitted pilots=local in 4.2s: RunHandle(site='lxplus', schedd='bigbird26.cern.ch', cluster=12748263, log_dir=PosixPath('/afs/cern.ch/user/l/lgray/graphed-m67-site/b'), submitted_at=1790355761.6099956)
+[17:02:41Z] leg b: run.json: { "pilots": "local", "n_pilots": 2, "site": "lxplus", "image": "/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-almalinux9-noml:2026.9.0-py3.12", "log_dir": "/afs/cern.ch/user/l/lgray/graphed-m67-site/b/pilots", "request_memory_mb": 2048, "min_pilots": 1, "retries": 3, "max_in_flight": 2, "schedd_locate": null, "user_modules": [  "m66site.py" ]}
++ /tmp/m67site.AR1u/venv/bin/python /tmp/m67site.AR1u/leg.py collect b /afs/cern.ch/user/l/lgray/graphed-m67-site
++ /tmp/m67site.AR1u/venv/bin/python /tmp/m67site.AR1u/leg.py collect a /afs/cern.ch/user/l/lgray/graphed-m67-site
+Terminated
++ wait
++ cat /tmp/m67site.AR1u/collect-a.txt /tmp/m67site.AR1u/collect-b.txt
+[17:02:41Z] leg a: loaded in pid 47142: schedd=bigbird26.cern.ch cluster=12748262
+[17:04:02Z] leg a: wait -> done after 81s
+[17:04:02Z] leg a: result: 16 leaves, 15 combines; bit-for-bit vs SequentialRunner: True (437 B)
+[17:04:02Z] leg a: ---- driver.log ----
+driver pid=14 dir=/srv
+2 condor pilots on http://b9p16p6451.cern.ch:10000 pids=[]
+1 pilots live after 15.5s
+exit 0 after 37.1s
+
+[17:04:02Z] leg a: ---- driver.out ----
+
+[17:04:02Z] leg a: ---- driver.err ----
+<frozen runpy>:128: RuntimeWarning: 'graphed_executors.htcondor_backend.driver' found in sys.modules after import of package 'graphed_executors.htcondor_backend', but prior to execution of 'graphed_executors.htcondor_backend.driver'; this may result in unpredictable behaviour
+
+[17:04:02Z] leg a: ---- driver.condor.log ----
+000 (12748262.000.000) 09/25 19:02:36 Job submitted from host: <188.185.8.79:9618?addrs=188.185.8.79-9618+[2001-1458-d00-63--100-23a]-9618&alias=bigbird26.cern.ch&noUDP&sock=schedd_5801_94fb>
+...
+040 (12748262.000.000) 09/25 19:03:01 Started transferring input files
+	Transferring to host: <188.185.196.56:9618?addrs=188.185.196.56-9618+[2001-1458-303-23--100-34]-9618&alias=b9p16p6451.cern.ch&noUDP&sock=slot1_38_5203_bbed_71691>
+...
+040 (12748262.000.000) 09/25 19:03:01 Finished transferring input files
+...
+001 (12748262.000.000) 09/25 19:03:01 Job executing on host: <188.185.196.56:9618?addrs=188.185.196.56-9618+[2001-1458-303-23--100-34]-9618&alias=b9p16p6451.cern.ch&noUDP&sock=startd_4258_365a>
+	SlotName: slot1_38@b9p16p6451.cern.ch
+	CondorScratchDir = "/pool/condor/dir_72934"
+	Cpus = 1
+	Disk = 1051452
+	GPUs = 0
+	Memory = 3000
+...
+006 (12748262.000.000) 09/25 19:03:10 Image size of job updated: 43896
+	43  -  MemoryUsage of job (MB)
+	43896  -  ResidentSetSize of job (KB)
+...
+006 (12748262.000.000) 09/25 19:03:42 Image size of job updated: 45004
+	43  -  MemoryUsage of job (MB)
+	43896  -  ResidentSetSize of job (KB)
+...
+040 (12748262.000.000) 09/25 19:03:42 Started transferring output files
+...
+040 (12748262.000.000) 09/25 19:03:42 Finished transferring output files
+...
+005 (12748262.000.000) 09/25 19:03:42 Job terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:00:06, Sys 0 00:00:01  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:00:06, Sys 0 00:00:01  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	975  -  Run Bytes Sent By Job
+	10342803  -  Run Bytes Received By Job
+	975  -  Total Bytes Sent By Job
+	10342803  -  Total Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :        0        1         1 
+	   Disk (KB)            :    35317  1048576   1051452 
+	   GPUs                 :                           0 
+	   Memory (MB)          :       43     3000      3000 
+	   TimeExecute (s)      :       41                    
+	   TimeSlotBusy (s)     :       43                    
+...
+
+[17:04:02Z] leg a: driver ad before removal: [{'ProcId': 0, 'ExitCode': 0, 'ClusterId': 12748262, 'JobStatus': 4, 'ServerTime': 1790355842, 'RequestCpus': 1, 'JobBatchName': 'graphed-driverless-6819165d', 'NumJobStarts': 1, 'JobMaxRetries': 2, 'LastRemoteHost': 'slot1_38@b9p16p6451.cern.ch'}]
+[17:04:12Z] leg a: condor_q rows on driver cluster 12748262 after remove: 0
+[17:02:41Z] leg b: loaded in pid 47144: schedd=bigbird26.cern.ch cluster=12748263
+[17:03:22Z] leg b: wait -> done after 40s
+[17:03:22Z] leg b: result: 16 leaves, 15 combines; bit-for-bit vs SequentialRunner: True (437 B)
+[17:03:22Z] leg b: ---- driver.log ----
+driver pid=14 dir=/srv
+2 local pilots on http://127.0.0.1:10000 pids=[20, 21]
+1 pilots live after 0.5s
+exit 0 after 1.1s
+
+[17:03:22Z] leg b: ---- driver.out ----
+pilot b9g03p9834.cern.ch:20:ff02f540 serving http://127.0.0.1:10000
+pilot b9g03p9834.cern.ch:21:c3e50fea serving http://127.0.0.1:10000
+
+[17:03:22Z] leg b: ---- driver.err ----
+<frozen runpy>:128: RuntimeWarning: 'graphed_executors.htcondor_backend.driver' found in sys.modules after import of package 'graphed_executors.htcondor_backend', but prior to execution of 'graphed_executors.htcondor_backend.driver'; this may result in unpredictable behaviour
+
+[17:03:22Z] leg b: ---- driver.condor.log ----
+000 (12748263.000.000) 09/25 19:02:41 Job submitted from host: <188.185.8.79:9618?addrs=188.185.8.79-9618+[2001-1458-d00-63--100-23a]-9618&alias=bigbird26.cern.ch&noUDP&sock=schedd_5801_94fb>
+...
+040 (12748263.000.000) 09/25 19:03:01 Started transferring input files
+	Transferring to host: <128.142.161.105:9618?addrs=128.142.161.105-9618+[2001-1458-301-b8--100-3c]-9618&alias=b9g03p9834.cern.ch&noUDP&sock=slot1_33_1211419_0687_72991>
+...
+040 (12748263.000.000) 09/25 19:03:01 Finished transferring input files
+...
+001 (12748263.000.000) 09/25 19:03:01 Job executing on host: <128.142.161.105:9618?addrs=128.142.161.105-9618+[2001-1458-301-b8--100-3c]-9618&alias=b9g03p9834.cern.ch&noUDP&sock=startd_1209508_76c3>
+	SlotName: slot1_33@b9g03p9834.cern.ch
+	CondorScratchDir = "/pool/condor/dir_1506990"
+	Cpus = 2
+	Disk = 1051205
+	GPUs = 0
+	Memory = 6000
+...
+006 (12748263.000.000) 09/25 19:03:18 Image size of job updated: 31844
+	0  -  MemoryUsage of job (MB)
+	0  -  ResidentSetSize of job (KB)
+...
+040 (12748263.000.000) 09/25 19:03:18 Started transferring output files
+...
+040 (12748263.000.000) 09/25 19:03:18 Finished transferring output files
+...
+005 (12748263.000.000) 09/25 19:03:18 Job terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:00:01, Sys 0 00:00:00  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:00:01, Sys 0 00:00:00  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	1105  -  Run Bytes Sent By Job
+	10342732  -  Run Bytes Received By Job
+	1105  -  Total Bytes Sent By Job
+	10342732  -  Total Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :        0        2         2 
+	   Disk (KB)            :    35310  1048576   1051205 
+	   GPUs                 :                           0 
+	   Memory (MB)          :        0     6000      6000 
+	   TimeExecute (s)      :       17                    
+	   TimeSlotBusy (s)     :       19                    
+...
+
+[17:03:22Z] leg b: driver ad before removal: [{'ProcId': 0, 'ExitCode': 0, 'ClusterId': 12748263, 'JobStatus': 4, 'ServerTime': 1790355802, 'RequestCpus': 2, 'JobBatchName': 'graphed-driverless-9418a0ff', 'NumJobStarts': 1, 'JobMaxRetries': 2, 'LastRemoteHost': 'slot1_33@b9g03p9834.cern.ch'}]
+[17:03:32Z] leg b: condor_q rows on driver cluster 12748263 after remove: 0
+== control: condor_q -totals
++ echo '== control: condor_q -totals'
++ condor_q -totals
++ tail -2
++ head -1
+Total for all users: 23929 jobs; 21980 completed, 0 removed, 10 idle, 1833 running, 106 held, 0 suspended
++ cd /
++ rm -rf /tmp/m67site.AR1u /afs/cern.ch/user/l/lgray/graphed-m67-site
+ls: cannot access '/tmp/m67site.AR1u': No such file or directory
+ls: cannot access '/afs/cern.ch/user/l/lgray/graphed-m67-site': No such file or directory
++ ls -d /tmp/m67site.AR1u /afs/cern.ch/user/l/lgray/graphed-m67-site
+rc=0
+
+## 3b. collect processes 47142/47144 (mine) killed at ~17:32Z: both hung in the probe's own schedd.history(q, HIST, match=5) (1 matching row -> full history scan of bigbird26 for 28 min); the steps after it below were run by hand
+
+## 4. inner pilot cluster user log (a/pilots/pilots.log, retrieved by the driver job)
+000 (12748264.000.000) 09/25 19:03:13 Job submitted from host: <188.185.8.79:9618?addrs=188.185.8.79-9618+[2001-1458-d00-63--100-23a]-9618&alias=bigbird26.cern.ch&noUDP&sock=schedd_5801_94fb>
+...
+040 (12748264.000.000) 09/25 19:03:19 Started transferring input files
+	Transferring to host: <128.142.161.105:9618?addrs=128.142.161.105-9618+[2001-1458-301-b8--100-3c]-9618&alias=b9g03p9834.cern.ch&noUDP&sock=slot1_33_1211419_0687_72992>
+...
+040 (12748264.000.000) 09/25 19:03:19 Finished transferring input files
+...
+001 (12748264.000.000) 09/25 19:03:19 Job executing on host: <128.142.161.105:9618?addrs=128.142.161.105-9618+[2001-1458-301-b8--100-3c]-9618&alias=b9g03p9834.cern.ch&noUDP&sock=startd_1209508_76c3>
+	SlotName: slot1_33@b9g03p9834.cern.ch
+	CondorScratchDir = "/pool/condor/dir_1507919"
+	Cpus = 2
+	Disk = 1050909
+	GPUs = 0
+	Memory = 6000
+...
+006 (12748264.000.000) 09/25 19:03:21 Image size of job updated: 332
+	0  -  MemoryUsage of job (MB)
+	0  -  ResidentSetSize of job (KB)
+...
+040 (12748264.000.000) 09/25 19:03:21 Started transferring output files
+...
+040 (12748264.000.000) 09/25 19:03:21 Finished transferring output files
+...
+005 (12748264.000.000) 09/25 19:03:21 Job terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:00:01, Sys 0 00:00:00  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:00:01, Sys 0 00:00:00  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	77  -  Run Bytes Sent By Job
+	10341039  -  Run Bytes Received By Job
+	77  -  Total Bytes Sent By Job
+	10341039  -  Total Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :        0        1         2 
+	   Disk (KB)            :    35308  1048576   1050909 
+	   GPUs                 :                           0 
+	   Memory (MB)          :        0     3000      6000 
+	   TimeExecute (s)      :        2                    
+	   TimeSlotBusy (s)     :        3                    
+...
+
+## 5. history rows + queue check (condor_history <cluster> -match N)
+Fri Sep 25 17:32:47 UTC 2026
+ClusterId ProcId JobStatus ExitCode NumJobStarts LastRemoteHost JobBatchName RequestCpus JobMaxRetries
+12748262  0      3         0        1            slot1_38@b9p16p6451.cern.ch graphed-driverless-6819165d 1           2            
+ClusterId ProcId JobStatus ExitCode NumJobStarts LastRemoteHost JobBatchName RequestCpus JobMaxRetries
+12748263  0      3         0        1            slot1_33@b9g03p9834.cern.ch graphed-driverless-9418a0ff 2           2            
+ClusterId ProcId JobStatus ExitCode NumJobStarts LastRemoteHost JobBatchName RequestCpus JobMaxRetries
+12748264  1      3         undefined 0            slot1_33@b9g03p9834.cern.ch graphed-pilots-004475eb 1           undefined    
+12748264  0      3         0         1            slot1_33@b9g03p9834.cern.ch graphed-pilots-004475eb 1           undefined    
+12748264 1 undefined /afs/cern.ch/user/l/lgray/graphed-m67-site/a/pilots
+12748264 0 undefined /afs/cern.ch/user/l/lgray/graphed-m67-site/a/pilots
+### condor_q rows on 12748262 12748263 12748264:
+0
+### control: condor_q -allusers -af ClusterId (row count):
+23872
+Fri Sep 25 17:32:51 UTC 2026

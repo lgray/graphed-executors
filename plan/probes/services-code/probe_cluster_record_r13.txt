@@ -1,0 +1,2 @@
+record_before=True raised=RuntimeError(svc: stop never acknowledged) exit=3 release_calls=['svc'] waited=0.21s
+record_before=False raised=ServiceUnavailable(svc: no worker's resources cover the recipe) exit=1 release_calls=[] waited=0.00s

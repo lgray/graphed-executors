@@ -1,0 +1,14 @@
+EXT_NODE_PARAMS {"content_hash": "sha256:13f1f56254aff23a9c43fb4a6a45ce7ec87c808eea30c85c068684afc890829f", "framework": "tritonclient", "input_name": "x", "kind": "triton_model", "model": "scorer", "output_name": "y", "transport": "fake_triton_probe:transport", "url": "http://gpu-a:8000"}
+EXT_DESCRIPTOR_KEYS ['content_hash', 'framework', 'io_schema', 'kind', 'preprocessing_ref', 'version']
+EXTERNAL_KEYS_DIFFER_BY_URL True
+IR_BYTES_DIFFER_WHEN_ONLY_URL_CHANGES True
+N_TASKS 2 PROCESS_TYPE graphed.aggregate._PartitionReduce
+STDLIB_PICKLE_PROCESS_BYTES 3463
+TASK 0 [2475.0, 2525.0]
+TASK 1 [7475.0, 7525.0]
+CONNECTS ['http://gpu-a:8000']
+INFERS [('http://gpu-a:8000', 100), ('http://gpu-a:8000', 100), ('http://gpu-a:8000', 100), ('http://gpu-a:8000', 100)]
+OPSPEC_KIND_OF_AGGREGATE_PROCESS opaque opaque True
+DURABLE_PLAN_BYTES 6767 combine_ref probe_funcs:combine
+FRESH_PROCESS NO_USER_MODULES rc 1 ModuleNotFoundError: No module named 'probe_funcs'
+FRESH_PROCESS WITH_PYTHONPATH rc 0 [9950.0, 10050.0]

@@ -1,0 +1,6 @@
+pilot macbookpro.meanphysicist.com:59594:1cc79c25 serving http://127.0.0.1:10000
+F exit=3 type=ValueError is_StageError=False cause_type=None
+S exit(_exit_code(ServiceUnavailable))=3 proposed=1
+lpc ('driver', 'cluster')
+lxplus ('cluster',)
+generic ('driver', 'cluster')

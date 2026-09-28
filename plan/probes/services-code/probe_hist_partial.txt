@@ -1,0 +1,10 @@
+FILL_NODE_DESCRIPTOR {"content_hash": "sha256:937f6b0d71d2e2757af0cb23b8f5fe32392a86398785a62f57d2bb6f0c75a770", "framework": "boost_histogram", "io_schema": "uhi", "kind": "histogram", "preprocessing_ref": null, "version": "1.8.1"}
+FILL_NODE_PARAMS {"n_axes": 1, "sampled": false, "spec": "{\"axes\":[{\"bins\":50,\"metadata\":{},\"overflow\":true,\"start\":0.0,\"stop\":100.0,\"type\":\"Regular\",\"underflow\":true}],\"storage\":\"Weight\",\"version\":1}", "weighted": false}
+PLAN_TYPES process _PartitionReduce reduce _SumFills combine graphed_histogram.boost:add_histograms empty _ZeroHist
+EXTERNALS_IN_PROCESS [('sha256:937f6b0d71d2e', 'FillEvaluator'), ('sha256:937f6b0d71d2e', 'FillEvaluator')]
+PARTIAL_TYPE boost_histogram.histogram.Histogram PICKLED_PARTIAL_BYTES [1153, 1153]
+COMBINED_SUM WeightedSum(value=20000, variance=20000) N_TASKS 2
+OPSPEC_KINDS process opaque combine ref empty opaque
+PROCESS_STDLIB_PICKLE_BYTES 1957
+WHOLE_RUNTIME_PLAN_STDLIB_PICKLE_BYTES 2315 tasks 2 partition0 Partition(uri='/var/folders/_8/wdyynsx91n91t7x7xwn69bsc0000gn/T/tmpnr1cz7dl/f0.parquet', tree='', entry_start=0, entry_stop=0, blind_step=0, blind_n_steps=1)
+FRESH_PROCESS_NO_USER_CODE rc 0 WeightedSum(value=20000, variance=20000)

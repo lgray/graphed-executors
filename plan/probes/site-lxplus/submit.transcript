@@ -1,0 +1,27 @@
+[05:04:51Z] site=lxplus schedd=bigbird26.cern.ch bindings=$CondorVersion: 24.12.16 2026-01-29 BuildID: 869053 PackageID: 24.12.16-1 GitSHA: d5741e8b $
+[05:04:51Z] submit description:
+universe = vanilla
+executable = /afs/cern.ch/user/l/lgray/gx-htc-q9SAZw/job.sh
+arguments = lxplus941.cern.ch 10000
+initialdir = /afs/cern.ch/user/l/lgray/gx-htc-q9SAZw
+output = job.out
+error = job.err
+log = job.log
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT_OR_EVICT
+request_cpus = 1
+request_memory = 2048
+JobBatchName = "graphed-htcondor-probe"
+MY.SingularityImage = "/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-almalinux9-noml:2026.9.0-py3.12"
+MY.JobFlavour = "espresso"
+MY.SendCredential = True
+queue
+
+Traceback (most recent call last):
+  File "/afs/cern.ch/user/l/lgray/gx-htc-q9SAZw/submit_probe.py", line 125, in <module>
+    main()
+  File "/afs/cern.ch/user/l/lgray/gx-htc-q9SAZw/submit_probe.py", line 79, in main
+    result = schedd.submit(sub, spool=True)
+  File "/usr/lib64/python3.9/site-packages/htcondor2/_schedd.py", line 651, in submit
+    return _schedd_submit(self._addr, real._handle, count, spool)
+htcondor2_impl.HTCondorException: Unable to commit transaction, SCHEDD:2:Your job uses -spool but does not set 'transfer_output_files' nor 'output_destination' (transfer plugin). This is not allowed. Please see https://batchdocs.web.cern.ch/concepts/dataflow.html#spool-submission for information and alternatives.

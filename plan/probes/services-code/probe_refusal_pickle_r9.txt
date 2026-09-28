@@ -1,0 +1,2 @@
+ServiceUnreachable: dumps ok, loads raises TypeError: ServiceUnreachable.__init__() missing 3 required positional arguments: 'endpoint', 'worker', and 'reason'
+Reduced: loads ok type=Reduced reason='refused' str=''

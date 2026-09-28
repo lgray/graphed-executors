@@ -1,0 +1,2 @@
+raw WorkerLost (in-run probe) -> 3
+control, engine-translated KilledWorker (plan task) -> 1

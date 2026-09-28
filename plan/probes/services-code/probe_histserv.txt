@@ -1,0 +1,16 @@
+REMOTE RemoteHist(hist_id='320d1ac9aa5f4910b66e3f792d8fc258', address='localhost:50551', token='run-secret')
+CHUNK_AXES ('dataset',) DENSE_SHAPE (52,) [('value', '<f8'), ('variance', '<f8')]
+PICKLED_REMOTEHIST_BYTES 2021
+2026-09-25 07:31:29.813 ERROR:histserv:RPC<Fill> - request=912 B, duration=146.83 us, response=<error> (hist_id=320d1ac9aa5f4910b66e3f792d8fc258)
+2026-09-25 07:31:29.815 ERROR:histserv:RPC<Fill> - request=912 B, duration=101.46 us, response=<error> (hist_id=320d1ac9aa5f4910b66e3f792d8fc258)
+2026-09-25 07:31:29.826 ERROR:histserv:RPC<Describe> - request=34 B, duration=88.63 us, response=<error> (hist_id=320d1ac9aa5f4910b66e3f792d8fc258)
+2026-09-25 07:31:29.827 ERROR:histserv:RPC<Describe> - request=34 B, duration=145.63 us, response=<error> (hist_id=320d1ac9aa5f4910b66e3f792d8fc258)
+WORKER_PID 61663 FILL_REQUEST_BYTES [912, 912, 912, 912] REPLAYED_UNIQUE_ID StatusCode.ALREADY_EXISTS rejected fill of histogram id 320d1ac9aa5f4910b66e3f792d8fc258, because request.unique_id=b'\xc8IV\xd1\x19\xeb\xe8C>\xb8\x0e!=y6\x82v\\\x8a\xd0\xea\xa0His#\x87\xefGc+\xf7' already exists
+WORKER_PID 61664 FILL_REQUEST_BYTES [912, 912, 912, 912] REPLAYED_UNIQUE_ID StatusCode.ALREADY_EXISTS rejected fill of histogram id 320d1ac9aa5f4910b66e3f792d8fc258, because request.unique_id=b'\x03v\x88\xf95f;\xc4K\x99\xb4\xd4\x80_\n\xd9+\x8f]2C\xee\x82\x00\xec\xbfZ\x8c@\xe7\x82\xb0' already exists
+SNAPSHOT_TYPE ChunkedHist -> hist.hist.Hist
+SNAPSHOT_SUM WeightedSum(value=60000, variance=60000) expected_6_fills 60000
+WAS_FILLED_1-0 True WAS_FILLED_9-9 False
+WRONG_TOKEN refused: _InactiveRpcError StatusCode.NOT_FOUND unknown histogram id: 320d1ac9aa5f4910b66e3f792d8fc258
+NO_TOKEN refused: _InactiveRpcError StatusCode.NOT_FOUND unknown histogram id: 320d1ac9aa5f4910b66e3f792d8fc258
+STATS {'histogram_count': 1, 'histogram_bytes': 832, 'version': '0.2.1'}
+LISTENER_AFTER_STOP none

@@ -1,0 +1,18 @@
+graphed 0.0.6
+/Users/lgray/vibe-coding/lanes/htcondor/.venv/lib/python3.12/site-packages/coffea/nanoevents/schemas/nanoaod.py:298: RuntimeWarning: Missing cross-reference index for LowPtElectron_electronIdx => Electron
+  warnings.warn(
+/Users/lgray/vibe-coding/lanes/htcondor/.venv/lib/python3.12/site-packages/coffea/nanoevents/schemas/nanoaod.py:298: RuntimeWarning: Missing cross-reference index for LowPtElectron_genPartIdx => GenPart
+  warnings.warn(
+/Users/lgray/vibe-coding/lanes/htcondor/.venv/lib/python3.12/site-packages/coffea/nanoevents/schemas/nanoaod.py:298: RuntimeWarning: Missing cross-reference index for LowPtElectron_photonIdx => Photon
+  warnings.warn(
+/Users/lgray/vibe-coding/lanes/htcondor/.venv/lib/python3.12/site-packages/coffea/nanoevents/schemas/nanoaod.py:298: RuntimeWarning: Missing cross-reference index for FatJet_genJetAK8Idx => GenJetAK8
+  warnings.warn(
+/Users/lgray/vibe-coding/lanes/htcondor/.venv/lib/python3.12/site-packages/coffea/nanoevents/schemas/nanoaod.py:337: RuntimeWarning: Branch Photon_mass already exists but its values will be replaced with 0.0
+  warnings.warn(
+/Users/lgray/vibe-coding/lanes/htcondor/.venv/lib/python3.12/site-packages/coffea/nanoevents/schemas/nanoaod.py:337: RuntimeWarning: Branch Photon_charge already exists but its values will be replaced with 0.0
+  warnings.warn(
+HAS_with_field True
+OK   gak.with_field(photons, zeros, 'mass') GraphedNanoArray
+OK   zip w/ charge + with_name PtEtaPhiMCandidate + metric_table GraphedNanoArray
+OK   with_name on combinations after with_field pt/eta/phi/mass/charge GraphedNanoArray
+OK   gak.where replacing numpy.where GraphedNanoArray

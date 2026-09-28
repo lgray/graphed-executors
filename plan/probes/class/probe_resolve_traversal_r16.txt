@@ -1,0 +1,3 @@
+run value: {'a': ('a', 'tcp://127.0.0.1:1'), 'b': ('b', 'tcp://127.0.0.1:1')}
+control (no forward): calls [] | returned unchanged True
+cut (forwarded): calls [('a', ('a', 'tcp://127.0.0.1:1')), ('b', ('b', 'tcp://127.0.0.1:1'))] | returned {'a': ('resolved', ('a', 'tcp://127.0.0.1:1')), 'b': ('resolved', ('b', 'tcp://127.0.0.1:1'))}

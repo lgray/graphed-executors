@@ -1,0 +1,4 @@
+### 2026-09-25T16:11:56Z PYTHONPATH=. lanes/htcondor/.venv python probe_ready_identity.py (M1 Max)
+PARSL wait_before_announce=False: first-task GET 200 in 0/5; (status, polls)=[('URLError', 0), ('URLError', 0), ('URLError', 0), ('URLError', 0), ('URLError', 0)]
+PARSL wait_before_announce=True: first-task GET 200 in 5/5; (status, polls)=[(200, 17), (200, 18), (200, 15), (200, 17), (200, 36)]
+DASK driver identity macbookpro.meanphysicist.com workers ['macbookpro.meanphysicist.com'] all equal: True

@@ -1,0 +1,8 @@
+UNNAMED_INIT refused: ValueError all axes must have names
+HIST_AXES_NAME_FROM_METADATA  | via hist.axis: x
+HIST_ID_SERVER_ASSIGNED True 32
+PREBINNED_FILL ok bytes 832
+REPLAY StatusCode.ALREADY_EXISTS
+SNAPSHOT_EQUALS_2x_PARTIAL True
+SNAPSHOT_TYPE Hist isinstance bh True
+DELETED True

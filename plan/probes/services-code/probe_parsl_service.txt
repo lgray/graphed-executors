@@ -1,0 +1,5 @@
+ANNOUNCE_REACHED_DRIVER True ('svc', ('announce', 'svc', '127.0.0.1', 56239, 78120, 78122)) after 1.3s
+OTHER_TASKS_RAN_WHILE_SERVICE_HELD True [(0, 78121), (1, 78121), (2, 78121), (3, 78121)] svc done? False
+OTHERS_AVOIDED_SERVICE_PID True svc_pid 78120 other_pids {78121}
+CANCEL_IS_LOCAL_ONLY True cancel()-> True child alive after cancel: True
+SERVICE_STOPPED_BY_MESSAGE True child gone after 0.1s

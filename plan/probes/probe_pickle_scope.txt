@@ -1,0 +1,2 @@
+__main__ function: in-process OK value=1; pickled 35B; unpickle in a fresh interpreter -> rc=1 AttributeError: Can't get attribute 'main_fn' on <module '__main__' (<class '_frozen_importlib.BuiltinImporter'>)>
+lambda: PicklingError: Can't pickle <function <lambda> at 0x101493e20>: attribute lookup <lambda> on __main__ failed

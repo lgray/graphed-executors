@@ -1,0 +1,5 @@
+Using Python 3.12.10 environment at: /Users/lgray/vibe-coding/lanes/htcondor/.venv
+  × No solution found when resolving dependencies:
+  ╰─▶ Because higgs-dna was not found in the package registry and you require
+      higgs-dna, we can conclude that your requirements are unsatisfiable.
+rc=1

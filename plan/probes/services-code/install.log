@@ -1,0 +1,28 @@
+  × Failed to build `histserv @
+  │ file:///Users/lgray/vibe-coding/lanes/htcondor/refs/histserv`
+  ├─▶ The build backend returned an error
+  ╰─▶ Call to `hatchling.build.build_wheel` failed (exit status: 1)
+
+      [stderr]
+      Traceback (most recent call last):
+        File "<string>", line 11, in <module>
+        File
+      "/Users/lgray/.cache/uv/builds-v0/.tmpijlLFD/lib/python3.12/site-packages/hatchling/build.py",
+      line 58, in build_wheel
+          return os.path.basename(next(builder.build(directory=wheel_directory,
+      versions=["standard"])))
+      
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File
+      "/Users/lgray/.cache/uv/builds-v0/.tmpijlLFD/lib/python3.12/site-packages/hatchling/builders/plugin/interface.py",
+      line 158, in build
+          build_hook.initialize(version, build_data)
+        File
+      "/Users/lgray/vibe-coding/lanes/htcondor/refs/histserv/hatch_build.py",
+      line 14, in initialize
+          raise RuntimeError(msg)
+      RuntimeError: Dashboard UI not pre-built. Run 'pixi run -e dashboard
+      dashboard-build' before packaging.
+
+
+hint: Build failures usually indicate a problem with the package or the build environmentrc=1

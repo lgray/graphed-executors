@@ -1,0 +1,67 @@
+
+### 2026-09-25T12:28:28Z $ ls /cvmfs/unpacked.cern.ch/; ls /cvmfs/unpacked.cern.ch/registry.hub.docker.com | wc -l; ls -d /cvmfs/unpacked.cern.ch/*/fastml* /cvmfs/unpacked.cern.ch/*/*/*triton* /cvmfs/unpacked.cern.ch/*/*triton* /cvmfs/unpacked.cern.ch/*/nvidia* 2>&1 | head -20
+README.md
+ghcr.io
+gitlab-p4n.aip.de:5005
+gitlab-registry.cern.ch
+hub.opensciencegrid.org
+logDir
+nvcr.io
+quay.io
+registry.cern.ch
+registry.hub.docker.com
+util
+91
+ls: cannot access '/cvmfs/unpacked.cern.ch/*/*triton*': No such file or directory
+/cvmfs/unpacked.cern.ch/nvcr.io/nvidia
+/cvmfs/unpacked.cern.ch/nvcr.io/nvidia/tritonserver:24.11-py3
+/cvmfs/unpacked.cern.ch/registry.hub.docker.com/fastml
+/cvmfs/unpacked.cern.ch/registry.hub.docker.com/fastml/triton-torchgeo:20.06-py3-geometric
+/cvmfs/unpacked.cern.ch/registry.hub.docker.com/fastml/triton-torchgeo:20.06-v1-py3-geometric
+/cvmfs/unpacked.cern.ch/registry.hub.docker.com/fastml/triton-torchgeo:20.09-py3-geometric
+/cvmfs/unpacked.cern.ch/registry.hub.docker.com/fastml/triton-torchgeo:21.02-py3-geometric
+/cvmfs/unpacked.cern.ch/registry.hub.docker.com/fastml/triton-torchgeo:21.06-py3-geometric
+/cvmfs/unpacked.cern.ch/registry.hub.docker.com/fastml/triton-torchgeo:21.06-py3-geometric-rc1
+/cvmfs/unpacked.cern.ch/registry.hub.docker.com/fastml/triton-torchgeo:21.06-py3-geometric-rc2
+/cvmfs/unpacked.cern.ch/registry.hub.docker.com/fastml/triton-torchgeo:22.03-py3-geometric
+/cvmfs/unpacked.cern.ch/registry.hub.docker.com/fastml/triton-torchgeo:22.07-py3-geometric
+/cvmfs/unpacked.cern.ch/registry.hub.docker.com/fastml/triton-torchgeo:23.04-PT-py3-geometric
+/cvmfs/unpacked.cern.ch/registry.hub.docker.com/fastml/triton-torchgeo:23.04-py3-geometric
+/cvmfs/unpacked.cern.ch/registry.hub.docker.com/fastml/triton-torchgeo:23.09-py3-geometric
+/cvmfs/unpacked.cern.ch/registry.hub.docker.com/fastml/triton-torchgeo:24.11-py3-geometric
+/cvmfs/unpacked.cern.ch/registry.hub.docker.com/fastml/triton-torchgeo:25.08-py3-geometric
+/cvmfs/unpacked.cern.ch/registry.hub.docker.com/fastml/triton-torchgeo:25.08dev-py3-geometric
+/cvmfs/unpacked.cern.ch/registry.hub.docker.com/fastml/triton-torchgeo:26.04-py3-geometric
+
+### 2026-09-25T12:28:32Z $ ls -d /cvmfs/unpacked.cern.ch/registry.hub.docker.com/fastml/* | sed -n "20,40p"; ls /cvmfs/unpacked.cern.ch/nvcr.io/nvidia/; ls -d /cvmfs/unpacked.cern.ch/*/*/*triton* /cvmfs/unpacked.cern.ch/*/*/*/*triton* 2>/dev/null | grep -v fastml/triton-torchgeo | head
+tritonserver:24.11-py3
+
+### 2026-09-25T12:33:29Z $ for i in /cvmfs/unpacked.cern.ch/nvcr.io/nvidia/tritonserver:24.11-py3 /cvmfs/unpacked.cern.ch/registry.hub.docker.com/fastml/triton-torchgeo:26.04-py3-geometric; do echo "== $i"; timeout 100 apptainer exec --nv $i tritonserver --version 2>&1 | grep -v -i warn | tail -4; done
+== /cvmfs/unpacked.cern.ch/nvcr.io/nvidia/tritonserver:24.11-py3
+	logs the 101-th to the 200-th traces to file <trace-file>.1.
+	Default is 0.
+
+
+== /cvmfs/unpacked.cern.ch/registry.hub.docker.com/fastml/triton-torchgeo:26.04-py3-geometric
+	logs the 101-th to the 200-th traces to file <trace-file>.1.
+	Default is 0.
+
+
+
+### 2026-09-25T12:34:28Z $ for i in /cvmfs/unpacked.cern.ch/nvcr.io/nvidia/tritonserver:24.11-py3 /cvmfs/unpacked.cern.ch/registry.hub.docker.com/fastml/triton-torchgeo:26.04-py3-geometric /cvmfs/unpacked.cern.ch/registry.hub.docker.com/fastml/triton-torchgeo:25.08-py3-geometric; do echo "== $i"; cat $i/opt/tritonserver/TRITON_VERSION; grep -h -o "TRITON_SERVER_VERSION=[^ ]*\|NVIDIA_TRITON_SERVER_VERSION=[^ ]*" $i/.singularity.d/env/*.sh 2>/dev/null | head -2; ls $i/opt/tritonserver/backends | tr "
+" " "; echo; done
+== /cvmfs/unpacked.cern.ch/nvcr.io/nvidia/tritonserver:24.11-py3
+2.52.0
+TRITON_SERVER_VERSION="${TRITON_SERVER_VERSION:-"2.52.0"}"
+NVIDIA_TRITON_SERVER_VERSION="${NVIDIA_TRITON_SERVER_VERSION:-"24.11"}"
+dali fil identity onnxruntime openvino python pytorch repeat square tensorflow tensorrt 
+== /cvmfs/unpacked.cern.ch/registry.hub.docker.com/fastml/triton-torchgeo:26.04-py3-geometric
+2.70.0dev
+TRITON_SERVER_VERSION="${TRITON_SERVER_VERSION:-"2.68.0"}"
+NVIDIA_TRITON_SERVER_VERSION="${NVIDIA_TRITON_SERVER_VERSION:-"r26.04"}"
+onnxruntime python pytorch tensorflow 
+== /cvmfs/unpacked.cern.ch/registry.hub.docker.com/fastml/triton-torchgeo:25.08-py3-geometric
+2.62.0dev
+TRITON_SERVER_VERSION="${TRITON_SERVER_VERSION:-"2.60.0"}"
+NVIDIA_TRITON_SERVER_VERSION="${NVIDIA_TRITON_SERVER_VERSION:-"r25.08"}"
+identity onnxruntime python pytorch repeat square tensorflow tensorrt 

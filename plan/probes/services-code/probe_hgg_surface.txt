@@ -1,0 +1,60 @@
+/Users/lgray/vibe-coding/lanes/notebook/.venv/lib/python3.12/site-packages/coffea/nanoevents/schemas/nanoaod.py:298: RuntimeWarning: Missing cross-reference index for LowPtElectron_electronIdx => Electron
+  warnings.warn(
+/Users/lgray/vibe-coding/lanes/notebook/.venv/lib/python3.12/site-packages/coffea/nanoevents/schemas/nanoaod.py:298: RuntimeWarning: Missing cross-reference index for LowPtElectron_genPartIdx => GenPart
+  warnings.warn(
+/Users/lgray/vibe-coding/lanes/notebook/.venv/lib/python3.12/site-packages/coffea/nanoevents/schemas/nanoaod.py:298: RuntimeWarning: Missing cross-reference index for LowPtElectron_photonIdx => Photon
+  warnings.warn(
+/Users/lgray/vibe-coding/lanes/notebook/.venv/lib/python3.12/site-packages/coffea/nanoevents/schemas/nanoaod.py:298: RuntimeWarning: Missing cross-reference index for FatJet_genJetAK8Idx => GenJetAK8
+  warnings.warn(
+/Users/lgray/vibe-coding/lanes/notebook/.venv/lib/python3.12/site-packages/coffea/nanoevents/schemas/nanoaod.py:337: RuntimeWarning: Branch Photon_mass already exists but its values will be replaced with 0.0
+  warnings.warn(
+/Users/lgray/vibe-coding/lanes/notebook/.venv/lib/python3.12/site-packages/coffea/nanoevents/schemas/nanoaod.py:337: RuntimeWarning: Branch Photon_charge already exists but its values will be replaced with 0.0
+  warnings.warn(
+OK   events.metadata['dataset']: str
+OK   hasattr(events,'GenPart'): bool
+OK   'superclusterEta' in Photon.fields: bool
+OK   Photon.fields: list
+OK   events.Flag[name] reduce and_: GraphedNanoArray
+OK   HLT.fields startswith loop: list
+FAIL gak.num(genWeight, axis=0) -> int(): TypeError: int() argument must be a string, a bytes-like object or a real number, not 'GraphedNanoArray'
+FAIL gak.sum(genWeight>0) -> int(): TypeError: int() argument must be a string, a bytes-like object or a real number, not 'GraphedNanoArray'
+FAIL genWeight.to_numpy(): GraphedTypeError: ill-typed op 'method' at /Users/lgray/vibe-coding/graphed-workdir/lanes/htcondor/probes/services-code/probe_hgg_surface.py:32: to_numpy(): Converting from an np
+FAIL len(events): TypeError: object of type 'GraphedNanoArray' has no len()
+OK   gak.sum(genWeight>0) deferred: GraphedNanoArray
+OK   events[mask] (run range & MET): GraphedNanoArray
+OK   numpy.abs(a - b) % (2*pi): GraphedNanoArray
+OK   gak.where: GraphedNanoArray
+OK   gak.any(axis=1): GraphedNanoArray
+OK   gak.zeros_like / ones_like: GraphedNanoArray
+FAIL setitem Photon['mass']: AttributeError: __setitem__
+FAIL events['Photon'] = photons: AttributeError: __setitem__
+OK   Rho * ones_like(photons.pt): GraphedNanoArray
+OK   numpy.exp/sqrt/cosh/sinh/log/arctan/tan/sin/cos/arcsin: GraphedNanoArray
+OK   numpy.where(graphed, ...): ndarray
+OK   numpy.isnan: GraphedNanoArray
+OK   numpy.copy(graphed): ndarray
+FAIL PV.x.to_numpy + numpy.zeros_like + boolean setitem (pre-v13 ScEta path): GraphedTypeError: ill-typed op 'method' at /Users/lgray/vibe-coding/graphed-workdir/lanes/htcondor/probes/services-code/probe_hgg_surface.py:47: to_numpy(): Converting from an np
+OK   photons[mask]: GraphedNanoArray
+OK   gak.argsort + index: GraphedNanoArray
+OK   gak.combinations(fields=): GraphedNanoArray
+OK   candidate + candidate (.pt/.mass/.energy/.z/.charge): GraphedNanoArray
+FAIL setitem on combinations record: AttributeError: __setitem__
+FAIL gak.with_name(..., 'PtEtaPhiMCandidate'): GraphedTypeError: ill-typed op 'ak.with_name' at /Users/lgray/vibe-coding/graphed-workdir/lanes/htcondor/probes/services-code/probe_hgg_surface.py:53: PtEtaPhiMCandidateArray req
+FAIL gak.zip + with_name PtEtaPhiMCandidate: GraphedTypeError: ill-typed op 'ak.with_name' at /Users/lgray/vibe-coding/graphed-workdir/lanes/htcondor/probes/services-code/probe_hgg_surface.py:54: PtEtaPhiMCandidateArray req
+OK   metric_table (delta_r_mask) + gak.all(axis=-1): GraphedNanoArray
+FAIL metric_table on zipped PtEtaPhiMCandidate: GraphedTypeError: ill-typed op 'ak.with_name' at /Users/lgray/vibe-coding/graphed-workdir/lanes/htcondor/probes/services-code/probe_hgg_surface.py:56: PtEtaPhiMCandidateArray req
+OK   bool(gak.num(x, axis=0) > 0) in if: bool
+OK   gak.local_index==n, pad_none, fill_none, flatten (choose_jet): GraphedNanoArray
+OK   gak.firsts + ~gak.is_none + mask: GraphedNanoArray
+OK   gak.flatten/unflatten with counts: GraphedNanoArray
+FAIL gak.fields + record dict -> ak.Array({...}) rebuild: GraphedTypeError: ill-typed op 'method' at /Users/lgray/vibe-coding/lanes/notebook/.venv/lib/python3.12/site-packages/awkward/operations/ak_from_iter.py:101: to_list(): cannot co
+OK   gak.zip dict rebuild: GraphedNanoArray
+OK   with numpy.errstate(...): GraphedNanoArray
+FAIL events.attrs['@events_factory']._partition_key: AttributeError: a deferred graphed array cannot answer 'attrs'; materialize the array and read it there
+FAIL gak.to_arrow_table: AttributeError: module 'graphed.awkward.functions' has no attribute 'to_arrow_table'
+RECORDED_OK_OUTPUTS 20
+PLAN_RUN_OK n_outputs 20
+BOOL_NUM_AXIS0_VALUE True and for an empty-selection True
+FULL_ERROR with_name GraphedTypeError ill-typed op 'ak.with_name' at /Users/lgray/vibe-coding/graphed-workdir/lanes/htcondor/probes/services-code/probe_hgg_surface.py:76: PtEtaPhiMCandidateArray requires the 'charge' field
+FULL_ERROR setitem AttributeError __setitem__
+NUMPY_WHERE_TYPE <class 'numpy.ndarray'> ()

@@ -1,0 +1,14 @@
+X509_USER_PROXY=unset
+ls: /tmp/x509up_u501: No such file or directory
+[] / > Goodbye.
+
+
+security protocol 'ztn' disallowed for non-TLS connections.
+xrdfs rc=142
+  File "<string>", line 1, in <module>
+ModuleNotFoundError: No module named 'uproot'
+uproot rc=0
+    raise ImportError(bit.get("err")) from e
+ImportError: Install fsspec-xrootd to access xrootd storage system. Note: 'root' is the protocol name for xrootd storage systems, not referring to root directories
+uproot 5.7.7.dev14+gca3a8a28c
+uproot rc=0

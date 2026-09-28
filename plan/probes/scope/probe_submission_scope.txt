@@ -1,0 +1,5 @@
+S: runs=2 nonces=['b3665459', 'fd8d4849'] tasks=22 key_carries_arg0_nonce=True
+C abandoned: run order after the gate opens = ['A-probe-0', 'B-first']
+C cancelled: run order after the gate opens = ['B-first']
+P: run raised OSError('submit refused')
+P: leaves run after run raised = 2

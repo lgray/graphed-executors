@@ -1,0 +1,2 @@
+register_at_popen=False raised=Unavailable child_alive=True
+register_at_popen=True raised=Unavailable child_alive=False

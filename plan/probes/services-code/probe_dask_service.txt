@@ -1,0 +1,9 @@
+2026-09-25 08:48:15,481 - distributed.worker.state_machine - WARNING - Async instruction for <Task cancelled name="execute('svc')" coro=<Worker.execute() done, defined at /Users/lgray/vibe-coding/lanes/htcondor/.venv/lib/python3.12/site-packages/distributed/worker_state_machine.py:3606>> ended with CancelledError
+2026-09-25 08:48:19,480 - distributed.nanny - WARNING - Worker process still alive after 4.0 seconds, killing
+ANNOUNCE_FROM_PINNED_WORKER True {'name': 'svc', 'pid': 77524, 'worker': 'tcp://127.0.0.1:54200'} after 0.1s
+OTHER_TASKS_RAN_ELSEWHERE_WHILE_SERVICE_HELD True ['tcp://127.0.0.1:54201'] svc done? False
+CANCEL_RUNNING True | processing after cancel: {'tcp://127.0.0.1:54200': 0, 'tcp://127.0.0.1:54201': 0}
+VARIABLE_ANNOUNCE_FROM_PINNED_WORKER True {'name': 'svc', 'pid': 80238, 'worker': 'tcp://127.0.0.1:52016'} after 0.0s, no driver listener
+OTHER_TASKS_RAN_ELSEWHERE_WHILE_VARIABLE_SERVICE_HELD True ['tcp://127.0.0.1:52017'] svc done? False
+STOP_VIA_VARIABLE True ('stopped', 'tcp://127.0.0.1:52016') after 0.0s
+STOP_VIA_EVENT True ('stopped', 'tcp://127.0.0.1:58778') after 0.01s; announce from pinned worker, 4 tasks ran elsewhere meanwhile

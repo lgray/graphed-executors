@@ -1,0 +1,4 @@
+control: launch._htcondor() raises ImportError: CondorPilots needs the htcondor bindings (Linux wheels only)
+L site=lpc: launcher profile=generic server=http://127.0.0.1:10000 driver machine_host()=slot-host.example pilot machine_host()=slot-host.example attached service_hosts of run.site=('driver', 'cluster')
+L site=lxplus: launcher profile=generic server=http://127.0.0.1:10000 driver machine_host()=slot-host.example pilot machine_host()=slot-host.example attached service_hosts of run.site=('cluster',)
+C site=r8-lx: launcher profile=r8-lx server=http://slot-host.example:10000 attached service_hosts=('cluster',) service_ports=None worker_ports=(10000, 10100) FULL_HOSTNAME=login-or-container.example machine_host()=slot-host.example
