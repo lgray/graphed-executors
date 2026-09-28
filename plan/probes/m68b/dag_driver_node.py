@@ -22,10 +22,12 @@ here = os.path.dirname(os.path.abspath(__file__))
 recv = subprocess.Popen(["python3", os.path.join(here, "receiver_proto.py"), secret, "10000", "10100", record,
                          os.path.join(dag, "driver.url")], stdout=subprocess.PIPE, text=True)
 url = recv.stdout.readline().strip()
+# only an announce recorded after this start counts: a retried start may rebind the same port
+before = len(open(record).read().splitlines()) if os.path.exists(record) else 0
 seen = None
 end = time.monotonic() + 90
 while time.monotonic() < end and seen is None:
-    for line in open(record).read().splitlines() if os.path.exists(record) else []:
+    for line in (open(record).read().splitlines() if os.path.exists(record) else [])[before:]:
         rec = json.loads(line)
         if rec["ok"] and rec["port"] == int(url.rpartition(":")[2]):
             seen = rec

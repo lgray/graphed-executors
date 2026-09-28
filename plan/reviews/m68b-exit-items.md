@@ -96,3 +96,12 @@ Wording, notes and small constraints from review r11 (`plan-services-m68b-r11.md
 - The "under `job_root`" test applies to the directory actually used. With `log_dir=None`, generic (`"/"`) accepts the temporary dir and any other root refuses, as m67 refuses `None` for lxplus today.
 - r10's items still stand: "stock" `from_dag` at L420 and L526.
 - Evidence r11: `probes/m68b/probe_r11_coverage.txt`, `probe_r11_dag_names.txt`, `probe_r11_fromdag_versions.txt`, `probe_r11_reruns.txt` (re-runs of `probe_service_job`, `probe_dag_service` and `probe_announce_rules`).
+
+## decisions (round 5)
+- Frozen subprocess legs run `python -m graphed_executors.htcondor_backend.announce`; the job keeps running the transferred file by path. Reason: coverage records only the module form (probe_r11_coverage); an imaged job has no package to `-m`, and a `__main__` guard with stdlib-only imports makes both the same code.
+- SERVICE nodes use derived ids `svc<i>` (name order) for node name, `.sub` stem and announce key; `run.json.announce_only` maps name → id. Reason: a spec name is free text; `driver` collides (probe_r11_dag_names) and whitespace breaks the three-field announce; deriving keeps every legal name usable instead of refusing some.
+- A spec whose `kind` the site row's `services` serves never becomes a SERVICE node. Reason: D2's order puts leg 2 before leg 3, and LPC's EAF Triton must keep serving driverless runs as in m68a; a leg-2 failure in the job then exits 1 and is retried.
+- `announce.py` runtime floor 3.9 (`__future__` annotations, `OSError` not `socket.timeout`, no 3.10+ names). Reason: ruff's py311 UP rules would otherwise introduce forms that differ on 3.9.
+- Subprocess legs set `$_CONDOR_MACHINE_AD` with `Machine = localhost`. Reason: a CI runner's `getfqdn` (macOS) is not known to resolve.
+- The `from_dag` fixture comparison runs only in `test-htcondor` and substitutes DAG dir, bindings' `CsdVersion` and `condor_dagman` path. Reason: the wheel lacks `condor_dagman` (probe_r11_fromdag_versions); the rest is identical across 25.13.2/25.14.1.
+- m68b split into B1 (attached hosting, commit 1 + its freeze) and B2 (DAG, job_root, lxplus, commits 2–3 + its freeze), CI/docs/§7 with B2. Reason: non-convergence rule; each part reviewable on its own.
