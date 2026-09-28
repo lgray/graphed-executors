@@ -185,3 +185,21 @@ Wording and small constraints from review r13-B2 (`plan-services-m68b-r13-b2.md`
 - Every `svc<i>.sub` carries `periodic_remove = JobStatus == 5` (after the profile keys, before `extra_submit`). Reason: a held SERVICE node at DAG end makes DAGMan exit 1 under `DAGMAN_USE_STRICT`, removed it does not (probe_r13_dag_held_service; `_prm` variant).
 - `release_service` forgets the announce key before popping, and every `host_service` failure path forgets it. Reason: no record can reappear after release; D10's "releases what it started" covers the registered secret.
 - The simulated-GPU pool line moves to commit 1 with `test-htcondor` running `tests/frozen/m68b`. Reason: B2's live file must find the GPU whenever it lands; B1's timeout leg is unaffected (it asks for two).
+
+## r14-B2 exit items
+Wording from review r14-B2 (`plan-services-m68b-r14-b2.md`, a delta round). The design finding is M43-B2 in that review.
+
+- **L547, where `periodic_remove` goes.** `ServiceJob`'s keys run profile keys → `MY.SingularityImage` →
+  `extra_submit` (L463-464), so "after the profile keys and before the launcher's `extra_submit`" leaves open whether it
+  sits before or after `MY.SingularityImage`. Harmless (distinct keys), but say "just before the launcher's
+  `extra_submit`", so a user's `periodic_remove` in `extra_submit` still overrides it and the implementer inserts at
+  one place.
+
+## r14-B1 exit items
+Wording and small constraints from review r14-B1 (`plan-services-m68b-r14-b1.md`, a delta round). The design findings are M30-B1 and M31-B1 in that review.
+
+- **L622, stale wording.** "`service.json` and `graphed-secret` in the child's cwd as in the job" should now read "in the job dir (the child runs in `service/`), as in the job".
+- **L627–630, a claim no row witnesses.** "Fails on: an announce secret left registered after a failed or released call" is not tested. Add a spy on `TaskServer.forget_announce` to the live row (b): the key is forgotten on the timeout path and on the dead-child path, and `release_service` calls `forget_announce` before `ServiceJob.stop`. Or say that the line is carried by review.
+- **L440–442, the rationale names only lxplus.** LPC's `x509userproxy` (`sites.py:51-53`) is also transferred into scratch, and LPC has `"cluster"`. The `service/` subdir keeps it out of the child's cwd too, so say so. The proxy stays readable by the child through `X509_USER_PROXY`, but the child does not serve it.
+- **L443, a missing input.** The prototype skips an input that is not in scratch (`os.path.exists`). Say so, or say that it exits 3 naming the input. Condor holds a job with a missing input anyway, so neither choice matters in a job.
+- **Evidence r14-B1:** `probe_announce_rules.py`, re-run locally, reproduces L1–L9. The duplicate-basename check (htcondor/mini) shows that the later file silently wins: the user's `service.json` replaced the job's own, with exit code 0.
