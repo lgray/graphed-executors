@@ -209,3 +209,36 @@ Wording and small constraints from review r14-B1 (`plan-services-m68b-r14-b1.md`
 - An input absent from scratch is skipped by `announce.py`. Reason: condor holds a job with a missing input before it runs, so the case does not arise in a job.
 - A watch-mode (SERVICE node) `ServiceJob` keeps `MY.SendCredential`; only the attached path drops it. Reason: the node reads `dag_dir` (AFS on lxplus) in the job; `service/` keeps the ticket cache out of the served cwd (probe_announce_rules L9); acceptance and `klist` are site check (2)'s.
 - A relative `{python}` is made absolute before `Popen(cwd=service/)`. Reason: POSIX resolves a relative `argv[0]` against the new cwd (probe_announce_rules L10 control: `FileNotFoundError`).
+
+## r15-B2 exit items
+Wording and test tightening from review r15-B2 (`plan-services-m68b-r15-b2.md`, a delta round). No design finding.
+
+- **L633, the new lxplus leg's setup.** `SITES["lxplus"]` templates `MY.SingularityImage` over `{image}` and has
+  `ship_env=True` (`sites.py:72-80`), so `CondorPilots._refuse` needs `image=` and a shippable venv
+  (`launch.py:180-194`). Its only SERVICE-capable host is `("cluster",)`, so the spec must be GPU or imaged. Say "with
+  `image=` and a fake venv, a GPU spec" as the lpc leg does.
+- **L633, "`submit` without spool" discriminates only on a `spool=True` profile.** The ids/DAG-text leg runs on a
+  generic copy (`spool=False`), where `launcher._submit` (`launch.py:226-230`, spool = `profile.spool`) also passes.
+  The new lxplus copy is `spool=True`. Assert there that the recorder logs `("submit", …, spool=False)` and no
+  `("spool",)` (`tests/frozen/m67/driverless_harness.py:254-259`). This pins "never spooled" (L568; round-1 decision)
+  at the one site it is for. The same precedent as r13's `result()`-no-`retrieve` item.
+- **L617, site check (2)'s `klist`.** The SERVICE node runs in `tritonserver:24.11-py3`. Its `klist` is unmeasured.
+  m67's `klist` ran in the coffea image (`m67-driverless.txt` L22), and the Triton image may not ship krb5 tools. Name
+  how the owner gets the SERVICE node's shell (`condor_ssh_to_job <svc cluster>`). Record `$KRB5CCNAME` and whether its
+  file exists, plus `klist`/`tokens` where present. The deciding evidence stays "the SERVICE node reading
+  `driver.url`/`graphed-secret` on AFS".
+- **L447-450 vs L552-561, the reserved-name refusal on the DAG path.** B2 builds nodes with `ServiceJob(...,
+  watch=…).files`, never `submit()`. Say that the refusal is raised by the constructor or `files()`, so the SERVICE
+  nodes get it, before `run.dag` is written and before `from_dag`. Optionally add one DAG case (an `announce_only`
+  recipe input named `service.json` refused naming it, recorder without `from_dag`). The names do not collide with
+  B2's own files: `svc<i>.sub`, `service-svc<i>/`, `run.dag` and `driver.url` live in the DAG dir, not in the node's
+  scratch.
+- **Round-7 decision 1** still reads "a `ServiceJob` drops `MY.SendCredential`" without scope. Round 8 narrows it to
+  the attached path. Mark it superseded there, or leave it as is if the log is read in order.
+
+## r15-B1 exit items
+Wording and small constraints from review r15-B1 (`plan-services-m68b-r15-b1.md`, a delta round). The design finding is M32-B1 in that review.
+
+- **L631, the relative-`{python}` leg's witness.** The POSIX legs also run on macOS (the `ci.yml` matrix). "The child's `argv[0]` is absolute" therefore needs a reader that works there too, such as `ps -o args= -p <pid>`. `/proc/<pid>/cmdline` and `pgrep -a` (which the probe uses) are Linux-only. Alternatively, let the announce alone carry the leg. It already discriminates, because a relative path makes `Popen` raise `FileNotFoundError`.
+- **L449–451, the proxy's basename.** On lpc, condor also transfers `x509up_u<uid>` into scratch. An input with that basename would replace the proxy, or be replaced by it. This is contrived. Refuse it only if the reserved set is extended anyway (M32-B1), or leave it to review.
+- **Evidence r15-B1:** `probe_announce_rules.py`, re-run locally, reproduces L1–L10. On htcondor/mini 25.13.2 the executable lands in scratch under its own name (`service.sh`, not `condor_exec.exe`). Under `MOUNT_UNDER_SCRATCH` (the default, active when the starter can mount), scratch also holds `tmp/` and `var/tmp/`, bind-mounted over `/tmp` and `/var/tmp` (M32-B1).
