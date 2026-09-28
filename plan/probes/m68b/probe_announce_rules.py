@@ -13,6 +13,8 @@ Run: python3 probe_announce_rules.py > probe_announce_rules.txt   (POSIX)
     x10 -> exit 3 naming 7 after exactly one child start each run (free() binds with SO_REUSEADDR)
  L8 attached, http.server child in the cwd that held graphed-secret: after the announce GET /graphed-secret -> 404,
     the file is gone from the cwd, and the beats still take 200
+ L10 {python} = ./env/bin/python (a symlink in the job dir to this interpreter): the child starts from service/ and
+    announces, argv[0] absolute; control: Popen of the relative path with cwd=service/ raises FileNotFoundError
  L9 the job dir also holds a stand-in ticket cache (user.cc) and an input dir `models/`: the child runs in service/,
     GET /user.cc -> 404, GET /models/m.txt -> 200 (the input moved in; the argv names it relatively)
 """
@@ -198,3 +200,27 @@ def l9(p):
 
 run("L9 child cwd holds only the inputs", cfg(ports=[lo, lo + 2], url=url, secret="graphed-secret", lease_s=3, beat_s=1,
                                               inputs=["models"]), until=l9)
+
+os.makedirs("env/bin", exist_ok=True)
+if not os.path.lexists("env/bin/python"):
+    os.symlink(PY, "env/bin/python")
+open("graphed-secret", "w").write(SECRET)
+r, url, rec = receiver("recv-secret")
+lo = free_base(3)
+
+
+def l10(p):
+    time.sleep(4)
+    port = json.loads(open(rec).read().splitlines()[0])["fields"][1].rpartition(":")[2]
+    ps = subprocess.run(["pgrep", "-af", "http.server %s" % port], capture_output=True, text=True).stdout.split()
+    print("   child argv[0]:", ps[1] if len(ps) > 1 else None)
+    r.terminate()
+
+
+run("L10 relative {python}", cfg(ports=[lo, lo + 2], url=url, secret="graphed-secret", lease_s=3, beat_s=1,
+                                 python="./env/bin/python"), until=l10)
+try:
+    subprocess.Popen(["./env/bin/python", "-c", "pass"], cwd="service").wait()
+    print("   control: relative ./env/bin/python with cwd=service/ started")
+except FileNotFoundError as exc:
+    print("   control: relative ./env/bin/python with cwd=service/ ->", type(exc).__name__)
