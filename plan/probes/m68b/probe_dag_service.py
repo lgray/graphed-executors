@@ -2,13 +2,15 @@
 
 Run: docker exec -u submituser m68b-probe-pool python3 /probes/probe_dag_service.py > probe_dag_service.txt
 
-Each DAG is submitted through the bindings (htcondor2.Submit.from_dag, schedd.submit, no spool) from a DAG
-dir both nodes read directly. The SERVICE node runs announce_proto.py in watch mode (key = the node name);
+Each DAG is submitted through the bindings (htcondor2.Submit.from_dag(run.dag, {"usedagdir": True, "force": True}),
+schedd.submit, no spool) from the home dir (not the DAG dir), the DAG dir being one both nodes read directly. The SERVICE node runs announce_proto.py in watch mode (key = the node name);
 each driver start (dag_driver_node.py) is a new receiver on a new port with a new secret, written into
 the DAG dir secret-first then driver.url, each by atomic rename.
  R  driver exits 1, then 0: one SERVICE cluster serves both driver starts (it re-announces to the second
     url with the second secret), DAGMan exits 0, the SERVICE job is removed at DAG end.
- X  driver exits 3: no retry, DAGMan exits nonzero, the SERVICE job is removed.
+ X  driver exits 3: no retry, DAGMan exits nonzero, the SERVICE job is removed (a rescue DAG is left).
+ U  a new DAG into X's dir (its run.dag.* and rescue files present), driver exits 0: accepted, the nodes run from
+    the start (force renames the rescue DAG), DAGMan exits 0.
 Also printed: the from_dag description (the generic DAG submit fixture) and the removed SERVICE ad.
 """
 
@@ -33,15 +35,22 @@ def wait_for(pred, timeout, step=2.0):
     return None
 
 
-def run(tag, codes):
-    d = os.path.expanduser("~/m68b-dag-%s" % tag)
-    shutil.rmtree(d, ignore_errors=True)
-    os.makedirs(d)
+def run(tag, codes, reuse=None):
+    d = os.path.expanduser("~/m68b-dag-%s" % (reuse or tag))
+    if reuse:
+        print("[%s] reusing %s, which holds: %s" % (tag, d, sorted(f for f in os.listdir(d) if f.startswith("run.dag"))))
+        for f in ("attempts", "announces.jsonl"):
+            if os.path.exists(os.path.join(d, f)):
+                os.remove(os.path.join(d, f))
+    else:
+        shutil.rmtree(d, ignore_errors=True)
+        os.makedirs(d)
     for f in ("announce_proto.py", "receiver_proto.py", "dag_driver_node.py"):
         shutil.copy(os.path.join(P, f), d)
     json.dump({"argv": ["{python}", "-m", "http.server", "{port}"], "env": {}, "check": "http:/",
                "ports": [10000, 10100], "key": "web", "url": None, "watch": d, "secret": None,
-               "python": "/usr/bin/python3", "timeout_s": 60}, open(os.path.join(d, "service.json"), "w"))
+               "python": "/usr/bin/python3", "timeout_s": 60, "lease_s": 30, "beat_s": 10},
+              open(os.path.join(d, "service.json"), "w"))
     common = ("universe = vanilla\nshould_transfer_files = YES\nwhen_to_transfer_output = ON_EXIT_OR_EVICT\n"
               "transfer_output_files = \"\"\nrequest_memory = 128\n")
     open(os.path.join(d, "driver.sub"), "w").write(
@@ -54,8 +63,8 @@ def run(tag, codes):
         "output = web.out\nerror = web.err\nlog = nodes.log\nqueue\n")
     dagfile = os.path.join(d, "run.dag")
     open(dagfile, "w").write("JOB driver driver.sub\nSERVICE web web.sub\nRETRY driver 2 UNLESS-EXIT 3\n")
-    os.chdir(d)
-    desc = htc.Submit.from_dag(dagfile, {})
+    os.chdir(os.path.expanduser("~"))  # the submitter's cwd is not the DAG dir
+    desc = htc.Submit.from_dag(dagfile, {"usedagdir": True, "force": True})
     if tag == "R":
         print("from_dag description:")
         for k in sorted(desc.keys()):
@@ -83,3 +92,5 @@ def run(tag, codes):
 print("condor", htc.version())
 run("R", [1, 0])
 run("X", [3])
+run("U", [0], reuse="X")
+print("[U] files after:", sorted(f for f in os.listdir(os.path.expanduser("~/m68b-dag-X")) if f.startswith("run.dag")))

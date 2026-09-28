@@ -1,16 +1,16 @@
 condor $CondorVersion: 25.13.2 2026-08-19 BuildID: 943576 PackageID: 25.13.2-1 GitSHA: 589a5b38 $
-FULL_HOSTNAME f406f3a35fff
-slot Machine ['f406f3a35fff']
-A receiver (task-server stand-in) at http://f406f3a35fff:10000
+FULL_HOSTNAME 08fa6a0db278
+slot Machine ['08fa6a0db278']
+A receiver (task-server stand-in) at http://08fa6a0db278:10000
 A a listener holds 10001
-A submitted service cluster 20
-A announce record: {"path": "/announce", "fields": ["nonce1-0123456789abcdef", "f406f3a35fff:10002", "f406f3a35fff"], "ok": true, "port": 10000}
+A submitted service cluster 1
+A announce record: {"path": "/announce", "fields": ["nonce1-0123456789abcdef", "08fa6a0db278:10002", "08fa6a0db278"], "ok": true, "port": 10000}
 A announced port 10002 (10000 receiver, 10001 listener)
 A identity == FULL_HOSTNAME: True
-A job ad {'JobStatus': 2, 'RemoteHost': 'slot1_1@f406f3a35fff', 'Args': 'announce_proto.py service.json'}
+A job ad {'JobStatus': 2, 'RemoteHost': 'slot1_1@08fa6a0db278', 'Args': 'announce_proto.py service.json'}
 A arguments carry no secret: True
-B GET http://f406f3a35fff:10002/ -> 200 text/html; charset=utf-8
-B service child pid(s) while running: 758
+B GET http://08fa6a0db278:10002/ -> 200 text/html; charset=utf-8
+B service child pid(s) while running: 275
 B queue empty after remove: True
 B child pid(s) after remove: ''
 B history {'JobStatus': 3, 'RemoveReason': None, 'VacateReason': 'Claim deactivated'}

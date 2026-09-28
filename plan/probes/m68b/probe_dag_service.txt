@@ -2,7 +2,7 @@ condor $CondorVersion: 25.13.2 2026-08-19 BuildID: 943576 PackageID: 25.13.2-1 G
 from_dag description:
    My.IsDaemonCore = True
    My.OtherJobRemoveRequirements = "DAGManJobId =?= $(cluster)"
-   arguments = "-f -l . -Lockfile /home/submituser/m68b-dag-R/run.dag.lock -Dag /home/submituser/m68b-dag-R/run.dag -CsdVersion $CondorVersion:' '25.13.2' '2026-08-19' 'BuildID:' '943576' 'PackageID:' '25.13.2-1' 'GitSHA:' '589a5b38' '$ -dagman /usr/bin/condor_dagman -AutoRescue 1"
+   arguments = "-f -l . -Lockfile /home/submituser/m68b-dag-R/run.dag.lock -Dag /home/submituser/m68b-dag-R/run.dag -CsdVersion $CondorVersion:' '25.13.2' '2026-08-19' 'BuildID:' '943576' 'PackageID:' '25.13.2-1' 'GitSHA:' '589a5b38' '$ -dagman /usr/bin/condor_dagman -UseDagDir -AutoRescue 1 -force"
    environment = "_CONDOR_DAGMAN_LOG=/home/submituser/m68b-dag-R/run.dag.dagman.out _CONDOR_MAX_DAGMAN_LOG=0"
    error = /home/submituser/m68b-dag-R/run.dag.lib.err
    executable = /usr/bin/condor_dagman
@@ -12,19 +12,28 @@ from_dag description:
    output = /home/submituser/m68b-dag-R/run.dag.lib.out
    remove_kill_sig = SIGUSR1
    universe = scheduler
-[R] DAGMan cluster 9, JobUniverse 7
-[R]   node web cluster 10 JobStatus 3 ExitCode 143 RemoveReason 'removed because <OtherJobRemoveRequirements = DAGManJobId =?= 9> fired when job (9.0) was removed'
-[R]   node driver cluster 11 JobStatus 4 ExitCode 1 RemoveReason None
-[R]   node driver cluster 12 JobStatus 4 ExitCode 0 RemoveReason None
+[R] DAGMan cluster 1, JobUniverse 7
+[R]   node web cluster 2 JobStatus 3 ExitCode 143 RemoveReason 'removed because <OtherJobRemoveRequirements = DAGManJobId =?= 1> fired when job (1.0) was removed'
+[R]   node driver cluster 3 JobStatus 4 ExitCode 1 RemoveReason None
+[R]   node driver cluster 4 JobStatus 4 ExitCode 0 RemoveReason None
 [R] DAGMan history: JobStatus 4 ExitCode 0 JobUniverse 7
 [R] SERVICE clusters: 1; driver clusters: 2
-[R] driver start 0: url http://f406f3a35fff:10000, announce ['web', 'f406f3a35fff:10001', 'f406f3a35fff'], GET 200
-[R] driver start 1: url http://f406f3a35fff:10000, announce ['web', 'f406f3a35fff:10001', 'f406f3a35fff'], GET 200
-[R] announces received: [10000, 10000]
-[X] DAGMan cluster 13, JobUniverse 7
-[X]   node web cluster 14 JobStatus 3 ExitCode 143 RemoveReason 'removed because <OtherJobRemoveRequirements = DAGManJobId =?= 13> fired when job (13.0) was removed'
-[X]   node driver cluster 15 JobStatus 4 ExitCode 3 RemoveReason None
+[R] driver start 0: url http://71f9fa156c73:10001, announce ['web', '71f9fa156c73:10000', '71f9fa156c73'], GET 200
+[R] driver start 1: url http://71f9fa156c73:10001, announce ['web', '71f9fa156c73:10000', '71f9fa156c73'], GET 200
+[R] announces received: [10001, 10001]
+[X] DAGMan cluster 5, JobUniverse 7
+[X]   node web cluster 6 JobStatus 3 ExitCode 143 RemoveReason 'removed because <OtherJobRemoveRequirements = DAGManJobId =?= 5> fired when job (5.0) was removed'
+[X]   node driver cluster 7 JobStatus 4 ExitCode 3 RemoveReason None
 [X] DAGMan history: JobStatus 4 ExitCode 1 JobUniverse 7
 [X] SERVICE clusters: 1; driver clusters: 1
-[X] driver start 0: url http://f406f3a35fff:10000, announce ['web', 'f406f3a35fff:10002', 'f406f3a35fff'], GET 200
+[X] driver start 0: url http://71f9fa156c73:10000, announce ['web', '71f9fa156c73:10002', '71f9fa156c73'], GET 200
 [X] announces received: [10000]
+[U] reusing /home/submituser/m68b-dag-X, which holds: ['run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.metrics', 'run.dag.nodes.log', 'run.dag.rescue001']
+[U] DAGMan cluster 8, JobUniverse 7
+[U]   node web cluster 9 JobStatus 3 ExitCode 143 RemoveReason 'removed because <OtherJobRemoveRequirements = DAGManJobId =?= 8> fired when job (8.0) was removed'
+[U]   node driver cluster 10 JobStatus 4 ExitCode 0 RemoveReason None
+[U] DAGMan history: JobStatus 4 ExitCode 0 JobUniverse 7
+[U] SERVICE clusters: 1; driver clusters: 1
+[U] driver start 0: url http://71f9fa156c73:10000, announce ['web', '71f9fa156c73:10003', '71f9fa156c73'], GET 200
+[U] announces received: [10000]
+[U] files after: ['run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.metrics', 'run.dag.nodes.log', 'run.dag.rescue001.old']

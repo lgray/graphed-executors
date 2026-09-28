@@ -69,7 +69,8 @@ print("A a listener holds 10001")
 with open("service.json", "w") as f:
     json.dump({"argv": ["{python}", "-m", "http.server", "{port}"], "env": {}, "check": "http:/",
                "ports": [10000, 10100], "key": "nonce1-0123456789abcdef", "url": url, "watch": None,
-               "secret": "graphed-secret", "python": "/usr/bin/python3", "timeout_s": 60}, f)
+               "secret": "graphed-secret", "python": "/usr/bin/python3", "timeout_s": 60, "lease_s": 30,
+               "beat_s": 10}, f)
 sub = htc.Submit({
     "universe": "vanilla", "executable": "/usr/bin/python3",
     "arguments": "announce_proto.py service.json",
