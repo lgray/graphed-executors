@@ -245,3 +245,32 @@ Wording and small constraints from review r15-B1 (`plan-services-m68b-r15-b1.md`
 
 ## decisions (round 9)
 - The reserved input names add `tmp`, `var` and the `x509up_u` prefix, checked in `ServiceJob`'s constructor. Reason: under `MOUNT_UNDER_SCRATCH` condor's `tmp/`/`var/tmp/` in scratch are bind-mounted over `/tmp`/`/var/tmp`, so an input `tmp` would merge into and serve the job's `/tmp` (r15-B1); the proxy's basename is condor's too; the constructor covers B2's `files()` before `run.dag` is written.
+
+## r16-B1 exit items
+These are wording items and small constraints from review r16-B1 (`plan-services-m68b-r16-b1.md`, a delta round). That review has no design finding.
+
+- **L634, where the relative-`{python}` leg gets `<pid>`.** The plan's `announce.py` text does not say that the child's pid is ever emitted. The prototype logs `ready pid=<n>` (`announce_proto.py:139`), and the probe instead finds the process with `pgrep -af`. The plan should name the pid source: either keep the prototype's `ready pid=` log line in `announce.py`, or use `pgrep -P <announce.py pid>`, which works on Linux and macOS.
+- **L445–451 with L529–532, the constructor refusal as a `host_service` failure path.** `host_service` mints the key's announce secret before it constructs the `ServiceJob`, because the constructor takes `secret=`. A reserved-name refusal therefore raises after `announce_secret([key])`. "Every failure path … calls `forget_announce([key])`" already covers this, but no leg witnesses it. Either name the refusal among those paths, or add it to the live row's `forget_announce` spy, where it needs no pool.
+- **L449–450, `tmp`/`var` assume the default `MOUNT_UNDER_SCRATCH` (`/tmp,/var/tmp`).** A site that adds a directory, for example `/dev/shm`, adds a scratch root such as `dev` that the fixed set does not refuse. The plan should state the assumption beside the reason. The execute side's configuration cannot be read from the submit host.
+- **Evidence r16-B1:** on Linux, `ps -o args= -p <pid>` prints the absolute `…/env/bin/python` argv[0] of a child that was started through a symlink to `sys.executable` with `cwd=service/`. The argv[0] is not rewritten.
+
+## r16-B2 exit items
+These are wording items and small constraints from review r16-B2 (`plan-services-m68b-r16-b2.md`, a whole-part read). The design finding is M44-B2 in that review.
+
+- **L168 (m67's `run.json` schema) vs L555–556.** m67's line still reads `announce_only: [] (m68)`, a list. B2
+  makes it `{name: id}`, a dict, which `driver._runner` reads as `run.get("announce_only") or {}`. Mark the m67 line
+  "(m68b: a `{name: node id}` map)" so nobody writes a list.
+- **L636, the ids leg's first clause.** "specs named `driver` and `a b` get `svc0`/`svc1`" reads as `driver → svc0`.
+  The same row's `announce_only == {"a b": "svc0", "driver": "svc1"}` is the truth. Reorder the clause to "`a b` and
+  `driver` get `svc0`/`svc1`".
+- **L634 vs L656–658, the watch-mode `ServiceJob` partition.** B1's frozen row (commit B1-0, gated at B1-1) asserts
+  "(a watch-mode one keeps it)", that is, `MY.SendCredential` on `ServiceJob(watch=…)`. That assertion needs the
+  `watch=` path, but B2's commit 2 claims "`ServiceJob` watch mode in `services.py`". Fix it one of two ways:
+  - move those ~15 lines into B1's commit 1, since `announce.py`'s watch loop is already there;
+  - or drop the parenthetical from B1's row, because B2's row already asserts that `svc0.sub` carries
+    `MY.SendCredential = True`.
+- **L658, the commit label.** `ci+docs(m68b)` carries no CI change: the CI lines are in B1's commit 1 (L655, L421).
+  Name it `docs(m68b)`.
+- **Evidence r16-B2:** `probes/m68b/probe_r16_dag_stale_result.{py,sh,txt}` (M44-B2). An evicted driver node with
+  `ON_EXIT_OR_EVICT` is held at output transfer. That reproduces `probe_r12_dag_held_node.txt`. Removing each held
+  node gives DAGMan `ExitCode 1` after two retries, while a stale `result.pkl` remains in the DAG dir.

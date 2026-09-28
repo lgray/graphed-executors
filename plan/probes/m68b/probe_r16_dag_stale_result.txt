@@ -1,0 +1,28 @@
+# r16-B2 probe (htcondor/mini 25.13.2, container r16b2-pool): reused DAG dir holding a previous run's result.pkl = (True, "PREVIOUS RUN'S VALUE"); JOB driver (sleep 300, periodic_remove after 5 s running, when_to_transfer_output ON_EXIT_OR_EVICT, transfer_output_files=result.pkl) + SERVICE svc0 + RETRY driver 2 UNLESS-EXIT 3; from_dag usedagdir/force, unspooled.
+## part 1: probe_r16_dag_stale_result.py (the evicted driver node is held at output transfer: result.pkl missing)
+DAGMan 1 history: [] after 502s
+node history: []
+result.pkl now holds: (True, "PREVIOUS RUN'S VALUE")
+files: ['driver.condor.log', 'driver.sh', 'driver.sub', 'result.pkl', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'svc0.log', 'svc0.sub']
+condor_q: DAGMan 1 JobStatus 2; svc0 (2) JobStatus 2; driver (3) JobStatus 5 HoldReason 'Transfer output files failure ... result.pkl: (errno 2) No such file or directory'
+## part 2: probe_r16_dag_stale_result.sh (each held driver node removed with condor_rm, as a user or a held-job removal policy would)
+round 1: removing held driver node 3.0
+round 2: removing held driver node 4.0
+round 3: removing held driver node 5.0
+no held driver on round 4
+queue after:
+2 svc0 3 undefined removed because <OtherJobRemoveRequirements = DAGManJobId =?= 1> fired when job (1.0) was removed
+1 undefined 4 1 undefined
+5 driver 3 undefined via condor_rm (by user submituser)
+4 driver 3 undefined via condor_rm (by user submituser)
+3 driver 3 undefined via condor_rm (by user submituser)
+result.pkl: (True, "PREVIOUS RUN'S VALUE")
+09/28/26 16:41:09 DAGMAN_RETRY_SUBMIT_FIRST setting: True
+09/28/26 16:41:09 DAGMAN_RETRY_NODE_FIRST setting: False
+09/28/26 16:41:09 Warning: failed to get attribute DAGNodeName
+09/28/26 16:49:46 Retrying node driver (retry #1 of 2)...
+09/28/26 16:50:06 Retrying node driver (retry #2 of 2)...
+09/28/26 16:50:26 ERROR: the following job(s) failed:
+09/28/26 16:50:26           Retry: 2
+09/28/26 16:50:26 **** condor_dagman (condor_DAGMAN) pid 178 EXITING WITH STATUS 1
+# => DAGMan history JobStatus 4 ExitCode 1: RunHandle(dag=True) maps it to 'failed', and result() would unpickle the previous run's (True, value) from the DAG dir.
