@@ -28,3 +28,16 @@ Planner decisions on ambiguities in §3.3 (and the D3/D10/§6–§9 lines m68b b
 - Live tests: (a)/(b) on a generic copy with `service_ports=None`; the DAG leg with a GPU `http_server` on a pool with one simulated GPU; the timeout leg asks for 2 GPUs. Reason: r7 M15 for (a); in a driver job only a GPU/imaged recipe is DAG-hosted, and minicondor needs `sim_gpu.config` to match one (probe_sim_gpu).
 - lxplus run: `model_repository="models"`. Reason: r7 M17 (probe_service_job C).
 - LPC/lxplus premises that need a live site are two owner-run site checks after CI is green, not freeze blockers. Reason: owner instruction (sites unreachable from the planning session).
+
+## r8 exit items
+Wording, notes and small implementer constraints from review r8 (`plan-services-m68b-r8.md`). None of them makes a round unclean.
+
+- `ServiceJob.stop()` also unlinks its `service-<key>/graphed-secret`, as `CondorPilots.stop` unlinks the pilots' secret (`launch.py`, the last line of `stop`). The file is 0600 and belongs to a dead server's secret, so this is hygiene only.
+- "Its removal registered when `schedd.submit` returns" (L479, D10) sits inside `launcher._submit`, which submits and then spools in one call (`launch.py:226-230`). The `ServiceJob` reuses whatever pre-spool registration hook m68a gives `CondorPilots` and adds none of its own.
+- On a non-spooled pool a completed `ServiceJob` leaves the queue at once. `host_service`'s "gone" branch therefore reads `JobStatus`/`ExitCode` from `schedd.history(..., match=1)`, as `RunHandle._poll` does.
+- `announce.py` is stdlib-only and cannot import `server.POLL_S`. Carry the beat interval in `service.json` (for example `beat_s`) or copy the constant with a comment. The plan should say which.
+- §6: `sim_gpu.config`'s two lines must be in the pool config before `condor` starts in `test-htcondor`'s pool step, or be followed by `condor_restart -daemon startd`, as `probe_sim_gpu.py` does.
+- Docs (`htcondor.rst` "Cluster-hosted services"): a recipe `inputs` directory lands under its basename, so `recipes.triton`'s `model_repository` must be a bare name relative to the driver's cwd (for example `"models"`, not `"a/models"`).
+- Docs: a SERVICE node that dies before announcing costs the DAG up to 3 × `timeout_s` (the driver times out, exits 1, and `RETRY` runs it twice more) before it fails. The in-job backend does not query the schedd.
+- Note: `announce_only` ignores leg 2. A site row with both a `services` entry for a kind and a `job_root` would submit a SERVICE node that goes unused whenever the site endpoint passes. No row has both today (lxplus and generic `services={}`, lpc `job_root=None`).
+- Evidence added by r8: `probes/m68b/probe_r8_paths.{py,txt}` (relative `executable`; `from_dag` cwd), `probe_r8_fromdag_force.txt` and `probe_r8_announce_loop.txt`. `probe_service_job` and `probe_dag_service` were re-run on `htcondor/mini` 25.13.2 and reproduce.

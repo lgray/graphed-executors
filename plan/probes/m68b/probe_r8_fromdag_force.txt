@@ -1,0 +1,9 @@
+# Submit.from_dag on a DAG dir a previous DAG already used (r8 review, htcondor/mini 25.13.2; script: /tmp scratch, same calls)
+# options {} on the used dir:
+ERROR: "/home/submituser/r8-dag-2/run.dag.condor.sub" already exists. (and run.dag.lib.out, run.dag.lib.err, run.dag.dagman.log)
+htcondor2_impl.HTCondorException: Unable to write condor_dagman output files
+# options {force: True} and {usedagdir: True, force: True}:
+force=True on a used dir: accepted
+DIFF arguments 
+  {force}: "-f -l . -Lockfile /home/submituser/r8-dag-2/run.dag.lock -Dag /home/submituser/r8-dag-2/run.dag -CsdVersion $CondorVersion:' '25.13.2' '2026-08-19' 'BuildID:' '943576' 'PackageID:' '25.13.2-1' 'GitSHA:' '589a5b38' '$ -dagman /usr/bin/condor_dagman -AutoRescue 1 -force" 
+  +usedagdir: "-f -l . -Lockfile /home/submituser/r8-dag-2/run.dag.lock -Dag /home/submituser/r8-dag-2/run.dag -CsdVersion $CondorVersion:' '25.13.2' '2026-08-19' 'BuildID:' '943576' 'PackageID:' '25.13.2-1' 'GitSHA:' '589a5b38' '$ -dagman /usr/bin/condor_dagman -UseDagDir -AutoRescue 1 -force"

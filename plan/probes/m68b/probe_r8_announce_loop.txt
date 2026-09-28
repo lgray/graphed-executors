@@ -1,0 +1,14 @@
+# announce_proto.py loop timing (local, no condor), r8 review
+# exits.json: argv exits 1 at once, ports 20000-20100, timeout_s 600
+real 0m50.8s exit=3; 'child exited' lines: 102 (one per port + final)
+[announce 14:44:41] port 20100: child exited 1 on port 20100
+[announce 14:44:41] not ready: child exited 1 on port 20100
+# alive.json: argv alive, never listening, check tcp, ports 20000-20002, timeout_s 2
+real 0m6.1s exit=3 (one full timeout_s per port)
+[announce 14:44:43] port 20000: ConnectionRefusedError(111, 'Connection refused')
+[announce 14:44:45] port 20001: ConnectionRefusedError(111, 'Connection refused')
+[announce 14:44:47] port 20002: ConnectionRefusedError(111, 'Connection refused')
+[announce 14:44:47] not ready: ConnectionRefusedError(111, 'Connection refused')
+
+{"argv": ["{python}", "-c", "import sys; sys.exit(1)"], "env": {}, "check": "tcp", "ports": [20000, 20100], "key": "k", "url": "http://127.0.0.1:1", "watch": null, "secret": "s", "python": "python3", "timeout_s": 600}
+{"argv": ["{python}", "-c", "import time; time.sleep(60)"], "env": {}, "check": "tcp", "ports": [20000, 20002], "key": "k", "url": "http://127.0.0.1:1", "watch": null, "secret": "s", "python": "python3", "timeout_s": 2}

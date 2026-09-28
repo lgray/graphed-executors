@@ -1,0 +1,7 @@
+condor $CondorVersion: 25.13.2 2026-08-19 BuildID: 943576 PackageID: 25.13.2-1 GitSHA: 589a5b38 $
+E relative executable, initialdir=/home/submituser/r8-exe, cwd=/home/submituser -> cluster 1 None
+E still queued: {'Cmd': '/home/submituser/svc.sh', 'JobStatus': 5, 'HoldReason': 'Transfer input files failure at access point 54c19a3693d6 while sending files to execution point slot1_1@54c19a3693d6. Details: 1 total failures: first failure: reading from file /home/submituser/svc.sh: (errno 2) No such file or directory', 'ServerTime': 1790606306}
+E output: None
+D1 opts={} abs_sub=False cwd=/home/submituser -> DAGMan {'JobStatus': 4, 'ExitCode': 1, 'Iwd': '/home/submituser'} nodes=0 drv.out=None errors=['09/28/26 14:38:27 Daemon Log is logging: D_ALWAYS D_ERROR D_STATUS', '09/28/26 14:38:27 DAGMAN_LOG_ON_NFS_IS_ERROR setting: False', '09/28/26 14:38:28 ERROR: submit attempt failed, errno=2 No such file or directory']
+D2 opts={'usedagdir': True} abs_sub=False cwd=/home/submituser -> DAGMan {'JobStatus': 4, 'ExitCode': 0, 'Iwd': '/home/submituser'} nodes=1 drv.out='hi' errors=['09/28/26 14:38:33 Daemon Log is logging: D_ALWAYS D_ERROR D_STATUS', '09/28/26 14:38:33 DAGMAN_LOG_ON_NFS_IS_ERROR setting: False']
+D3 opts={} abs_sub=True cwd=/home/submituser -> DAGMan {'JobStatus': 4, 'ExitCode': 0, 'Iwd': '/home/submituser'} nodes=1 drv.out='hi' errors=['09/28/26 14:38:52 Daemon Log is logging: D_ALWAYS D_ERROR D_STATUS', '09/28/26 14:38:52 DAGMAN_LOG_ON_NFS_IS_ERROR setting: False']
