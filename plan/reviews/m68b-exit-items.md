@@ -62,3 +62,11 @@ Wording and small constraints from review r9 (`plan-services-m68b-r9.md`). None 
 ## decisions (round 3)
 - "Free" (the scan and the after-exit check) is a bind with `SO_REUSEADDR` succeeding. Reason: a listener still refuses it, while the server-side `TIME_WAIT` left by the service's own self-check does not, so a child that answered once and died is not restarted per port (probe_r9_timewait; probe_announce_rules L7: one start in 10/10 runs).
 - `data/from_dag-generic.txt` is compared after substituting the DAG dir and `CsdVersion`. Reason: both are embedded in the description and differ per run and pool.
+
+## r10 exit items
+Wording and small constraints from review r10 (`plan-services-m68b-r10.md`). None of them makes a round unclean.
+
+- §3.3 L420 (the premise table) and L525 still say "stock" `from_dag`. The DAG is submitted with `usedagdir`/`force`, so the word should go or become "`from_dag` with `usedagdir`/`force`". The `OtherJobRemoveRequirements` line L525 cites still holds under those options (`probe_dag_service.txt`, header).
+- `data/from_dag-generic.txt` substitution: `arguments` carries `CsdVersion` in its shell-escaped form (`$CondorVersion:' '25.13.2' '2026-08-19' …$`), not the raw string, and the DAG dir also appears in `-Lockfile`/`-Dag`. The test substitutes both forms, or rebuilds the expected text from the pool's `htcondor2.version()` and the tmp dir.
+- Docs (`htcondor.rst` "Cluster-hosted services"): with "free" decided by a `SO_REUSEADDR` bind, a recipe's server that binds *without* `SO_REUSEADDR` can fail on a port that holds only a `TIME_WAIT` (for example one left by another job's task server on the same node). `announce.py` then exits 3 naming the returncode instead of moving on. The shipped recipes bind with it: `http.server` sets `allow_reuse_address`, and gRPC/Triton set it by default. The m66 `TaskServer` sets it on POSIX (`server.py:81`). Say that a custom recipe's server must do the same.
+- Evidence r10: `probe_announce_rules.py` re-run locally reproduces L1–L7. L7 gives `[1]*10` child starts and exit 3 naming 7. `announce_proto.py` `free()` now sets `SO_REUSEADDR` (L62-71).
