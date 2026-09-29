@@ -109,6 +109,24 @@ def reap(child):
         child.wait()
 
 
+def hard_reap(pid):
+    """The reap after a SIGTERM: on the pid, never through Popen (whose waitpid lock an interrupted poll/wait may
+    have leaked): SIGTERM, poll os.waitpid(WNOHANG) for at most 5 s, then SIGKILL and a blocking os.waitpid."""
+    if pid is None:
+        return
+    try:
+        os.kill(pid, signal.SIGTERM)
+        end = time.monotonic() + 5
+        while time.monotonic() < end:
+            if os.waitpid(pid, os.WNOHANG) != (0, 0):
+                return
+            time.sleep(0.05)
+        os.kill(pid, signal.SIGKILL)
+        os.waitpid(pid, 0)
+    except (ProcessLookupError, ChildProcessError):
+        return  # already exited and reaped
+
+
 def on_sigterm(*_):
     # never wait here: the interrupted main thread may hold Popen's waitpid lock. Ignore further SIGTERMs and
     # unwind the main thread, which reaps.
@@ -132,11 +150,17 @@ def start(cfg, ident):
         python = (os.path.abspath(cfg["python"]) if os.sep in cfg["python"]
                   else shutil.which(cfg["python"], path=os.environ.get("PATH", os.defpath)) or cfg["python"])
         argv = [a.format(port=cand, host=ident, python=python) for a in cfg["argv"]]
+        # SIGTERM is blocked while the child is created and recorded, so a removal cannot land between the two
+        signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM})
         try:
-            child = subprocess.Popen(argv, env={**os.environ, **cfg.get("env", {})}, cwd=RUN_DIR)
+            # the child must not inherit the blocked mask (it would then ignore condor's SIGTERM)
+            child = subprocess.Popen(argv, env={**os.environ, **cfg.get("env", {})}, cwd=RUN_DIR,
+                                     preexec_fn=lambda: signal.pthread_sigmask(signal.SIG_UNBLOCK, {signal.SIGTERM}))
+            CHILD[0] = child
         except OSError as exc:
             return None, "cannot start %s: %r" % (argv[0], exc)
-        CHILD[0] = child
+        finally:
+            signal.pthread_sigmask(signal.SIG_UNBLOCK, {signal.SIGTERM})
         while True:
             if child.poll() is not None:
                 if free(cand):
@@ -160,7 +184,7 @@ def main():
     except _Stop:
         # a SIGTERM (condor's removal, sent to the whole family) at any point, a reap in progress included: the
         # one bounded reap, then leave through sys.exit so coverage saves its data
-        reap(CHILD[0])
+        hard_reap(CHILD[0].pid if CHILD[0] is not None else None)
         log("SIGTERM: reaped")
         sys.exit(143)
 

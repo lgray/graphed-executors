@@ -414,3 +414,7 @@ These are items from review r20-B1 (`plan-services-m68b-r20-b1.md`, a delta roun
   2. call its SIGTERM handler with a `Popen.wait` spy installed;
   3. assert that it raises the private exception, that `signal.getsignal(SIGTERM) is SIG_IGN` afterwards, and that the spy saw no call.
 - **Evidence r20-B1:** `/tmp/claude-0/review-r20-b1/r20b1_results.txt`, with `r20b1_lockleak.py`, `r20b1_stress.py`, `r20b1_double.py`, `r20b1_double_waiting.py` and `r20b1_rules.txt` (the `probe_announce_rules.py` re-run, matching the committed L1–L15) beside it. All local; no container was started.
+
+## decisions (round 15)
+- The post-SIGTERM reap works on the child's pid (`os.kill`, `os.waitpid(WNOHANG)` ≤ 5 s, SIGKILL, blocking `os.waitpid`), never through `Popen`; the child is created and recorded with SIGTERM blocked, and unblocks it in its `preexec_fn`. Reason: closes r20's lock-leak and unrecorded-child windows rather than bounding them by `job_max_vacate_time`; without the child-side unblock the child would inherit the mask and ignore condor's SIGTERM (seen in the first re-run, legs +5 s). probe_announce_rules L1–L16 re-run.
+- "A SIGTERM handler that waits" is kept in Fails on, witnessed by the in-process leg L16. Reason: the subprocess legs cannot tell a waiting handler apart once the orphan reap is bounded.

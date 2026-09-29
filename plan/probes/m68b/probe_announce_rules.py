@@ -21,6 +21,8 @@ Run: python3 probe_announce_rules.py > probe_announce_rules.txt   (POSIX)
  L13 a SIGTERM-ignoring child, url on a closed port, lease_s 3: the orphan path's one bounded reap kills it; exit 0
     within lease_s + 5 s, child pid gone
  L14 the same, SIGTERM to announce.py ~1 s after its "orphaned" line (inside the reap): exits within 5 s
+ L16 in-process: the SIGTERM handler, called with Popen.wait/poll spied, raises the private exception, leaves
+    SIGTERM ignored, and never calls wait or poll
  L15 the child's environment is the recipe's env over the job's (a job variable and a recipe variable both seen)
  L9 the job dir holds a stand-in ticket cache (user.cc) beside the transferred `service/models/`: the child runs in
     service/, GET /user.cc -> 404, GET /models/m.txt -> 200 (the argv names inputs relatively)
@@ -307,3 +309,23 @@ run("L15 env merge", cfg(argv=["{python}", ENVDUMP, "{port}"], ports=[lo, lo + 2
                          lease_s=3, beat_s=1, env={"RECVAR": "from-recipe"}),
     until=lambda p: (time.sleep(4), r.terminate()))
 print("   child saw JOBVAR RECVAR:", open(os.path.join(work, "env.txt")).read())
+
+import importlib.util
+spec = importlib.util.spec_from_file_location("announce_proto", PROTO)
+mod = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(mod)
+calls = []
+orig_wait, orig_poll = subprocess.Popen.wait, subprocess.Popen.poll
+subprocess.Popen.wait = lambda self, *a, **k: calls.append("wait")
+subprocess.Popen.poll = lambda self, *a, **k: calls.append("poll")
+prev = signal.getsignal(signal.SIGTERM)
+try:
+    mod.on_sigterm(signal.SIGTERM, None)
+    raised = None
+except BaseException as exc:
+    raised = type(exc).__name__
+finally:
+    subprocess.Popen.wait, subprocess.Popen.poll = orig_wait, orig_poll
+print("L16 handler raised %s, SIGTERM afterwards SIG_IGN %s, Popen calls %s"
+      % (raised, signal.getsignal(signal.SIGTERM) is signal.SIG_IGN, calls))
+signal.signal(signal.SIGTERM, prev)
