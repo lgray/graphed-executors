@@ -1,0 +1,670 @@
+# probe_surface_dagman
+# $CondorVersion: 25.13.2 2026-08-19 BuildID: 943576 PackageID: 25.13.2-1 GitSHA: 589a5b38 $
+# STARTER_NESTED_SCRATCH = True
+# MOUNT_UNDER_SCRATCH = "/tmp,/var/tmp"
+# PERIODIC_EXPR_INTERVAL = 60
+# DAGMAN_USE_STRICT = 1
+D1 dir before from_dag: ['a.sub', 'run.dag']
+D1 from_dag({}): flags ['-AutoRescue 1']; dir now ['a.sub', 'run.dag', 'run.dag.condor.sub']
+D1 from_dag({'usedagdir': True, 'force': True}): flags ['-UseDagDir', '-force', '-AutoRescue 1']; dir now ['a.sub', 'run.dag', 'run.dag.condor.sub']
+D1 from_dag({'UseDagDir': True, 'Force': True}): flags ['-UseDagDir', '-force', '-AutoRescue 1']; dir now ['a.sub', 'run.dag', 'run.dag.condor.sub']
+D1 from_dag({'usedagdir': 1}): raised HTCondorException Unable to write condor_dagman output files
+ERROR: "/home/submituser/surf/d1/run.dag.condor.sub" already exists.
+
+Some file(s) needed by condor_dagman already exist. Either:
+- Rename them
+	or
+- Set the { "force" : True } option to force them to be overwritten.
+ERROR: "/home/submituser/surf/d1/run.dag.condor.sub" already exists.
+
+Some file(s) needed by condor_dagman already exist. Either:
+- Rename them
+	or
+- Set the { "force" : True } option to force them to be overwritten.
+D1 from_dag({'UseDagDir': False}): raised HTCondorException Unable to write condor_dagman output files
+D1 from_dag({'usedagdri': True}): raised KeyError 'usedagdri is not a recognized DAGMan option'
+D1 from_dag({'force': True, 'AutoRescue': 0}): flags ['-force', '-AutoRescue 0']; dir now ['a.sub', 'run.dag', 'run.dag.condor.sub']
+D1 from_dag(missing file): raised HTCondorException /home/submituser/surf/d1/missing.dag does not exist
+D1 fresh dir, with vs without force: keys differing (dir substituted): ['arguments'] | arguments tail without:  /usr/bin/condor_dagman -UseDagDir -AutoRescue 1" with:  /usr/bin/condor_dagman -UseDagDir -AutoRescue 1 -force"
+D2 submitted {'ok': 54, 'ok-force': 55, 'svc-exit0': 56, 'svc-exit3': 57, 'svc-idle': 58, 'svc-held': 59, 'svc-held-prm-race': 60, 'svc-held-prm-long': 61, 'svc-held-strict0': 62, 'svc-userhold-end': 63, 'svc-removed': 64, 'retry-1-0': 65, 'retry-3': 66, 'retry-exhausted': 67, 'driver-kill9-noresult': 68, 'driver-held': 69, 'dag-removed': 70, 'no-service': 71}
+==================== ok DAGMan cluster 54 dir /home/submituser/surf/ok
+D[ok] t=  0 DAGMan JobStatus=1 JobsIdle=None JobsRunning=None JobsHeld=None NodesQueued=None NodesDone=None NodesTotal=None nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[ok] t=  2 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[ok] t=  4 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[ok] t=  9 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[ok] t= 11 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', 2))
+D[ok] t= 36 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', 2))
+D[ok] t= 39 DAGMan left the queue
+D[ok] DAGMan history: {'JobStatus': 4, 'ExitCode': 0, 'DAG_Status': 0, 'DAG_NodesTotal': 1, 'DAG_NodesDone': 1, 'DAG_NodesFailed': 0, 'DAG_NodesQueued': 0, 'DAG_JobsSubmitted': 2, 'DAG_JobsIdle': 0, 'DAG_JobsRunning': 0, 'DAG_JobsHeld': 0, 'DAG_JobsCompleted': 1, 'JobUniverse': 7}
+D[ok]   node {'ClusterId': 72, 'DAGNodeName': 'svc0', 'DAGManJobId': 54, 'JobStatus': 3, 'ExitBySignal': True, 'NumJobStarts': 1, 'RemoveReason': 'removed because <OtherJobRemoveRequirements = DAGManJobId =?= 54> fired when job (54.0) was removed'}
+D[ok]   node {'ClusterId': 75, 'DAGNodeName': 'driver', 'DAGManJobId': 54, 'JobStatus': 4, 'ExitCode': 0, 'ExitBySignal': False, 'NumJobStarts': 1}
+D[ok]   files t=0 before from_dag    ['driver.sh', 'driver.sub', 'run.dag', 'service-svc0', 'svc0.sub']
+D[ok]   files after from_dag         ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'service-svc0', 'svc0.sub']
+D[ok]   files after submit           ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[ok]   files t=0 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[ok]   files t=2 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[ok]   files t=4 running            ['driver.condor.log', 'driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[ok]   files t=36 running           ['driver.condor.log', 'driver.err', 'driver.out', 'driver.sh', 'driver.sub', 'result.pkl', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[ok]   files after end              ['driver.condor.log', 'driver.err', 'driver.out', 'driver.sh', 'driver.sub', 'result.pkl', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.metrics', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[ok]   dagman.out: DAGMAN_LOG_ON_NFS_IS_ERROR setting: False
+D[ok]   dagman.out: argv[10] == "-AutoRescue"
+D[ok]   dagman.out: Warning: failed to get attribute DAGNodeName
+D[ok]   dagman.out: Starting service node svc0...
+D[ok]   dagman.out: 0 job proc(s) currently held
+D[ok]   dagman.out: Submitting HTCondor Node svc0 job(s)...
+D[ok]   dagman.out: 0 job proc(s) currently held
+D[ok]   dagman.out: Event: ULOG_SUBMIT for HTCondor Node svc0 (72.0.0) {09/29/26 17:19:00}
+D[ok]   dagman.out: Event: ULOG_EXECUTE for HTCondor Node svc0 (72.0.0) {09/29/26 17:19:09}
+D[ok]   dagman.out: 0 job proc(s) currently held
+D[ok]   dagman.out: Warning for node svc0: unexpected job event value for proc 0: 1!
+D[ok]   dagman.out: Warning checking HTCondor job events: BAD EVENT: job (72.0.0) ended, total end count != 1 (0)
+D[ok]   dagman.out: 0 job proc(s) currently held
+D[ok]   dagman.out: **** condor_dagman (condor_DAGMAN) pid 3665 EXITING WITH STATUS 0
+D[ok]   metrics: {'exitcode': 0, 'DagStatus': 0, 'jobs': None, 'jobs_failed': 1, 'jobs_succeeded': 1, 'service_nodes': 1, 'service_nodes_failed': 0, 'service_nodes_succeeded': 1, 'total_jobs': None, 'total_jobs_run': None, 'retries': None}
+==================== ok-force DAGMan cluster 55 dir /home/submituser/surf/ok-force
+D[ok-force] t=  0 DAGMan JobStatus=1 JobsIdle=None JobsRunning=None JobsHeld=None NodesQueued=None NodesDone=None NodesTotal=None nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[ok-force] t=  2 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[ok-force] t=  4 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[ok-force] t=  9 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[ok-force] t= 11 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', 2))
+D[ok-force] t= 36 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', 2))
+D[ok-force] t= 39 DAGMan left the queue
+D[ok-force] DAGMan history: {'JobStatus': 4, 'ExitCode': 0, 'DAG_Status': 0, 'DAG_NodesTotal': 1, 'DAG_NodesDone': 1, 'DAG_NodesFailed': 0, 'DAG_NodesQueued': 0, 'DAG_JobsSubmitted': 2, 'DAG_JobsIdle': 0, 'DAG_JobsRunning': 0, 'DAG_JobsHeld': 0, 'DAG_JobsCompleted': 1, 'JobUniverse': 7}
+D[ok-force]   node {'ClusterId': 73, 'DAGNodeName': 'svc0', 'DAGManJobId': 55, 'JobStatus': 3, 'ExitBySignal': True, 'NumJobStarts': 1, 'RemoveReason': 'removed because <OtherJobRemoveRequirements = DAGManJobId =?= 55> fired when job (55.0) was removed'}
+D[ok-force]   node {'ClusterId': 77, 'DAGNodeName': 'driver', 'DAGManJobId': 55, 'JobStatus': 4, 'ExitCode': 0, 'ExitBySignal': False, 'NumJobStarts': 1}
+D[ok-force]   files t=0 before from_dag    ['driver.sh', 'driver.sub', 'run.dag', 'service-svc0', 'svc0.sub']
+D[ok-force]   files after from_dag         ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'service-svc0', 'svc0.sub']
+D[ok-force]   files after submit           ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[ok-force]   files t=0 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[ok-force]   files t=2 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[ok-force]   files t=4 running            ['driver.condor.log', 'driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[ok-force]   files t=36 running           ['driver.condor.log', 'driver.err', 'driver.out', 'driver.sh', 'driver.sub', 'result.pkl', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[ok-force]   files after end              ['driver.condor.log', 'driver.err', 'driver.out', 'driver.sh', 'driver.sub', 'result.pkl', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.metrics', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[ok-force]   dagman.out: DAGMAN_LOG_ON_NFS_IS_ERROR setting: False
+D[ok-force]   dagman.out: argv[10] == "-AutoRescue"
+D[ok-force]   dagman.out: Warning: failed to get attribute DAGNodeName
+D[ok-force]   dagman.out: Starting service node svc0...
+D[ok-force]   dagman.out: 0 job proc(s) currently held
+D[ok-force]   dagman.out: Submitting HTCondor Node svc0 job(s)...
+D[ok-force]   dagman.out: 0 job proc(s) currently held
+D[ok-force]   dagman.out: Event: ULOG_SUBMIT for HTCondor Node svc0 (73.0.0) {09/29/26 17:19:00}
+D[ok-force]   dagman.out: Event: ULOG_EXECUTE for HTCondor Node svc0 (73.0.0) {09/29/26 17:19:09}
+D[ok-force]   dagman.out: 0 job proc(s) currently held
+D[ok-force]   dagman.out: Warning for node svc0: unexpected job event value for proc 0: 1!
+D[ok-force]   dagman.out: Warning checking HTCondor job events: BAD EVENT: job (73.0.0) ended, total end count != 1 (0)
+D[ok-force]   dagman.out: 0 job proc(s) currently held
+D[ok-force]   dagman.out: **** condor_dagman (condor_DAGMAN) pid 3666 EXITING WITH STATUS 0
+D[ok-force]   metrics: {'exitcode': 0, 'DagStatus': 0, 'jobs': None, 'jobs_failed': 1, 'jobs_succeeded': 1, 'service_nodes': 1, 'service_nodes_failed': 0, 'service_nodes_succeeded': 1, 'total_jobs': None, 'total_jobs_run': None, 'retries': None}
+==================== svc-exit0 DAGMan cluster 56 dir /home/submituser/surf/svc-exit0
+D[svc-exit0] t=  0 DAGMan JobStatus=1 JobsIdle=None JobsRunning=None JobsHeld=None NodesQueued=None NodesDone=None NodesTotal=None nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[svc-exit0] t=  2 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[svc-exit0] t=  4 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[svc-exit0] t=  9 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[svc-exit0] t= 11 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', 2))
+D[svc-exit0] t= 18 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', None))
+D[svc-exit0] t= 36 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[svc-exit0] t= 39 DAGMan left the queue
+D[svc-exit0] DAGMan history: {'JobStatus': 4, 'ExitCode': 0, 'DAG_Status': 0, 'DAG_NodesTotal': 1, 'DAG_NodesDone': 1, 'DAG_NodesFailed': 0, 'DAG_NodesQueued': 0, 'DAG_JobsSubmitted': 2, 'DAG_JobsIdle': 0, 'DAG_JobsRunning': 0, 'DAG_JobsHeld': 0, 'DAG_JobsCompleted': 2, 'JobUniverse': 7}
+D[svc-exit0]   node {'ClusterId': 76, 'DAGNodeName': 'svc0', 'DAGManJobId': 56, 'JobStatus': 4, 'ExitCode': 0, 'ExitBySignal': False, 'NumJobStarts': 1}
+D[svc-exit0]   node {'ClusterId': 84, 'DAGNodeName': 'driver', 'DAGManJobId': 56, 'JobStatus': 4, 'ExitCode': 0, 'ExitBySignal': False, 'NumJobStarts': 1}
+D[svc-exit0]   files t=0 before from_dag    ['driver.sh', 'driver.sub', 'run.dag', 'service-svc0', 'svc0.sub']
+D[svc-exit0]   files after from_dag         ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'service-svc0', 'svc0.sub']
+D[svc-exit0]   files after submit           ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[svc-exit0]   files t=0 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[svc-exit0]   files t=2 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-exit0]   files t=4 running            ['driver.condor.log', 'driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-exit0]   files t=36 running           ['driver.condor.log', 'driver.err', 'driver.out', 'driver.sh', 'driver.sub', 'result.pkl', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-exit0]   files after end              ['driver.condor.log', 'driver.err', 'driver.out', 'driver.sh', 'driver.sub', 'result.pkl', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.metrics', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-exit0]   dagman.out: argv[10] == "-AutoRescue"
+D[svc-exit0]   dagman.out: Warning: failed to get attribute DAGNodeName
+D[svc-exit0]   dagman.out: Starting service node svc0...
+D[svc-exit0]   dagman.out: 0 job proc(s) currently held
+D[svc-exit0]   dagman.out: Submitting HTCondor Node svc0 job(s)...
+D[svc-exit0]   dagman.out: 0 job proc(s) currently held
+D[svc-exit0]   dagman.out: Event: ULOG_SUBMIT for HTCondor Node svc0 (76.0.0) {09/29/26 17:19:00}
+D[svc-exit0]   dagman.out: Event: ULOG_EXECUTE for HTCondor Node svc0 (76.0.0) {09/29/26 17:19:09}
+D[svc-exit0]   dagman.out: Event: ULOG_JOB_TERMINATED for HTCondor Node svc0 (76.0.0) {09/29/26 17:19:15}
+D[svc-exit0]   dagman.out: Node svc0 job proc (76.0.0) completed successfully.
+D[svc-exit0]   dagman.out: Node svc0 job(s) have exited the queue
+D[svc-exit0]   dagman.out: 0 job proc(s) currently held
+D[svc-exit0]   dagman.out: 0 job proc(s) currently held
+D[svc-exit0]   dagman.out: **** condor_dagman (condor_DAGMAN) pid 3667 EXITING WITH STATUS 0
+D[svc-exit0]   metrics: {'exitcode': 0, 'DagStatus': 0, 'jobs': None, 'jobs_failed': 0, 'jobs_succeeded': 2, 'service_nodes': 1, 'service_nodes_failed': 0, 'service_nodes_succeeded': 1, 'total_jobs': None, 'total_jobs_run': None, 'retries': None}
+==================== svc-exit3 DAGMan cluster 57 dir /home/submituser/surf/svc-exit3
+D[svc-exit3] t=  0 DAGMan JobStatus=1 JobsIdle=None JobsRunning=None JobsHeld=None NodesQueued=None NodesDone=None NodesTotal=None nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[svc-exit3] t=  2 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[svc-exit3] t=  4 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[svc-exit3] t=  9 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[svc-exit3] t= 11 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', 2))
+D[svc-exit3] t= 18 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', None))
+D[svc-exit3] t= 36 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[svc-exit3] t= 39 DAGMan left the queue
+D[svc-exit3] DAGMan history: {'JobStatus': 4, 'ExitCode': 0, 'DAG_Status': 2, 'DAG_NodesTotal': 1, 'DAG_NodesDone': 1, 'DAG_NodesFailed': 0, 'DAG_NodesQueued': 0, 'DAG_JobsSubmitted': 2, 'DAG_JobsIdle': 0, 'DAG_JobsRunning': 0, 'DAG_JobsHeld': 0, 'DAG_JobsCompleted': 2, 'JobUniverse': 7}
+D[svc-exit3]   node {'ClusterId': 74, 'DAGNodeName': 'svc0', 'DAGManJobId': 57, 'JobStatus': 4, 'ExitCode': 3, 'ExitBySignal': False, 'NumJobStarts': 1}
+D[svc-exit3]   node {'ClusterId': 80, 'DAGNodeName': 'driver', 'DAGManJobId': 57, 'JobStatus': 4, 'ExitCode': 0, 'ExitBySignal': False, 'NumJobStarts': 1}
+D[svc-exit3]   files t=0 before from_dag    ['driver.sh', 'driver.sub', 'run.dag', 'service-svc0', 'svc0.sub']
+D[svc-exit3]   files after from_dag         ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'service-svc0', 'svc0.sub']
+D[svc-exit3]   files after submit           ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[svc-exit3]   files t=0 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[svc-exit3]   files t=2 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-exit3]   files t=4 running            ['driver.condor.log', 'driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-exit3]   files t=36 running           ['driver.condor.log', 'driver.err', 'driver.out', 'driver.sh', 'driver.sub', 'result.pkl', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-exit3]   files after end              ['driver.condor.log', 'driver.err', 'driver.out', 'driver.sh', 'driver.sub', 'result.pkl', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.metrics', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-exit3]   dagman.out: argv[10] == "-AutoRescue"
+D[svc-exit3]   dagman.out: Warning: failed to get attribute DAGNodeName
+D[svc-exit3]   dagman.out: Starting service node svc0...
+D[svc-exit3]   dagman.out: 0 job proc(s) currently held
+D[svc-exit3]   dagman.out: Submitting HTCondor Node svc0 job(s)...
+D[svc-exit3]   dagman.out: 0 job proc(s) currently held
+D[svc-exit3]   dagman.out: Event: ULOG_SUBMIT for HTCondor Node svc0 (74.0.0) {09/29/26 17:19:00}
+D[svc-exit3]   dagman.out: Event: ULOG_EXECUTE for HTCondor Node svc0 (74.0.0) {09/29/26 17:19:09}
+D[svc-exit3]   dagman.out: Event: ULOG_JOB_TERMINATED for HTCondor Node svc0 (74.0.0) {09/29/26 17:19:15}
+D[svc-exit3]   dagman.out: Node svc0 job proc (74.0.0) failed with status 3.
+D[svc-exit3]   dagman.out: Node svc0 job(s) have exited the queue
+D[svc-exit3]   dagman.out: 0 job proc(s) currently held
+D[svc-exit3]   dagman.out: 0 job proc(s) currently held
+D[svc-exit3]   dagman.out: **** condor_dagman (condor_DAGMAN) pid 3668 EXITING WITH STATUS 0
+D[svc-exit3]   metrics: {'exitcode': 0, 'DagStatus': 2, 'jobs': None, 'jobs_failed': 0, 'jobs_succeeded': 2, 'service_nodes': 1, 'service_nodes_failed': 1, 'service_nodes_succeeded': 0, 'total_jobs': None, 'total_jobs_run': None, 'retries': None}
+==================== svc-idle DAGMan cluster 58 dir /home/submituser/surf/svc-idle
+D[svc-idle] t=  0 DAGMan JobStatus=1 JobsIdle=None JobsRunning=None JobsHeld=None NodesQueued=None NodesDone=None NodesTotal=None nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[svc-idle] t=  2 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[svc-idle] t=  4 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[svc-idle] t=  9 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[svc-idle] t= 13 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', 1))
+D[svc-idle] t= 36 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', 1))
+D[svc-idle] t= 39 DAGMan left the queue
+D[svc-idle] DAGMan history: {'JobStatus': 4, 'ExitCode': 1, 'DAG_Status': 1, 'DAG_NodesTotal': 1, 'DAG_NodesDone': 1, 'DAG_NodesFailed': 0, 'DAG_NodesQueued': 0, 'DAG_JobsSubmitted': 2, 'DAG_JobsIdle': 0, 'DAG_JobsRunning': 0, 'DAG_JobsHeld': 0, 'DAG_JobsCompleted': 1, 'JobUniverse': 7}
+D[svc-idle]   node {'ClusterId': 82, 'DAGNodeName': 'svc0', 'DAGManJobId': 58, 'JobStatus': 3, 'ExitBySignal': False, 'NumJobStarts': 0, 'RemoveReason': 'Removed by DAGMan (by user submituser)'}
+D[svc-idle]   node {'ClusterId': 96, 'DAGNodeName': 'driver', 'DAGManJobId': 58, 'JobStatus': 4, 'ExitCode': 0, 'ExitBySignal': False, 'NumJobStarts': 1}
+D[svc-idle]   files t=0 before from_dag    ['driver.sh', 'driver.sub', 'run.dag', 'service-svc0', 'svc0.sub']
+D[svc-idle]   files after from_dag         ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'service-svc0', 'svc0.sub']
+D[svc-idle]   files after submit           ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[svc-idle]   files t=0 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[svc-idle]   files t=2 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-idle]   files t=4 running            ['driver.condor.log', 'driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-idle]   files t=36 running           ['driver.condor.log', 'driver.err', 'driver.out', 'driver.sh', 'driver.sub', 'result.pkl', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-idle]   files after end              ['driver.condor.log', 'driver.err', 'driver.out', 'driver.sh', 'driver.sub', 'result.pkl', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.metrics', 'run.dag.nodes.log', 'run.dag.rescue001', 'service-svc0', 'svc0.sub']
+D[svc-idle]   dagman.out: Event: ULOG_SUBMIT for HTCondor Node svc0 (82.0.0) {09/29/26 17:19:00}
+D[svc-idle]   dagman.out: 0 job proc(s) currently held
+D[svc-idle]   dagman.out: Warning for node svc0: unexpected job event value for proc 0: 4!
+D[svc-idle]   dagman.out: Warning checking HTCondor job events: BAD EVENT: job (82.0.0) ended, total end count != 1 (0)
+D[svc-idle]   dagman.out: Warning:  DAGMan thinks there are 1 idle jobs, even though the DAG is completed!
+D[svc-idle]   dagman.out: ERROR: Warning is fatal error because of DAGMAN_USE_STRICT setting
+D[svc-idle]   dagman.out: Writing Rescue DAG to /home/submituser/surf/svc-idle/run.dag.rescue001...
+D[svc-idle]   dagman.out: Removing submitted jobs...
+D[svc-idle]   dagman.out: Removing any/all submitted HTCondor jobs...
+D[svc-idle]   dagman.out: Running: /usr/bin/condor_rm -const DAGManJobId==58 -reason DAG' 'Abort:' 'DAG' 'is' 'exiting' 'and' 'writing' 'rescue' 'file.
+D[svc-idle]   dagman.out: DAG status: 1 (DAG_STATUS_ERROR)
+D[svc-idle]   dagman.out: 0 job proc(s) currently held
+D[svc-idle]   dagman.out: Warning: Number of counted idle job processes (0) is not equivalent to DAGs internal idle job processes count (1).
+D[svc-idle]   dagman.out: **** condor_dagman (condor_DAGMAN) pid 3669 EXITING WITH STATUS 1
+D[svc-idle]   metrics: {'exitcode': 1, 'DagStatus': 1, 'jobs': None, 'jobs_failed': 1, 'jobs_succeeded': 1, 'service_nodes': 1, 'service_nodes_failed': 0, 'service_nodes_succeeded': 1, 'total_jobs': None, 'total_jobs_run': None, 'retries': None}
+==================== svc-held DAGMan cluster 59 dir /home/submituser/surf/svc-held
+D[svc-held] t=  0 DAGMan JobStatus=1 JobsIdle=None JobsRunning=None JobsHeld=None NodesQueued=None NodesDone=None NodesTotal=None nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[svc-held] t=  2 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[svc-held] t=  4 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[svc-held] t=  9 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[svc-held] t= 11 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', 2))
+D[svc-held] t= 13 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', 5))
+D[svc-held] t= 36 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', 5))
+D[svc-held] t= 39 DAGMan left the queue
+D[svc-held] DAGMan history: {'JobStatus': 4, 'ExitCode': 1, 'DAG_Status': 1, 'DAG_NodesTotal': 1, 'DAG_NodesDone': 1, 'DAG_NodesFailed': 0, 'DAG_NodesQueued': 0, 'DAG_JobsSubmitted': 2, 'DAG_JobsIdle': 0, 'DAG_JobsRunning': 0, 'DAG_JobsHeld': 0, 'DAG_JobsCompleted': 1, 'JobUniverse': 7}
+D[svc-held]   node {'ClusterId': 78, 'DAGNodeName': 'svc0', 'DAGManJobId': 59, 'JobStatus': 3, 'ExitBySignal': False, 'NumJobStarts': 0, 'RemoveReason': 'Removed by DAGMan (by user submituser)'}
+D[svc-held]   node {'ClusterId': 88, 'DAGNodeName': 'driver', 'DAGManJobId': 59, 'JobStatus': 4, 'ExitCode': 0, 'ExitBySignal': False, 'NumJobStarts': 1}
+D[svc-held]   files t=0 before from_dag    ['driver.sh', 'driver.sub', 'run.dag', 'service-svc0', 'svc0.sub']
+D[svc-held]   files after from_dag         ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'service-svc0', 'svc0.sub']
+D[svc-held]   files after submit           ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[svc-held]   files t=0 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[svc-held]   files t=2 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-held]   files t=4 running            ['driver.condor.log', 'driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-held]   files t=36 running           ['driver.condor.log', 'driver.err', 'driver.out', 'driver.sh', 'driver.sub', 'result.pkl', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-held]   files after end              ['driver.condor.log', 'driver.err', 'driver.out', 'driver.sh', 'driver.sub', 'result.pkl', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.metrics', 'run.dag.nodes.log', 'run.dag.rescue001', 'service-svc0', 'svc0.sub']
+D[svc-held]   dagman.out: Warning for node svc0: unexpected job event value for proc 0: 12!
+D[svc-held]   dagman.out: Warning checking HTCondor job events: BAD EVENT: job (78.0.0) ended, total end count != 1 (0)
+D[svc-held]   dagman.out: Warning:  DAGMan thinks there are 1 idle jobs, even though the DAG is completed!
+D[svc-held]   dagman.out: ERROR: Warning is fatal error because of DAGMAN_USE_STRICT setting
+D[svc-held]   dagman.out: Writing Rescue DAG to /home/submituser/surf/svc-held/run.dag.rescue001...
+D[svc-held]   dagman.out: Removing submitted jobs...
+D[svc-held]   dagman.out: Removing any/all submitted HTCondor jobs...
+D[svc-held]   dagman.out: Running: /usr/bin/condor_rm -const DAGManJobId==59 -reason DAG' 'Abort:' 'DAG' 'is' 'exiting' 'and' 'writing' 'rescue' 'file.
+D[svc-held]   dagman.out: DAG status: 1 (DAG_STATUS_ERROR)
+D[svc-held]   dagman.out: 0 job proc(s) currently held
+D[svc-held]   dagman.out: Warning: Number of counted held job processes (0) is not equivalent to Node svc0's internal count of held job processes count (1).
+D[svc-held]   dagman.out: Warning: Number of counted idle job processes (0) is not equivalent to DAGs internal idle job processes count (1).
+D[svc-held]   dagman.out: Wrote metrics file /home/submituser/surf/svc-held/run.dag.metrics.
+D[svc-held]   dagman.out: **** condor_dagman (condor_DAGMAN) pid 3670 EXITING WITH STATUS 1
+D[svc-held]   metrics: {'exitcode': 1, 'DagStatus': 1, 'jobs': None, 'jobs_failed': 1, 'jobs_succeeded': 1, 'service_nodes': 1, 'service_nodes_failed': 0, 'service_nodes_succeeded': 1, 'total_jobs': None, 'total_jobs_run': None, 'retries': None}
+==================== svc-held-prm-race DAGMan cluster 60 dir /home/submituser/surf/svc-held-prm-race
+D[svc-held-prm-race] t=  0 DAGMan JobStatus=1 JobsIdle=None JobsRunning=None JobsHeld=None NodesQueued=None NodesDone=None NodesTotal=None nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[svc-held-prm-race] t=  2 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[svc-held-prm-race] t=  4 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[svc-held-prm-race] t=  9 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[svc-held-prm-race] t= 11 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', 2))
+D[svc-held-prm-race] t= 18 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', 5))
+D[svc-held-prm-race] t= 26 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', 5))
+D[svc-held-prm-race] t= 28 DAGMan left the queue
+D[svc-held-prm-race] DAGMan history: {'JobStatus': 4, 'ExitCode': 1, 'DAG_Status': 1, 'DAG_NodesTotal': 1, 'DAG_NodesDone': 1, 'DAG_NodesFailed': 0, 'DAG_NodesQueued': 0, 'DAG_JobsSubmitted': 2, 'DAG_JobsIdle': 0, 'DAG_JobsRunning': 0, 'DAG_JobsHeld': 0, 'DAG_JobsCompleted': 1, 'JobUniverse': 7}
+D[svc-held-prm-race]   node {'ClusterId': 79, 'DAGNodeName': 'svc0', 'DAGManJobId': 60, 'JobStatus': 3, 'ExitBySignal': False, 'NumJobStarts': 0, 'RemoveReason': 'Removed by DAGMan (by user submituser)'}
+D[svc-held-prm-race]   node {'ClusterId': 91, 'DAGNodeName': 'driver', 'DAGManJobId': 60, 'JobStatus': 4, 'ExitCode': 0, 'ExitBySignal': False, 'NumJobStarts': 1}
+D[svc-held-prm-race]   files t=0 before from_dag    ['driver.sh', 'driver.sub', 'run.dag', 'service-svc0', 'svc0.sub']
+D[svc-held-prm-race]   files after from_dag         ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'service-svc0', 'svc0.sub']
+D[svc-held-prm-race]   files after submit           ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[svc-held-prm-race]   files t=0 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[svc-held-prm-race]   files t=2 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-held-prm-race]   files t=4 running            ['driver.condor.log', 'driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-held-prm-race]   files t=26 running           ['driver.condor.log', 'driver.err', 'driver.out', 'driver.sh', 'driver.sub', 'result.pkl', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-held-prm-race]   files after end              ['driver.condor.log', 'driver.err', 'driver.out', 'driver.sh', 'driver.sub', 'result.pkl', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.metrics', 'run.dag.nodes.log', 'run.dag.rescue001', 'service-svc0', 'svc0.sub']
+D[svc-held-prm-race]   dagman.out: Warning for node svc0: unexpected job event value for proc 0: 12!
+D[svc-held-prm-race]   dagman.out: Warning checking HTCondor job events: BAD EVENT: job (79.0.0) ended, total end count != 1 (0)
+D[svc-held-prm-race]   dagman.out: Warning:  DAGMan thinks there are 1 idle jobs, even though the DAG is completed!
+D[svc-held-prm-race]   dagman.out: ERROR: Warning is fatal error because of DAGMAN_USE_STRICT setting
+D[svc-held-prm-race]   dagman.out: Writing Rescue DAG to /home/submituser/surf/svc-held-prm-race/run.dag.rescue001...
+D[svc-held-prm-race]   dagman.out: Removing submitted jobs...
+D[svc-held-prm-race]   dagman.out: Removing any/all submitted HTCondor jobs...
+D[svc-held-prm-race]   dagman.out: Running: /usr/bin/condor_rm -const DAGManJobId==60 -reason DAG' 'Abort:' 'DAG' 'is' 'exiting' 'and' 'writing' 'rescue' 'file.
+D[svc-held-prm-race]   dagman.out: DAG status: 1 (DAG_STATUS_ERROR)
+D[svc-held-prm-race]   dagman.out: 0 job proc(s) currently held
+D[svc-held-prm-race]   dagman.out: Warning: Number of counted held job processes (0) is not equivalent to Node svc0's internal count of held job processes count (1).
+D[svc-held-prm-race]   dagman.out: Warning: Number of counted idle job processes (0) is not equivalent to DAGs internal idle job processes count (1).
+D[svc-held-prm-race]   dagman.out: Wrote metrics file /home/submituser/surf/svc-held-prm-race/run.dag.metrics.
+D[svc-held-prm-race]   dagman.out: **** condor_dagman (condor_DAGMAN) pid 3671 EXITING WITH STATUS 1
+D[svc-held-prm-race]   metrics: {'exitcode': 1, 'DagStatus': 1, 'jobs': None, 'jobs_failed': 1, 'jobs_succeeded': 1, 'service_nodes': 1, 'service_nodes_failed': 0, 'service_nodes_succeeded': 1, 'total_jobs': None, 'total_jobs_run': None, 'retries': None}
+==================== svc-held-prm-long DAGMan cluster 61 dir /home/submituser/surf/svc-held-prm-long
+D[svc-held-prm-long] t=  0 DAGMan JobStatus=1 JobsIdle=None JobsRunning=None JobsHeld=None NodesQueued=None NodesDone=None NodesTotal=None nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[svc-held-prm-long] t=  2 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[svc-held-prm-long] t=  4 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[svc-held-prm-long] t=  9 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[svc-held-prm-long] t= 11 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 2))
+D[svc-held-prm-long] t= 13 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', 2))
+D[svc-held-prm-long] t= 18 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', 5))
+D[svc-held-prm-long] t= 32 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', None))
+D[svc-held-prm-long] t=162 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[svc-held-prm-long] t=164 DAGMan left the queue
+D[svc-held-prm-long] DAGMan history: {'JobStatus': 4, 'ExitCode': 0, 'DAG_Status': 2, 'DAG_NodesTotal': 1, 'DAG_NodesDone': 1, 'DAG_NodesFailed': 0, 'DAG_NodesQueued': 0, 'DAG_JobsSubmitted': 2, 'DAG_JobsIdle': 0, 'DAG_JobsRunning': 0, 'DAG_JobsHeld': 0, 'DAG_JobsCompleted': 2, 'JobUniverse': 7}
+D[svc-held-prm-long]   node {'ClusterId': 85, 'DAGNodeName': 'svc0', 'DAGManJobId': 61, 'JobStatus': 3, 'ExitBySignal': False, 'NumJobStarts': 0, 'RemoveReason': "The job attribute PeriodicRemove expression 'JobStatus == 5' evaluated to TRUE"}
+D[svc-held-prm-long]   node {'ClusterId': 99, 'DAGNodeName': 'driver', 'DAGManJobId': 61, 'JobStatus': 4, 'ExitCode': 0, 'ExitBySignal': False, 'NumJobStarts': 1}
+D[svc-held-prm-long]   files t=0 before from_dag    ['driver.sh', 'driver.sub', 'run.dag', 'service-svc0', 'svc0.sub']
+D[svc-held-prm-long]   files after from_dag         ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'service-svc0', 'svc0.sub']
+D[svc-held-prm-long]   files after submit           ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[svc-held-prm-long]   files t=0 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[svc-held-prm-long]   files t=2 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-held-prm-long]   files t=4 running            ['driver.condor.log', 'driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-held-prm-long]   files t=162 running          ['driver.condor.log', 'driver.err', 'driver.out', 'driver.sh', 'driver.sub', 'result.pkl', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-held-prm-long]   files after end              ['driver.condor.log', 'driver.err', 'driver.out', 'driver.sh', 'driver.sub', 'result.pkl', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.metrics', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-held-prm-long]   dagman.out: MultiLogFiles: truncating log file /home/submituser/surf/svc-held-prm-long/run.dag.nodes.log
+D[svc-held-prm-long]   dagman.out: Starting service node svc0...
+D[svc-held-prm-long]   dagman.out: 0 job proc(s) currently held
+D[svc-held-prm-long]   dagman.out: Submitting HTCondor Node svc0 job(s)...
+D[svc-held-prm-long]   dagman.out: 0 job proc(s) currently held
+D[svc-held-prm-long]   dagman.out: Event: ULOG_SUBMIT for HTCondor Node svc0 (85.0.0) {09/29/26 17:19:00}
+D[svc-held-prm-long]   dagman.out: Event: ULOG_JOB_EVICTED for HTCondor Node svc0 (85.0.0) {09/29/26 17:19:15}
+D[svc-held-prm-long]   dagman.out: Event: ULOG_JOB_HELD for HTCondor Node svc0 (85.0.0) {09/29/26 17:19:15}
+D[svc-held-prm-long]   dagman.out: Event: ULOG_JOB_ABORTED for HTCondor Node svc0 (85.0.0) {09/29/26 17:19:29}
+D[svc-held-prm-long]   dagman.out: Node svc0 job(s) have exited the queue
+D[svc-held-prm-long]   dagman.out: 0 job proc(s) currently held
+D[svc-held-prm-long]   dagman.out: 0 job proc(s) currently held
+D[svc-held-prm-long]   dagman.out: Wrote metrics file /home/submituser/surf/svc-held-prm-long/run.dag.metrics.
+D[svc-held-prm-long]   dagman.out: **** condor_dagman (condor_DAGMAN) pid 3672 EXITING WITH STATUS 0
+D[svc-held-prm-long]   metrics: {'exitcode': 0, 'DagStatus': 2, 'jobs': None, 'jobs_failed': 0, 'jobs_succeeded': 2, 'service_nodes': 1, 'service_nodes_failed': 1, 'service_nodes_succeeded': 0, 'total_jobs': None, 'total_jobs_run': None, 'retries': None}
+==================== svc-held-strict0 DAGMan cluster 62 dir /home/submituser/surf/svc-held-strict0
+D[svc-held-strict0] t=  0 DAGMan JobStatus=1 JobsIdle=None JobsRunning=None JobsHeld=None NodesQueued=None NodesDone=None NodesTotal=None nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[svc-held-strict0] t=  2 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[svc-held-strict0] t=  4 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[svc-held-strict0] t=  9 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[svc-held-strict0] t= 11 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 2))
+D[svc-held-strict0] t= 13 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', 2))
+D[svc-held-strict0] t= 18 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', 5))
+D[svc-held-strict0] t= 36 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', 5))
+D[svc-held-strict0] t= 39 DAGMan left the queue
+D[svc-held-strict0] DAGMan history: {'JobStatus': 4, 'ExitCode': 0, 'DAG_Status': 0, 'DAG_NodesTotal': 1, 'DAG_NodesDone': 1, 'DAG_NodesFailed': 0, 'DAG_NodesQueued': 0, 'DAG_JobsSubmitted': 2, 'DAG_JobsIdle': 0, 'DAG_JobsRunning': 0, 'DAG_JobsHeld': 0, 'DAG_JobsCompleted': 1, 'JobUniverse': 7}
+D[svc-held-strict0]   node {'ClusterId': 81, 'DAGNodeName': 'svc0', 'DAGManJobId': 62, 'JobStatus': 3, 'ExitBySignal': False, 'NumJobStarts': 0, 'RemoveReason': 'Removed by DAGMan (by user submituser)'}
+D[svc-held-strict0]   node {'ClusterId': 94, 'DAGNodeName': 'driver', 'DAGManJobId': 62, 'JobStatus': 4, 'ExitCode': 0, 'ExitBySignal': False, 'NumJobStarts': 1}
+D[svc-held-strict0]   files t=0 before from_dag    ['driver.sh', 'driver.sub', 'run.dag', 'service-svc0', 'svc0.sub']
+D[svc-held-strict0]   files after from_dag         ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'service-svc0', 'svc0.sub']
+D[svc-held-strict0]   files after submit           ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[svc-held-strict0]   files t=0 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[svc-held-strict0]   files t=2 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-held-strict0]   files t=4 running            ['driver.condor.log', 'driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-held-strict0]   files t=36 running           ['driver.condor.log', 'driver.err', 'driver.out', 'driver.sh', 'driver.sub', 'result.pkl', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-held-strict0]   files after end              ['driver.condor.log', 'driver.err', 'driver.out', 'driver.sh', 'driver.sub', 'result.pkl', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.metrics', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-held-strict0]   dagman.out: Submitting HTCondor Node svc0 job(s)...
+D[svc-held-strict0]   dagman.out: 0 job proc(s) currently held
+D[svc-held-strict0]   dagman.out: Event: ULOG_SUBMIT for HTCondor Node svc0 (81.0.0) {09/29/26 17:19:00}
+D[svc-held-strict0]   dagman.out: Event: ULOG_JOB_EVICTED for HTCondor Node svc0 (81.0.0) {09/29/26 17:19:15}
+D[svc-held-strict0]   dagman.out: Event: ULOG_JOB_HELD for HTCondor Node svc0 (81.0.0) {09/29/26 17:19:15}
+D[svc-held-strict0]   dagman.out: 0 job proc(s) currently held
+D[svc-held-strict0]   dagman.out: Warning for node svc0: unexpected job event value for proc 0: 12!
+D[svc-held-strict0]   dagman.out: Warning checking HTCondor job events: BAD EVENT: job (81.0.0) ended, total end count != 1 (0)
+D[svc-held-strict0]   dagman.out: Warning:  DAGMan thinks there are 1 idle jobs, even though the DAG is completed!
+D[svc-held-strict0]   dagman.out: 0 job proc(s) currently held
+D[svc-held-strict0]   dagman.out: Warning: Number of counted held job processes (0) is not equivalent to Node svc0's internal count of held job processes count (1).
+D[svc-held-strict0]   dagman.out: Warning: Number of counted idle job processes (0) is not equivalent to DAGs internal idle job processes count (1).
+D[svc-held-strict0]   dagman.out: Wrote metrics file /home/submituser/surf/svc-held-strict0/run.dag.metrics.
+D[svc-held-strict0]   dagman.out: **** condor_dagman (condor_DAGMAN) pid 3673 EXITING WITH STATUS 0
+D[svc-held-strict0]   metrics: {'exitcode': 0, 'DagStatus': 0, 'jobs': None, 'jobs_failed': 1, 'jobs_succeeded': 1, 'service_nodes': 1, 'service_nodes_failed': 0, 'service_nodes_succeeded': 1, 'total_jobs': None, 'total_jobs_run': None, 'retries': None}
+==================== svc-userhold-end DAGMan cluster 63 dir /home/submituser/surf/svc-userhold-end
+D[svc-userhold-end] t=  0 DAGMan JobStatus=1 JobsIdle=None JobsRunning=None JobsHeld=None NodesQueued=None NodesDone=None NodesTotal=None nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[svc-userhold-end] t=  2 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[svc-userhold-end] t=  4 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[svc-userhold-end] t=  9 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[svc-userhold-end] t= 11 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 2))
+D[svc-userhold-end] t= 13 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', 2))
+D[svc-userhold-end] t= 15 ACTION hold svc0
+D[svc-userhold-end] t= 15 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', 5))
+D[svc-userhold-end] t= 53 DAGMan left the queue
+D[svc-userhold-end] DAGMan history: {'JobStatus': 4, 'ExitCode': 1, 'DAG_Status': 1, 'DAG_NodesTotal': 1, 'DAG_NodesDone': 1, 'DAG_NodesFailed': 0, 'DAG_NodesQueued': 0, 'DAG_JobsSubmitted': 2, 'DAG_JobsIdle': 0, 'DAG_JobsRunning': 0, 'DAG_JobsHeld': 0, 'DAG_JobsCompleted': 1, 'JobUniverse': 7}
+D[svc-userhold-end]   node {'ClusterId': 83, 'DAGNodeName': 'svc0', 'DAGManJobId': 63, 'JobStatus': 3, 'ExitBySignal': True, 'NumJobStarts': 1, 'RemoveReason': 'Removed by DAGMan (by user submituser)'}
+D[svc-userhold-end]   node {'ClusterId': 98, 'DAGNodeName': 'driver', 'DAGManJobId': 63, 'JobStatus': 4, 'ExitCode': 0, 'ExitBySignal': False, 'NumJobStarts': 1}
+D[svc-userhold-end]   files t=0 before from_dag    ['driver.sh', 'driver.sub', 'run.dag', 'service-svc0', 'svc0.sub']
+D[svc-userhold-end]   files after from_dag         ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'service-svc0', 'svc0.sub']
+D[svc-userhold-end]   files after submit           ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[svc-userhold-end]   files t=0 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[svc-userhold-end]   files t=2 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-userhold-end]   files t=4 running            ['driver.condor.log', 'driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-userhold-end]   files after end              ['driver.condor.log', 'driver.err', 'driver.out', 'driver.sh', 'driver.sub', 'result.pkl', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.metrics', 'run.dag.nodes.log', 'run.dag.rescue001', 'service-svc0', 'svc0.sub']
+D[svc-userhold-end]   dagman.out: 0 job proc(s) currently held
+D[svc-userhold-end]   dagman.out: Warning for node svc0: unexpected job event value for proc 0: 13!
+D[svc-userhold-end]   dagman.out: Warning checking HTCondor job events: BAD EVENT: job (83.0.0) ended, total end count != 1 (0)
+D[svc-userhold-end]   dagman.out: Warning:  DAGMan thinks there are 1 idle jobs, even though the DAG is completed!
+D[svc-userhold-end]   dagman.out: ERROR: Warning is fatal error because of DAGMAN_USE_STRICT setting
+D[svc-userhold-end]   dagman.out: Writing Rescue DAG to /home/submituser/surf/svc-userhold-end/run.dag.rescue001...
+D[svc-userhold-end]   dagman.out: Removing submitted jobs...
+D[svc-userhold-end]   dagman.out: Removing any/all submitted HTCondor jobs...
+D[svc-userhold-end]   dagman.out: Running: /usr/bin/condor_rm -const DAGManJobId==63 -reason DAG' 'Abort:' 'DAG' 'is' 'exiting' 'and' 'writing' 'rescue' 'file.
+D[svc-userhold-end]   dagman.out: DAG status: 1 (DAG_STATUS_ERROR)
+D[svc-userhold-end]   dagman.out: 0 job proc(s) currently held
+D[svc-userhold-end]   dagman.out: Warning: Number of counted held job processes (0) is not equivalent to Node svc0's internal count of held job processes count (1).
+D[svc-userhold-end]   dagman.out: Warning: Number of counted idle job processes (0) is not equivalent to DAGs internal idle job processes count (1).
+D[svc-userhold-end]   dagman.out: **** condor_dagman (condor_DAGMAN) pid 3674 EXITING WITH STATUS 1
+D[svc-userhold-end]   metrics: {'exitcode': 1, 'DagStatus': 1, 'jobs': None, 'jobs_failed': 1, 'jobs_succeeded': 1, 'service_nodes': 1, 'service_nodes_failed': 0, 'service_nodes_succeeded': 1, 'total_jobs': None, 'total_jobs_run': None, 'retries': None}
+==================== svc-removed DAGMan cluster 64 dir /home/submituser/surf/svc-removed
+D[svc-removed] t=  0 DAGMan JobStatus=1 JobsIdle=None JobsRunning=None JobsHeld=None NodesQueued=None NodesDone=None NodesTotal=None nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[svc-removed] t=  2 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[svc-removed] t=  4 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[svc-removed] t=  9 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[svc-removed] t= 11 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 2))
+D[svc-removed] t= 13 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', 2))
+D[svc-removed] t= 15 ACTION rm svc0
+D[svc-removed] t= 15 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', 3))
+D[svc-removed] t= 18 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', None))
+D[svc-removed] t= 53 DAGMan left the queue
+D[svc-removed] DAGMan history: {'JobStatus': 4, 'ExitCode': 0, 'DAG_Status': 2, 'DAG_NodesTotal': 1, 'DAG_NodesDone': 1, 'DAG_NodesFailed': 0, 'DAG_NodesQueued': 0, 'DAG_JobsSubmitted': 2, 'DAG_JobsIdle': 0, 'DAG_JobsRunning': 0, 'DAG_JobsHeld': 0, 'DAG_JobsCompleted': 2, 'JobUniverse': 7}
+D[svc-removed]   node {'ClusterId': 86, 'DAGNodeName': 'svc0', 'DAGManJobId': 64, 'JobStatus': 3, 'ExitBySignal': True, 'NumJobStarts': 1}
+D[svc-removed]   node {'ClusterId': 100, 'DAGNodeName': 'driver', 'DAGManJobId': 64, 'JobStatus': 4, 'ExitCode': 0, 'ExitBySignal': False, 'NumJobStarts': 1}
+D[svc-removed]   files t=0 before from_dag    ['driver.sh', 'driver.sub', 'run.dag', 'service-svc0', 'svc0.sub']
+D[svc-removed]   files after from_dag         ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'service-svc0', 'svc0.sub']
+D[svc-removed]   files after submit           ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[svc-removed]   files t=0 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[svc-removed]   files t=2 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-removed]   files t=4 running            ['driver.condor.log', 'driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-removed]   files after end              ['driver.condor.log', 'driver.err', 'driver.out', 'driver.sh', 'driver.sub', 'result.pkl', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.metrics', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[svc-removed]   dagman.out: MultiLogFiles: truncating log file /home/submituser/surf/svc-removed/run.dag.nodes.log
+D[svc-removed]   dagman.out: Starting service node svc0...
+D[svc-removed]   dagman.out: 0 job proc(s) currently held
+D[svc-removed]   dagman.out: Submitting HTCondor Node svc0 job(s)...
+D[svc-removed]   dagman.out: 0 job proc(s) currently held
+D[svc-removed]   dagman.out: Event: ULOG_SUBMIT for HTCondor Node svc0 (86.0.0) {09/29/26 17:19:00}
+D[svc-removed]   dagman.out: Event: ULOG_EXECUTE for HTCondor Node svc0 (86.0.0) {09/29/26 17:19:09}
+D[svc-removed]   dagman.out: Event: ULOG_JOB_EVICTED for HTCondor Node svc0 (86.0.0) {09/29/26 17:19:14}
+D[svc-removed]   dagman.out: Event: ULOG_JOB_ABORTED for HTCondor Node svc0 (86.0.0) {09/29/26 17:19:14}
+D[svc-removed]   dagman.out: Node svc0 job(s) have exited the queue
+D[svc-removed]   dagman.out: 0 job proc(s) currently held
+D[svc-removed]   dagman.out: 0 job proc(s) currently held
+D[svc-removed]   dagman.out: Wrote metrics file /home/submituser/surf/svc-removed/run.dag.metrics.
+D[svc-removed]   dagman.out: **** condor_dagman (condor_DAGMAN) pid 3675 EXITING WITH STATUS 0
+D[svc-removed]   metrics: {'exitcode': 0, 'DagStatus': 2, 'jobs': None, 'jobs_failed': 0, 'jobs_succeeded': 2, 'service_nodes': 1, 'service_nodes_failed': 1, 'service_nodes_succeeded': 0, 'total_jobs': None, 'total_jobs_run': None, 'retries': None}
+==================== retry-1-0 DAGMan cluster 65 dir /home/submituser/surf/retry-1-0
+D[retry-1-0] t=  0 DAGMan JobStatus=1 JobsIdle=None JobsRunning=None JobsHeld=None NodesQueued=None NodesDone=None NodesTotal=None nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[retry-1-0] t=  2 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[retry-1-0] t=  4 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[retry-1-0] t=  9 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[retry-1-0] t= 11 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 2))
+D[retry-1-0] t= 13 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', 2))
+D[retry-1-0] t= 18 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', 2))
+D[retry-1-0] t= 24 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 2))
+D[retry-1-0] t= 26 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', 2))
+D[retry-1-0] t= 32 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', 2))
+D[retry-1-0] t= 34 DAGMan left the queue
+D[retry-1-0] DAGMan history: {'JobStatus': 4, 'ExitCode': 0, 'DAG_Status': 0, 'DAG_NodesTotal': 1, 'DAG_NodesDone': 1, 'DAG_NodesFailed': 0, 'DAG_NodesQueued': 0, 'DAG_JobsSubmitted': 3, 'DAG_JobsIdle': 0, 'DAG_JobsRunning': 0, 'DAG_JobsHeld': 0, 'DAG_JobsCompleted': 2, 'JobUniverse': 7}
+D[retry-1-0]   node {'ClusterId': 87, 'DAGNodeName': 'svc0', 'DAGManJobId': 65, 'JobStatus': 3, 'ExitBySignal': True, 'NumJobStarts': 1, 'RemoveReason': 'removed because <OtherJobRemoveRequirements = DAGManJobId =?= 65> fired when job (65.0) was removed'}
+D[retry-1-0]   node {'ClusterId': 101, 'DAGNodeName': 'driver', 'DAGManJobId': 65, 'JobStatus': 4, 'ExitCode': 1, 'ExitBySignal': False, 'NumJobStarts': 1}
+D[retry-1-0]   node {'ClusterId': 107, 'DAGNodeName': 'driver', 'DAGManJobId': 65, 'JobStatus': 4, 'ExitCode': 0, 'ExitBySignal': False, 'NumJobStarts': 1}
+D[retry-1-0]   files t=0 before from_dag    ['driver.sh', 'driver.sub', 'run.dag', 'service-svc0', 'svc0.sub']
+D[retry-1-0]   files after from_dag         ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'service-svc0', 'svc0.sub']
+D[retry-1-0]   files after submit           ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[retry-1-0]   files t=0 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[retry-1-0]   files t=2 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[retry-1-0]   files t=4 running            ['driver.condor.log', 'driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[retry-1-0]   files t=18 running           ['driver.condor.log', 'driver.err', 'driver.out', 'driver.sh', 'driver.sub', 'result.pkl', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[retry-1-0]   files after end              ['driver.condor.log', 'driver.err', 'driver.out', 'driver.sh', 'driver.sub', 'result.pkl', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.metrics', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[retry-1-0]   dagman.out: Warning: failed to get attribute DAGNodeName
+D[retry-1-0]   dagman.out: Starting service node svc0...
+D[retry-1-0]   dagman.out: 0 job proc(s) currently held
+D[retry-1-0]   dagman.out: Submitting HTCondor Node svc0 job(s)...
+D[retry-1-0]   dagman.out: 0 job proc(s) currently held
+D[retry-1-0]   dagman.out: Event: ULOG_SUBMIT for HTCondor Node svc0 (87.0.0) {09/29/26 17:19:00}
+D[retry-1-0]   dagman.out: Event: ULOG_EXECUTE for HTCondor Node svc0 (87.0.0) {09/29/26 17:19:09}
+D[retry-1-0]   dagman.out: 0 job proc(s) currently held
+D[retry-1-0]   dagman.out: 0 job proc(s) currently held
+D[retry-1-0]   dagman.out: 0 job proc(s) currently held
+D[retry-1-0]   dagman.out: Warning for node svc0: unexpected job event value for proc 0: 1!
+D[retry-1-0]   dagman.out: Warning checking HTCondor job events: BAD EVENT: job (87.0.0) ended, total end count != 1 (0)
+D[retry-1-0]   dagman.out: 0 job proc(s) currently held
+D[retry-1-0]   dagman.out: **** condor_dagman (condor_DAGMAN) pid 3676 EXITING WITH STATUS 0
+D[retry-1-0]   metrics: {'exitcode': 0, 'DagStatus': 0, 'jobs': None, 'jobs_failed': 1, 'jobs_succeeded': 2, 'service_nodes': 1, 'service_nodes_failed': 0, 'service_nodes_succeeded': 1, 'total_jobs': None, 'total_jobs_run': None, 'retries': None}
+==================== retry-3 DAGMan cluster 66 dir /home/submituser/surf/retry-3
+D[retry-3] t=  0 DAGMan JobStatus=1 JobsIdle=None JobsRunning=None JobsHeld=None NodesQueued=None NodesDone=None NodesTotal=None nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[retry-3] t=  2 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[retry-3] t=  4 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[retry-3] t=  9 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[retry-3] t= 11 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 2))
+D[retry-3] t= 13 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', 2))
+D[retry-3] t= 18 DAGMan left the queue
+D[retry-3] DAGMan history: {'JobStatus': 4, 'ExitCode': 1, 'DAG_Status': 2, 'DAG_NodesTotal': 1, 'DAG_NodesDone': 0, 'DAG_NodesFailed': 1, 'DAG_NodesQueued': 0, 'DAG_JobsSubmitted': 2, 'DAG_JobsIdle': 0, 'DAG_JobsRunning': 1, 'DAG_JobsHeld': 0, 'DAG_JobsCompleted': 1, 'JobUniverse': 7}
+D[retry-3]   node {'ClusterId': 90, 'DAGNodeName': 'svc0', 'DAGManJobId': 66, 'JobStatus': 3, 'ExitBySignal': True, 'NumJobStarts': 1, 'RemoveReason': 'removed because <OtherJobRemoveRequirements = DAGManJobId =?= 66> fired when job (66.0) was removed'}
+D[retry-3]   node {'ClusterId': 103, 'DAGNodeName': 'driver', 'DAGManJobId': 66, 'JobStatus': 4, 'ExitCode': 3, 'ExitBySignal': False, 'NumJobStarts': 1}
+D[retry-3]   files t=0 before from_dag    ['driver.sh', 'driver.sub', 'run.dag', 'service-svc0', 'svc0.sub']
+D[retry-3]   files after from_dag         ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'service-svc0', 'svc0.sub']
+D[retry-3]   files after submit           ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[retry-3]   files t=0 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[retry-3]   files t=2 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[retry-3]   files t=4 running            ['driver.condor.log', 'driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[retry-3]   files after end              ['driver.condor.log', 'driver.err', 'driver.out', 'driver.sh', 'driver.sub', 'result.pkl', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.metrics', 'run.dag.nodes.log', 'run.dag.rescue001', 'service-svc0', 'svc0.sub']
+D[retry-3]   dagman.out: 0 job proc(s) currently held
+D[retry-3]   dagman.out: Submitting HTCondor Node svc0 job(s)...
+D[retry-3]   dagman.out: 0 job proc(s) currently held
+D[retry-3]   dagman.out: Event: ULOG_SUBMIT for HTCondor Node svc0 (90.0.0) {09/29/26 17:19:00}
+D[retry-3]   dagman.out: Event: ULOG_EXECUTE for HTCondor Node svc0 (90.0.0) {09/29/26 17:19:09}
+D[retry-3]   dagman.out: 0 job proc(s) currently held
+D[retry-3]   dagman.out: ERROR: the following job(s) failed:
+D[retry-3]   dagman.out: Node Status: STATUS_ERROR
+D[retry-3]   dagman.out: Writing Rescue DAG to /home/submituser/surf/retry-3/run.dag.rescue001...
+D[retry-3]   dagman.out: Removing submitted jobs...
+D[retry-3]   dagman.out: Removing any/all submitted HTCondor jobs...
+D[retry-3]   dagman.out: Running: /usr/bin/condor_rm -const DAGManJobId==66 -reason DAG' 'Abort:' 'DAG' 'is' 'exiting' 'and' 'writing' 'rescue' 'file.
+D[retry-3]   dagman.out: 0 job proc(s) currently held
+D[retry-3]   dagman.out: **** condor_dagman (condor_DAGMAN) pid 3677 EXITING WITH STATUS 1
+D[retry-3]   metrics: {'exitcode': 1, 'DagStatus': 2, 'jobs': None, 'jobs_failed': 1, 'jobs_succeeded': 1, 'service_nodes': 1, 'service_nodes_failed': 0, 'service_nodes_succeeded': 0, 'total_jobs': None, 'total_jobs_run': None, 'retries': None}
+==================== retry-exhausted DAGMan cluster 67 dir /home/submituser/surf/retry-exhausted
+D[retry-exhausted] t=  0 DAGMan JobStatus=1 JobsIdle=None JobsRunning=None JobsHeld=None NodesQueued=None NodesDone=None NodesTotal=None nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[retry-exhausted] t=  2 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[retry-exhausted] t=  4 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[retry-exhausted] t=  9 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[retry-exhausted] t= 11 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 2))
+D[retry-exhausted] t= 13 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', 2))
+D[retry-exhausted] t= 18 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', 2))
+D[retry-exhausted] t= 24 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 2))
+D[retry-exhausted] t= 26 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', 2))
+D[retry-exhausted] t= 32 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', 2))
+D[retry-exhausted] t= 39 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 2))
+D[retry-exhausted] t= 43 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', 2))
+D[retry-exhausted] t= 47 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', 2))
+D[retry-exhausted] t= 49 DAGMan left the queue
+D[retry-exhausted] DAGMan history: {'JobStatus': 4, 'ExitCode': 1, 'DAG_Status': 2, 'DAG_NodesTotal': 1, 'DAG_NodesDone': 0, 'DAG_NodesFailed': 1, 'DAG_NodesQueued': 0, 'DAG_JobsSubmitted': 4, 'DAG_JobsIdle': 0, 'DAG_JobsRunning': 1, 'DAG_JobsHeld': 0, 'DAG_JobsCompleted': 3, 'JobUniverse': 7}
+D[retry-exhausted]   node {'ClusterId': 89, 'DAGNodeName': 'svc0', 'DAGManJobId': 67, 'JobStatus': 3, 'ExitBySignal': True, 'NumJobStarts': 1, 'RemoveReason': 'removed because <OtherJobRemoveRequirements = DAGManJobId =?= 67> fired when job (67.0) was removed'}
+D[retry-exhausted]   node {'ClusterId': 102, 'DAGNodeName': 'driver', 'DAGManJobId': 67, 'JobStatus': 4, 'ExitCode': 1, 'ExitBySignal': False, 'NumJobStarts': 1}
+D[retry-exhausted]   node {'ClusterId': 108, 'DAGNodeName': 'driver', 'DAGManJobId': 67, 'JobStatus': 4, 'ExitCode': 1, 'ExitBySignal': False, 'NumJobStarts': 1}
+D[retry-exhausted]   node {'ClusterId': 109, 'DAGNodeName': 'driver', 'DAGManJobId': 67, 'JobStatus': 4, 'ExitCode': 1, 'ExitBySignal': False, 'NumJobStarts': 1}
+D[retry-exhausted]   files t=0 before from_dag    ['driver.sh', 'driver.sub', 'run.dag', 'service-svc0', 'svc0.sub']
+D[retry-exhausted]   files after from_dag         ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'service-svc0', 'svc0.sub']
+D[retry-exhausted]   files after submit           ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[retry-exhausted]   files t=0 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[retry-exhausted]   files t=2 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[retry-exhausted]   files t=4 running            ['driver.condor.log', 'driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[retry-exhausted]   files t=18 running           ['driver.condor.log', 'driver.err', 'driver.out', 'driver.sh', 'driver.sub', 'result.pkl', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[retry-exhausted]   files after end              ['driver.condor.log', 'driver.err', 'driver.out', 'driver.sh', 'driver.sub', 'result.pkl', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.metrics', 'run.dag.nodes.log', 'run.dag.rescue001', 'service-svc0', 'svc0.sub']
+D[retry-exhausted]   dagman.out: Event: ULOG_EXECUTE for HTCondor Node svc0 (89.0.0) {09/29/26 17:19:09}
+D[retry-exhausted]   dagman.out: 0 job proc(s) currently held
+D[retry-exhausted]   dagman.out: 0 job proc(s) currently held
+D[retry-exhausted]   dagman.out: 0 job proc(s) currently held
+D[retry-exhausted]   dagman.out: 0 job proc(s) currently held
+D[retry-exhausted]   dagman.out: 0 job proc(s) currently held
+D[retry-exhausted]   dagman.out: ERROR: the following job(s) failed:
+D[retry-exhausted]   dagman.out: Node Status: STATUS_ERROR
+D[retry-exhausted]   dagman.out: Writing Rescue DAG to /home/submituser/surf/retry-exhausted/run.dag.rescue001...
+D[retry-exhausted]   dagman.out: Removing submitted jobs...
+D[retry-exhausted]   dagman.out: Removing any/all submitted HTCondor jobs...
+D[retry-exhausted]   dagman.out: Running: /usr/bin/condor_rm -const DAGManJobId==67 -reason DAG' 'Abort:' 'DAG' 'is' 'exiting' 'and' 'writing' 'rescue' 'file.
+D[retry-exhausted]   dagman.out: 0 job proc(s) currently held
+D[retry-exhausted]   dagman.out: **** condor_dagman (condor_DAGMAN) pid 3678 EXITING WITH STATUS 1
+D[retry-exhausted]   metrics: {'exitcode': 1, 'DagStatus': 2, 'jobs': None, 'jobs_failed': 1, 'jobs_succeeded': 3, 'service_nodes': 1, 'service_nodes_failed': 0, 'service_nodes_succeeded': 0, 'total_jobs': None, 'total_jobs_run': None, 'retries': None}
+==================== driver-kill9-noresult DAGMan cluster 68 dir /home/submituser/surf/driver-kill9-noresult
+D[driver-kill9-noresult] t=  0 DAGMan JobStatus=1 JobsIdle=None JobsRunning=None JobsHeld=None NodesQueued=None NodesDone=None NodesTotal=None nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[driver-kill9-noresult] t=  2 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[driver-kill9-noresult] t=  4 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[driver-kill9-noresult] t=  9 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[driver-kill9-noresult] t= 11 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 2))
+D[driver-kill9-noresult] t= 13 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', 2))
+D[driver-kill9-noresult] t= 18 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 5), ('svc0', 2))
+D[driver-kill9-noresult] t=309 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=1 JobsHeld=1 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 5), ('svc0', 2))
+D[driver-kill9-noresult] DAGMan still queued: [[ JobStatus = 2; DAG_Status = 0; ServerTime = 1790703839; DAG_JobsHeld = 1; DAG_JobsIdle = 0; DAG_NodesDone = 0; DAG_NodesTotal = 1; DAG_JobsRunning = 1; DAG_NodesFailed = 0; DAG_NodesQueued = 1; DAG_JobsCompleted = 0; DAG_JobsSubmitted = 2 ]]
+D[driver-kill9-noresult]   files t=0 before from_dag    ['driver.sh', 'driver.sub', 'run.dag', 'service-svc0', 'svc0.sub']
+D[driver-kill9-noresult]   files after from_dag         ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'service-svc0', 'svc0.sub']
+D[driver-kill9-noresult]   files after submit           ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[driver-kill9-noresult]   files t=0 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[driver-kill9-noresult]   files t=2 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[driver-kill9-noresult]   files t=4 running            ['driver.condor.log', 'driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[driver-kill9-noresult]   files t=18 running           ['driver.condor.log', 'driver.err', 'driver.out', 'driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[driver-kill9-noresult]   dagman.out: Warning: failed to get attribute DAGNodeName
+D[driver-kill9-noresult]   dagman.out: Starting service node svc0...
+D[driver-kill9-noresult]   dagman.out: 0 job proc(s) currently held
+D[driver-kill9-noresult]   dagman.out: Submitting HTCondor Node svc0 job(s)...
+D[driver-kill9-noresult]   dagman.out: 0 job proc(s) currently held
+D[driver-kill9-noresult]   dagman.out: Event: ULOG_SUBMIT for HTCondor Node svc0 (92.0.0) {09/29/26 17:19:00}
+D[driver-kill9-noresult]   dagman.out: Event: ULOG_EXECUTE for HTCondor Node svc0 (92.0.0) {09/29/26 17:19:09}
+D[driver-kill9-noresult]   dagman.out: 1 job proc(s) currently held
+D[driver-kill9-noresult]   dagman.out: Writing Rescue DAG to /home/submituser/surf/driver-kill9-noresult/run.dag.rescue001...
+D[driver-kill9-noresult]   dagman.out: Removing submitted jobs...
+D[driver-kill9-noresult]   dagman.out: Removing any/all submitted HTCondor jobs...
+D[driver-kill9-noresult]   dagman.out: Running: /usr/bin/condor_rm -const DAGManJobId==68 -reason DAG' 'Removed:' 'User' 'removed' 'scheduler' 'job' 'from' 'queue.
+D[driver-kill9-noresult]   dagman.out: 1 job proc(s) currently held
+D[driver-kill9-noresult]   dagman.out: **** condor_dagman (condor_DAGMAN) pid 3679 EXITING WITH STATUS 2
+D[driver-kill9-noresult]   metrics: {'exitcode': 2, 'DagStatus': 4, 'jobs': None, 'jobs_failed': 2, 'jobs_succeeded': 0, 'service_nodes': 1, 'service_nodes_failed': 0, 'service_nodes_succeeded': 0, 'total_jobs': None, 'total_jobs_run': None, 'retries': None}
+==================== driver-held DAGMan cluster 69 dir /home/submituser/surf/driver-held
+D[driver-held] t=  0 DAGMan JobStatus=1 JobsIdle=None JobsRunning=None JobsHeld=None NodesQueued=None NodesDone=None NodesTotal=None nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[driver-held] t=  2 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[driver-held] t=  4 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[driver-held] t=  9 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[driver-held] t= 11 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 2))
+D[driver-held] t= 13 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', 2))
+D[driver-held] t= 22 ACTION hold driver
+D[driver-held] t= 22 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 5), ('svc0', 2))
+D[driver-held] t= 51 ACTION release driver
+D[driver-held] t= 51 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 2))
+D[driver-held] t= 53 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', 2))
+D[driver-held] t=111 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', 2))
+D[driver-held] t=113 DAGMan left the queue
+D[driver-held] DAGMan history: {'JobStatus': 4, 'ExitCode': 0, 'DAG_Status': 0, 'DAG_NodesTotal': 1, 'DAG_NodesDone': 1, 'DAG_NodesFailed': 0, 'DAG_NodesQueued': 0, 'DAG_JobsSubmitted': 2, 'DAG_JobsIdle': 0, 'DAG_JobsRunning': 0, 'DAG_JobsHeld': 0, 'DAG_JobsCompleted': 1, 'JobUniverse': 7}
+D[driver-held]   node {'ClusterId': 93, 'DAGNodeName': 'svc0', 'DAGManJobId': 69, 'JobStatus': 3, 'ExitBySignal': True, 'NumJobStarts': 1, 'RemoveReason': 'removed because <OtherJobRemoveRequirements = DAGManJobId =?= 69> fired when job (69.0) was removed'}
+D[driver-held]   node {'ClusterId': 105, 'DAGNodeName': 'driver', 'DAGManJobId': 69, 'JobStatus': 4, 'ExitCode': 0, 'ExitBySignal': False, 'NumJobStarts': 2}
+D[driver-held]   files t=0 before from_dag    ['driver.sh', 'driver.sub', 'run.dag', 'service-svc0', 'svc0.sub']
+D[driver-held]   files after from_dag         ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'service-svc0', 'svc0.sub']
+D[driver-held]   files after submit           ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[driver-held]   files t=0 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[driver-held]   files t=2 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[driver-held]   files t=4 running            ['driver.condor.log', 'driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[driver-held]   files t=111 running          ['driver.condor.log', 'driver.err', 'driver.out', 'driver.sh', 'driver.sub', 'result.pkl', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[driver-held]   files after end              ['driver.condor.log', 'driver.err', 'driver.out', 'driver.sh', 'driver.sub', 'result.pkl', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.metrics', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[driver-held]   dagman.out: Starting service node svc0...
+D[driver-held]   dagman.out: 0 job proc(s) currently held
+D[driver-held]   dagman.out: Submitting HTCondor Node svc0 job(s)...
+D[driver-held]   dagman.out: 0 job proc(s) currently held
+D[driver-held]   dagman.out: Event: ULOG_SUBMIT for HTCondor Node svc0 (93.0.0) {09/29/26 17:19:00}
+D[driver-held]   dagman.out: Event: ULOG_EXECUTE for HTCondor Node svc0 (93.0.0) {09/29/26 17:19:09}
+D[driver-held]   dagman.out: 1 job proc(s) currently held
+D[driver-held]   dagman.out: 0 job proc(s) currently held
+D[driver-held]   dagman.out: 0 job proc(s) currently held
+D[driver-held]   dagman.out: Warning for node svc0: unexpected job event value for proc 0: 1!
+D[driver-held]   dagman.out: Warning checking HTCondor job events: BAD EVENT: job (93.0.0) ended, total end count != 1 (0)
+D[driver-held]   dagman.out: 0 job proc(s) currently held
+D[driver-held]   dagman.out: Wrote metrics file /home/submituser/surf/driver-held/run.dag.metrics.
+D[driver-held]   dagman.out: **** condor_dagman (condor_DAGMAN) pid 3680 EXITING WITH STATUS 0
+D[driver-held]   metrics: {'exitcode': 0, 'DagStatus': 0, 'jobs': None, 'jobs_failed': 1, 'jobs_succeeded': 1, 'service_nodes': 1, 'service_nodes_failed': 0, 'service_nodes_succeeded': 1, 'total_jobs': None, 'total_jobs_run': None, 'retries': None}
+==================== dag-removed DAGMan cluster 70 dir /home/submituser/surf/dag-removed
+D[dag-removed] t=  0 DAGMan JobStatus=1 JobsIdle=None JobsRunning=None JobsHeld=None NodesQueued=None NodesDone=None NodesTotal=None nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[dag-removed] t=  2 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[dag-removed] t=  4 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[dag-removed] t=  9 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 1))
+D[dag-removed] t= 11 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', 2))
+D[dag-removed] t= 13 DAGMan JobStatus=2 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', 2))
+D[dag-removed] t= 30 ACTION rm dagman
+D[dag-removed] t= 30 DAGMan JobStatus=3 JobsIdle=2 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', 2))
+D[dag-removed] t= 32 DAGMan left the queue
+D[dag-removed] DAGMan history: {'JobStatus': 3, 'DAG_Status': 4, 'DAG_NodesTotal': 1, 'DAG_NodesDone': 0, 'DAG_NodesFailed': 0, 'DAG_NodesQueued': 1, 'DAG_JobsSubmitted': 2, 'DAG_JobsIdle': 0, 'DAG_JobsRunning': 2, 'DAG_JobsHeld': 0, 'DAG_JobsCompleted': 0, 'JobUniverse': 7}
+D[dag-removed]   node {'ClusterId': 97, 'DAGNodeName': 'svc0', 'DAGManJobId': 70, 'JobStatus': 3, 'ExitBySignal': True, 'NumJobStarts': 1, 'RemoveReason': 'removed because <OtherJobRemoveRequirements = DAGManJobId =?= 70> fired when job (70.0) was removed'}
+D[dag-removed]   node {'ClusterId': 106, 'DAGNodeName': 'driver', 'DAGManJobId': 70, 'JobStatus': 3, 'ExitBySignal': True, 'NumJobStarts': 1, 'RemoveReason': 'removed because <OtherJobRemoveRequirements = DAGManJobId =?= 70> fired when job (70.0) was removed'}
+D[dag-removed]   files t=0 before from_dag    ['driver.sh', 'driver.sub', 'run.dag', 'service-svc0', 'svc0.sub']
+D[dag-removed]   files after from_dag         ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'service-svc0', 'svc0.sub']
+D[dag-removed]   files after submit           ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[dag-removed]   files t=0 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'service-svc0', 'svc0.sub']
+D[dag-removed]   files t=2 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[dag-removed]   files t=4 running            ['driver.condor.log', 'driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'service-svc0', 'svc0.sub']
+D[dag-removed]   files t=30 running           ['driver.condor.log', 'driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log', 'run.dag.rescue001', 'service-svc0', 'svc0.sub']
+D[dag-removed]   files after end              ['driver.condor.log', 'driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.metrics', 'run.dag.nodes.log', 'run.dag.rescue001', 'service-svc0', 'svc0.sub']
+D[dag-removed]   dagman.out: MultiLogFiles: truncating log file /home/submituser/surf/dag-removed/run.dag.nodes.log
+D[dag-removed]   dagman.out: Starting service node svc0...
+D[dag-removed]   dagman.out: 0 job proc(s) currently held
+D[dag-removed]   dagman.out: Submitting HTCondor Node svc0 job(s)...
+D[dag-removed]   dagman.out: 0 job proc(s) currently held
+D[dag-removed]   dagman.out: Event: ULOG_SUBMIT for HTCondor Node svc0 (97.0.0) {09/29/26 17:19:01}
+D[dag-removed]   dagman.out: Event: ULOG_EXECUTE for HTCondor Node svc0 (97.0.0) {09/29/26 17:19:09}
+D[dag-removed]   dagman.out: Writing Rescue DAG to /home/submituser/surf/dag-removed/run.dag.rescue001...
+D[dag-removed]   dagman.out: Removing submitted jobs...
+D[dag-removed]   dagman.out: Removing any/all submitted HTCondor jobs...
+D[dag-removed]   dagman.out: Running: /usr/bin/condor_rm -const DAGManJobId==70 -reason DAG' 'Removed:' 'User' 'removed' 'scheduler' 'job' 'from' 'queue.
+D[dag-removed]   dagman.out: 0 job proc(s) currently held
+D[dag-removed]   dagman.out: Wrote metrics file /home/submituser/surf/dag-removed/run.dag.metrics.
+D[dag-removed]   dagman.out: **** condor_dagman (condor_DAGMAN) pid 3681 EXITING WITH STATUS 2
+D[dag-removed]   metrics: {'exitcode': 2, 'DagStatus': 4, 'jobs': None, 'jobs_failed': 2, 'jobs_succeeded': 0, 'service_nodes': 1, 'service_nodes_failed': 0, 'service_nodes_succeeded': 0, 'total_jobs': None, 'total_jobs_run': None, 'retries': None}
+==================== no-service DAGMan cluster 71 dir /home/submituser/surf/no-service
+D[no-service] t=  0 DAGMan JobStatus=1 JobsIdle=None JobsRunning=None JobsHeld=None NodesQueued=None NodesDone=None NodesTotal=None nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[no-service] t=  2 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', None), ('svc0', None))
+D[no-service] t=  4 DAGMan JobStatus=2 JobsIdle=0 JobsRunning=0 JobsHeld=0 NodesQueued=0 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', None))
+D[no-service] t=  9 DAGMan JobStatus=2 JobsIdle=1 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 1), ('svc0', None))
+D[no-service] t= 11 DAGMan JobStatus=2 JobsIdle=1 JobsRunning=0 JobsHeld=0 NodesQueued=1 NodesDone=0 NodesTotal=1 nodes(JobStatus)=(('driver', 2), ('svc0', None))
+D[no-service] t= 18 DAGMan left the queue
+D[no-service] DAGMan history: {'JobStatus': 4, 'ExitCode': 0, 'DAG_Status': 0, 'DAG_NodesTotal': 1, 'DAG_NodesDone': 1, 'DAG_NodesFailed': 0, 'DAG_NodesQueued': 0, 'DAG_JobsSubmitted': 1, 'DAG_JobsIdle': 0, 'DAG_JobsRunning': 0, 'DAG_JobsHeld': 0, 'DAG_JobsCompleted': 1, 'JobUniverse': 7}
+D[no-service]   node {'ClusterId': 95, 'DAGNodeName': 'driver', 'DAGManJobId': 71, 'JobStatus': 4, 'ExitCode': 0, 'ExitBySignal': False, 'NumJobStarts': 1}
+D[no-service]   files t=0 before from_dag    ['driver.sh', 'driver.sub', 'run.dag']
+D[no-service]   files after from_dag         ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub']
+D[no-service]   files after submit           ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log']
+D[no-service]   files t=0 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log']
+D[no-service]   files t=2 running            ['driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log']
+D[no-service]   files t=4 running            ['driver.condor.log', 'driver.sh', 'driver.sub', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.lock', 'run.dag.nodes.log']
+D[no-service]   files after end              ['driver.condor.log', 'driver.err', 'driver.out', 'driver.sh', 'driver.sub', 'result.pkl', 'run.dag', 'run.dag.condor.sub', 'run.dag.dagman.log', 'run.dag.dagman.out', 'run.dag.lib.err', 'run.dag.lib.out', 'run.dag.metrics', 'run.dag.nodes.log']
+D[no-service]   dagman.out: argv[4] == "/home/submituser/surf/no-service/run.dag"
+D[no-service]   dagman.out: argv[10] == "-AutoRescue"
+D[no-service]   dagman.out: Warning: failed to get attribute DAGNodeName
+D[no-service]   dagman.out: Default node log file is: </home/submituser/surf/no-service/run.dag.nodes.log>
+D[no-service]   dagman.out: DAG Lockfile will be written to /home/submituser/surf/no-service/run.dag.lock
+D[no-service]   dagman.out: DAG Input file is /home/submituser/surf/no-service/run.dag
+D[no-service]   dagman.out: Parsing /home/submituser/surf/no-service/run.dag ...
+D[no-service]   dagman.out: MultiLogFiles: truncating log file /home/submituser/surf/no-service/run.dag.nodes.log
+D[no-service]   dagman.out: 0 job proc(s) currently held
+D[no-service]   dagman.out: 0 job proc(s) currently held
+D[no-service]   dagman.out: 0 job proc(s) currently held
+D[no-service]   dagman.out: 0 job proc(s) currently held
+D[no-service]   dagman.out: Wrote metrics file /home/submituser/surf/no-service/run.dag.metrics.
+D[no-service]   dagman.out: **** condor_dagman (condor_DAGMAN) pid 3682 EXITING WITH STATUS 0
+D[no-service]   metrics: {'exitcode': 0, 'DagStatus': 0, 'jobs': None, 'jobs_failed': 0, 'jobs_succeeded': 1, 'service_nodes': 0, 'service_nodes_failed': 0, 'service_nodes_succeeded': 0, 'total_jobs': None, 'total_jobs_run': None, 'retries': None}
+D-done

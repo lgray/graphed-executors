@@ -1,0 +1,56 @@
+# probe_surface_lifecycle
+# $CondorVersion: 25.13.2 2026-08-19 BuildID: 943576 PackageID: 25.13.2-1 GitSHA: 589a5b38 $
+# STARTER_NESTED_SCRATCH = True
+# MOUNT_UNDER_SCRATCH = "/tmp,/var/tmp"
+# PERIODIC_EXPR_INTERVAL = 60
+# DAGMAN_USE_STRICT = 1
+# MachineMaxVacateTime = 600
+# KILLING_TIMEOUT = 30
+# GRACEFULLY_REMOVE_JOBS = True
+# MAX_PERIODIC_EXPR_INTERVAL = 1200
+L1 status sequences (queue JobStatus..., then history): {68: [1, 2, 'hist:4'], 69: [1, 2, 'hist:4'], 70: [1, 2, 'hist:4'], 71: [1, 2, 'hist:4'], 72: [1, 2, 'hist:4'], 73: [1, 2, 'hist:4'], 74: [1, 2, 'hist:4'], 75: [1, 2, 'hist:4']}
+L1 seconds a finished job was in neither queue nor history (0.2 s polls): {68: 0.0, 69: 0.0, 70: 0.0, 71: 0.0, 72: 0.0, 73: 0.0, 74: 0.0, 75: 0.0}
+L2 condor_rm sent at 1790703988.66
+L2 reap               queue=3 events=['-9.4s parent pid=3733 start pgid=3733', '-9.4s child pid=3739 start pgid=3733', '+0.0s parent pid=3733 got SIGTERM', '+0.0s child pid=3739 got SIGTERM (ignored)'] | heartbeat fresh now (+105s): {'parent': False, 'child': True}
+L2 exit-on-term       queue=None events=['-4.4s parent pid=3750 start pgid=3750', '-4.4s child pid=3752 start pgid=3750', '+0.0s parent pid=3750 got SIGTERM', '+0.0s parent pid=3750 exiting without touching child'] | heartbeat fresh now (+105s): {'parent': False, 'child': False}
+L2 ignore-all         queue=3 events=['-9.4s parent pid=3740 start pgid=3740', '-9.4s child pid=3746 start pgid=3740'] | heartbeat fresh now (+105s): {'parent': True, 'child': True}
+L2 ignore-all-jmvt5   queue=None events=['-4.4s parent pid=3751 start pgid=3751', '-4.4s child pid=3753 start pgid=3751'] | heartbeat fresh now (+105s): {'parent': False, 'child': False}
+L2 exit-normally      queue=None events=['-9.4s parent pid=3745 start pgid=3745', '-9.4s child pid=3747 start pgid=3745', '-1.4s parent pid=3745 parent exits normally, child still running'] | heartbeat fresh now (+105s): {'parent': None, 'child': False}
+L2 ignore-all (default MachineMaxVacateTime): left the queue 601 s after rm; history {'JobStatus': 3, 'ExitBySignal': True, 'ExitSignal': 9}
+L2 reap           history: {'JobStatus': 3, 'ExitBySignal': True, 'ExitSignal': 9}
+L2 exit-on-term   history: {'JobStatus': 3, 'ExitCode': 0, 'ExitBySignal': False}
+L2 exit-normally  history: {'JobStatus': 4, 'ExitCode': 0, 'ExitBySignal': False}
+L2 any probe process left on the host: none
+L3a condor_hold running job: JobStatus 5 HoldReasonCode 1 | ['-1.3s parent pid=4603 start pgid=4603', '-1.3s child pid=4604 start pgid=4603', '+0.0s parent pid=4603 got SIGTERM', '+0.0s child pid=4604 got SIGTERM (ignored)']
+L3b after release, (JobStatus, NumJobStarts) over 60 s: [('+0s', (1, 0)), ('+4s', (1, 1))]
+L3c periodic_remove=JobStatus==5, held (input): removed 13 s after the hold; {'JobStatus': 3, 'RemoveReason': "The job attribute PeriodicRemove expression 'JobStatus == 5' evaluated to TRUE"}
+L3c periodic_remove=JobStatus==5, held (user): removed 13 s after the hold; {'JobStatus': 3, 'RemoveReason': "The job attribute PeriodicRemove expression 'JobStatus == 5' evaluated to TRUE"}
+L3d periodic_hold after 5 s running: {'JobStatus': 5, 'HoldReasonCode': 3, 'HoldReason': 'probe periodic hold'} held 6 s after start
+L4 OnExitRemove generated: NumJobCompletions > JobMaxRetries || ExitCode is 0 || ExitCode is 3
+L4 exit1-always  (JobStatus, NumJobStarts) seen in queue: [(1, 0), (2, 0), (1, 1)]; history {'JobStatus': 4, 'ExitCode': 1, 'ExitBySignal': False, 'NumJobStarts': 3, 'JobMaxRetries': 2}
+L4 exit3         (JobStatus, NumJobStarts) seen in queue: [(1, 0), (2, 1)]; history {'JobStatus': 4, 'ExitCode': 3, 'ExitBySignal': False, 'NumJobStarts': 1, 'JobMaxRetries': 2}
+L4 kill9         (JobStatus, NumJobStarts) seen in queue: [(1, 0), (2, 0), (1, 1), (2, 3)]; history {'JobStatus': 4, 'ExitBySignal': True, 'ExitSignal': 9, 'NumJobStarts': 3, 'JobMaxRetries': 2}
+L4 exit1-then-0  (JobStatus, NumJobStarts) seen in queue: [(1, 0), (2, 0), (1, 1)]; history {'JobStatus': 4, 'ExitCode': 0, 'ExitBySignal': False, 'NumJobStarts': 2, 'JobMaxRetries': 2}
+L5a spool=True before spool(): {'JobStatus': '5', 'HoldReasonCode': '16', 'HoldReason': 'Spooling input data files', 'LeaveJobInQueue': 'JobStatus == 4 && (time() - (CompletionDate ?: time())) < 864000 && (StageOutFinish ?: 0) < EnteredCurrentStatus'}
+L5b completed spooled job: in queue JobStatus 4 | initialdir holds: ['in.txt', 's.sh']
+L5c after retrieve: initialdir holds: ['in.txt', 'job.err', 'job.log', 'job.out', 'result.pkl', 's.sh'] | queue: 
+    [
+        JobStatus = 4; 
+        ServerTime = 1790704711
+    ]
+L5d 10 s after retrieve: queue: 
+    [
+        JobStatus = 4; 
+        ServerTime = 1790704721
+    ]
+L5e removed after retrieve; history: {'JobStatus': 3, 'ExitCode': 0}
+L5f spooled, removed at JobStatus 4 without retrieve: initialdir holds ['s.sh'] history {'JobStatus': 3, 'ExitCode': 0}
+L6 act(Remove) on nonexistent cluster: returned {'TotalJobAds': 2}
+L6 act(Remove) on finished cluster: returned {'TotalJobAds': 2}
+L7 act(Remove, constraint str reason=...) -> history {'JobStatus': 3, 'ExitReason': 'died on signal 15 (Terminated)'}
+L7 act(Remove, int cluster    reason=...) -> history {'JobStatus': 3, 'ExitReason': 'died on signal 15 (Terminated)'}
+L7 act(Remove, 'c.0' str      reason=...) -> history {'JobStatus': 3, 'ExitReason': 'died on signal 15 (Terminated)'}
+L7 act(Remove, ExprTree       reason=...) -> history {'JobStatus': 3, 'ExitReason': 'died on signal 15 (Terminated)'}
+L7 act(Hold, reason=...) -> queue {'JobStatus': 5, 'HoldReasonCode': 1, 'HoldReason': ''}
+L7 condor_rm -reason (CLI) -> history {'JobStatus': 3, 'RemoveReason': 'graphed: via condor_rm -reason (by user submituser)'}
+L-done

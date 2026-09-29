@@ -1,0 +1,39 @@
+# probe_surface_dagman_strict
+# $CondorVersion: 25.13.2 2026-08-19 BuildID: 943576 PackageID: 25.13.2-1 GitSHA: 589a5b38 $
+# STARTER_NESTED_SCRATCH = True
+# MOUNT_UNDER_SCRATCH = "/tmp,/var/tmp"
+# PERIODIC_EXPR_INTERVAL = 60
+# DAGMAN_USE_STRICT = 1
+# DAGMAN_QUEUE_UPDATE_INTERVAL = 300
+D-S idle-strict-default submitted DAGMan 110; description environment = "_CONDOR_DAGMAN_LOG=/home/submituser/surf/ds-idle-strict-default/run.dag.dagman.out _CONDOR_MAX_DAGMAN_LOG=0"
+D-S idle-ConfigFile-strict0 submitted DAGMan 111; description environment = "_CONDOR_DAGMAN_CONFIG_FILE=/home/submituser/surf/ds-conf/dag.conf _CONDOR_DAGMAN_LOG=/home/submituser/surf/ds-idle-ConfigFile-strict0/run.dag.dagman.out _CONDOR_MAX_DAGMAN_LOG=0"
+D-S idle-AddToEnv-strict0 submitted DAGMan 112; description environment = "_CONDOR_DAGMAN_LOG=/home/submituser/surf/ds-idle-AddToEnv-strict0/run.dag.dagman.out _CONDOR_DAGMAN_USE_STRICT=0 _CONDOR_MAX_DAGMAN_LOG=0"
+D-S held-AddToEnv-strict0 submitted DAGMan 113; description environment = "_CONDOR_DAGMAN_LOG=/home/submituser/surf/ds-held-AddToEnv-strict0/run.dag.dagman.out _CONDOR_DAGMAN_USE_STRICT=0 _CONDOR_MAX_DAGMAN_LOG=0"
+D-S driver-held-counter submitted DAGMan 114; description environment = "_CONDOR_DAGMAN_LOG=/home/submituser/surf/ds-driver-held-counter/run.dag.dagman.out _CONDOR_MAX_DAGMAN_LOG=0"
+D-S driver-held-counter t=16 held the driver node
+D-S driver-held-counter t=16 DAGMan DAG_JobsHeld=0 | direct node query JobStatus=2
+D-S driver-held-counter t=18 DAGMan DAG_JobsHeld=0 | direct node query JobStatus=5
+D-S driver-held-counter t=311 DAGMan DAG_JobsHeld=1 | direct node query JobStatus=5
+D-S idle-strict-default      DAGMan history {'JobStatus': 4, 'ExitCode': 1, 'DAG_Status': 1}; result.pkl True; rescue ['run.dag.rescue001']
+D-S idle-strict-default        dagman.out: DAGMAN_USE_STRICT setting: 1
+D-S idle-strict-default        dagman.out: Warning:  DAGMan thinks there are 1 idle jobs, even though the DAG is completed!
+D-S idle-strict-default        dagman.out: ERROR: Warning is fatal error because of DAGMAN_USE_STRICT setting
+D-S idle-strict-default        dagman.out: **** condor_dagman (condor_DAGMAN) pid 8160 EXITING WITH STATUS 1
+D-S idle-ConfigFile-strict0  DAGMan history {'JobStatus': 4, 'ExitCode': 0, 'DAG_Status': 0}; result.pkl True; rescue []
+D-S idle-ConfigFile-strict0    dagman.out: DAGMAN_USE_STRICT setting: 0
+D-S idle-ConfigFile-strict0    dagman.out: Warning:  DAGMan thinks there are 1 idle jobs, even though the DAG is completed!
+D-S idle-ConfigFile-strict0    dagman.out: **** condor_dagman (condor_DAGMAN) pid 8161 EXITING WITH STATUS 0
+D-S idle-AddToEnv-strict0    DAGMan history {'JobStatus': 4, 'ExitCode': 0, 'DAG_Status': 0}; result.pkl True; rescue []
+D-S idle-AddToEnv-strict0      dagman.out: DAGMAN_USE_STRICT setting: 0
+D-S idle-AddToEnv-strict0      dagman.out: argv[13] == "_CONDOR_DAGMAN_USE_STRICT=0"
+D-S idle-AddToEnv-strict0      dagman.out: Warning:  DAGMan thinks there are 1 idle jobs, even though the DAG is completed!
+D-S idle-AddToEnv-strict0      dagman.out: **** condor_dagman (condor_DAGMAN) pid 8162 EXITING WITH STATUS 0
+D-S held-AddToEnv-strict0    DAGMan history {'JobStatus': 4, 'ExitCode': 0, 'DAG_Status': 0}; result.pkl True; rescue []
+D-S held-AddToEnv-strict0      dagman.out: DAGMAN_USE_STRICT setting: 0
+D-S held-AddToEnv-strict0      dagman.out: argv[13] == "_CONDOR_DAGMAN_USE_STRICT=0"
+D-S held-AddToEnv-strict0      dagman.out: Warning:  DAGMan thinks there are 1 idle jobs, even though the DAG is completed!
+D-S held-AddToEnv-strict0      dagman.out: **** condor_dagman (condor_DAGMAN) pid 8163 EXITING WITH STATUS 0
+D-S driver-held-counter      DAGMan history {'JobStatus': 3, 'ExitCode': None, 'DAG_Status': 4}; result.pkl False; rescue ['run.dag.rescue001']
+D-S driver-held-counter        dagman.out: DAGMAN_USE_STRICT setting: 1
+D-S driver-held-counter        dagman.out: **** condor_dagman (condor_DAGMAN) pid 8164 EXITING WITH STATUS 2
+D-S-done

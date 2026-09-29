@@ -1,0 +1,11 @@
+# probe_surface_network
+# $CondorVersion: 25.13.2 2026-08-19 BuildID: 943576 PackageID: 25.13.2-1 GitSHA: 589a5b38 $
+# STARTER_NESTED_SCRATCH = True
+# MOUNT_UNDER_SCRATCH = "/tmp,/var/tmp"
+# PERIODIC_EXPR_INTERVAL = 60
+# DAGMAN_USE_STRICT = 1
+N1 Machine=d123f186b90c gethostname=d123f186b90c getfqdn=d123f186b90c | Machine resolves to 172.17.0.6 | 
+N2 job B dialling job A's port: GET http://d123f186b90c:10050/ -> 200 | GET http://127.0.0.1:10050/ -> 200 | 
+N3 condor_ssh_to_job rc=0 stdout='/var/lib/condor/execute/dir_2854/scratch\n.condor_ssh_to_job_1 .job.ad .machine.ad _condor_stderr _condor_stdout server.py server.sh \nKRB5CCNAME=' stderr=''
+N4 submit from inside a job: {'JobStatus': 4, 'ExitCode': 0} inner cluster 66 via 172.17.0.6 d123f186b90c 
+N-done

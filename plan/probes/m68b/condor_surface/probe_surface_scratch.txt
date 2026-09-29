@@ -1,0 +1,1128 @@
+## config A-unpriv-default on surf-scr: # defaults;
+# probe_surface_scratch config=A-unpriv-default
+# $CondorVersion: 25.13.2 2026-08-19 BuildID: 943576 PackageID: 25.13.2-1 GitSHA: 589a5b38 $
+# STARTER_NESTED_SCRATCH = True
+# MOUNT_UNDER_SCRATCH = "/tmp,/var/tmp"
+# PERIODIC_EXPR_INTERVAL = 60
+# DAGMAN_USE_STRICT = 1
+# SINGULARITY_JOB = False
+# SINGULARITY_TARGET_DIR = None
+# MOUNT_PRIVATE_DEV_SHM = True
+X[A-unpriv-default/plain] final: {'JobStatus': 4, 'ExitCode': 0}
+X[A-unpriv-default/plain]   pwd=/var/lib/condor/execute/dir_271/scratch
+X[A-unpriv-default/plain]   _CONDOR_SCRATCH_DIR=/var/lib/condor/execute/dir_271/scratch
+X[A-unpriv-default/plain]   _CONDOR_JOB_AD=/var/lib/condor/execute/dir_271/scratch/.job.ad
+X[A-unpriv-default/plain]   _CONDOR_MACHINE_AD=/var/lib/condor/execute/dir_271/scratch/.machine.ad
+X[A-unpriv-default/plain]   _CONDOR_CREDS=
+X[A-unpriv-default/plain]   X509_USER_PROXY=
+X[A-unpriv-default/plain]   KRB5CCNAME=
+X[A-unpriv-default/plain]   TMPDIR=/var/lib/condor/execute/dir_271/scratch TMP=/var/lib/condor/execute/dir_271/scratch TEMP=/var/lib/condor/execute/dir_271/scratch
+X[A-unpriv-default/plain]   hostname=84d8f4ff5881 id=1001
+X[A-unpriv-default/plain]   --- ls -A scratch
+X[A-unpriv-default/plain]     .job.ad
+X[A-unpriv-default/plain]     .machine.ad
+X[A-unpriv-default/plain]     _condor_stderr
+X[A-unpriv-default/plain]     _condor_stdout
+X[A-unpriv-default/plain]     in.txt
+X[A-unpriv-default/plain]     inspect.sh
+X[A-unpriv-default/plain]     models
+X[A-unpriv-default/plain]   --- ls -A scratch/.. 
+X[A-unpriv-default/plain]     htcondor
+X[A-unpriv-default/plain]     scratch
+X[A-unpriv-default/plain]     user
+X[A-unpriv-default/plain]   --- find scratch (depth 3)
+X[A-unpriv-default/plain]     .
+X[A-unpriv-default/plain]     ./.job.ad
+X[A-unpriv-default/plain]     ./.machine.ad
+X[A-unpriv-default/plain]     ./_condor_stderr
+X[A-unpriv-default/plain]     ./_condor_stdout
+X[A-unpriv-default/plain]     ./in.txt
+X[A-unpriv-default/plain]     ./inspect.sh
+X[A-unpriv-default/plain]     ./models
+X[A-unpriv-default/plain]     ./models/m.txt
+X[A-unpriv-default/plain]   --- env names
+X[A-unpriv-default/plain]   APPTAINER_CACHEDIR BATCH_SYSTEM CONDOR_STARTER_PID CUBACORES CUDA_VISIBLE_DEVICES GOMAXPROCS GPU_DEVICE_ORDINAL HOME JULIA_NUM_THREADS MKL_NUM_THREADS NUMEXPR_NUM_THREADS NVIDIA_VISIBLE_DEVICES OMP_NUM_THREADS OMP_THREAD_LIMIT OPENBLAS_NUM_THREADS PWD PYTHON_CPU_COUNT ROOT_MAX_THREADS SHLVL SINGULARITY_CACHEDIR TEMP TF_LOOP_PARALLEL_ITERATIONS TF_NUM_THREADS TMP TMPDIR _ _CHIRP_DELAYED_UPDATE_PREFIX _CONDOR_ANCESTOR_18 _CONDOR_ANCESTOR_271 _CONDOR_ANCESTOR_39 _CONDOR_AssignedGPUs _CONDOR_BIN _CONDOR_CHIRP_CONFIG _CONDOR_JOB_AD _CONDOR_JOB_IWD _CONDOR_JOB_PIDS _CONDOR_MACHINE_AD _CONDOR_SCRATCH_DIR _CONDOR_SLOT 
+X[A-unpriv-default/plain]   --- PATH=/usr/local/bin:/usr/bin HOME=/home/submituser
+X[A-unpriv-default/plain]   --- mounts under scratch
+X[A-unpriv-default/plain]   --- /tmp write
+X[A-unpriv-default/plain]     -rw-r--r-- 1 submituser submituser 6 Sep 29 17:47 /tmp/surf-probe-281
+X[A-unpriv-default/proxy] final: {'JobStatus': 4, 'ExitCode': 0}
+X[A-unpriv-default/proxy]   pwd=/var/lib/condor/execute/dir_316/scratch
+X[A-unpriv-default/proxy]   _CONDOR_SCRATCH_DIR=/var/lib/condor/execute/dir_316/scratch
+X[A-unpriv-default/proxy]   _CONDOR_JOB_AD=/var/lib/condor/execute/dir_316/scratch/.job.ad
+X[A-unpriv-default/proxy]   _CONDOR_MACHINE_AD=/var/lib/condor/execute/dir_316/scratch/.machine.ad
+X[A-unpriv-default/proxy]   _CONDOR_CREDS=
+X[A-unpriv-default/proxy]   X509_USER_PROXY=/var/lib/condor/execute/dir_316/scratch/x509up_u1001
+X[A-unpriv-default/proxy]   KRB5CCNAME=
+X[A-unpriv-default/proxy]   TMPDIR=/var/lib/condor/execute/dir_316/scratch TMP=/var/lib/condor/execute/dir_316/scratch TEMP=/var/lib/condor/execute/dir_316/scratch
+X[A-unpriv-default/proxy]   hostname=84d8f4ff5881 id=1001
+X[A-unpriv-default/proxy]   --- ls -A scratch
+X[A-unpriv-default/proxy]     .job.ad
+X[A-unpriv-default/proxy]     .machine.ad
+X[A-unpriv-default/proxy]     _condor_stderr
+X[A-unpriv-default/proxy]     _condor_stdout
+X[A-unpriv-default/proxy]     in.txt
+X[A-unpriv-default/proxy]     inspect.sh
+X[A-unpriv-default/proxy]     x509up_u1001
+X[A-unpriv-default/proxy]   --- ls -A scratch/.. 
+X[A-unpriv-default/proxy]     htcondor
+X[A-unpriv-default/proxy]     scratch
+X[A-unpriv-default/proxy]     user
+X[A-unpriv-default/proxy]   --- find scratch (depth 3)
+X[A-unpriv-default/proxy]     .
+X[A-unpriv-default/proxy]     ./.job.ad
+X[A-unpriv-default/proxy]     ./.machine.ad
+X[A-unpriv-default/proxy]     ./_condor_stderr
+X[A-unpriv-default/proxy]     ./_condor_stdout
+X[A-unpriv-default/proxy]     ./in.txt
+X[A-unpriv-default/proxy]     ./inspect.sh
+X[A-unpriv-default/proxy]     ./x509up_u1001
+X[A-unpriv-default/proxy]   --- env names
+X[A-unpriv-default/proxy]   APPTAINER_CACHEDIR BATCH_SYSTEM CONDOR_STARTER_PID CUBACORES CUDA_VISIBLE_DEVICES GOMAXPROCS GPU_DEVICE_ORDINAL HOME JULIA_NUM_THREADS MKL_NUM_THREADS NUMEXPR_NUM_THREADS NVIDIA_VISIBLE_DEVICES OMP_NUM_THREADS OMP_THREAD_LIMIT OPENBLAS_NUM_THREADS PWD PYTHON_CPU_COUNT ROOT_MAX_THREADS SHLVL SINGULARITY_CACHEDIR TEMP TF_LOOP_PARALLEL_ITERATIONS TF_NUM_THREADS TMP TMPDIR X509_USER_PROXY _ _CHIRP_DELAYED_UPDATE_PREFIX _CONDOR_ANCESTOR_18 _CONDOR_ANCESTOR_316 _CONDOR_ANCESTOR_39 _CONDOR_AssignedGPUs _CONDOR_BIN _CONDOR_CHIRP_CONFIG _CONDOR_JOB_AD _CONDOR_JOB_IWD _CONDOR_JOB_PIDS _CONDOR_MACHINE_AD _CONDOR_SCRATCH_DIR _CONDOR_SLOT 
+X[A-unpriv-default/proxy]   --- PATH=/usr/local/bin:/usr/bin HOME=/home/submituser
+X[A-unpriv-default/proxy]   --- mounts under scratch
+X[A-unpriv-default/proxy]   --- /tmp write
+X[A-unpriv-default/proxy]     -rw-r--r-- 1 submituser submituser 6 Sep 29 17:47 /tmp/surf-probe-319
+X[A-unpriv-default/cred] not done after 90 s: {'JobStatus': 1, 'HoldReasonCode': None, 'NumJobStarts': 0} None
+X[A-unpriv-default/cred]   better-analyze: 0 slots are rejected by your job's requirements
+X[A-unpriv-default/cred]   better-analyze: 0 slots reject your job because of their own requirements
+X[A-unpriv-default/cred]   better-analyze: 1 slots match and are willing to run your job
+X[A-unpriv-default/cred]   better-analyze: Last successful match: Tue Sep 29 17:48:38 2026
+X[A-unpriv-default/cred]   better-analyze: Last successful match for this autocluster: Tue Sep 29 17:48:38 2026
+X[A-unpriv-default/tmpin] final: {'JobStatus': 4, 'ExitCode': 0}
+X[A-unpriv-default/tmpin]   pwd=/var/lib/condor/execute/dir_538/scratch
+X[A-unpriv-default/tmpin]   _CONDOR_SCRATCH_DIR=/var/lib/condor/execute/dir_538/scratch
+X[A-unpriv-default/tmpin]   _CONDOR_JOB_AD=/var/lib/condor/execute/dir_538/scratch/.job.ad
+X[A-unpriv-default/tmpin]   _CONDOR_MACHINE_AD=/var/lib/condor/execute/dir_538/scratch/.machine.ad
+X[A-unpriv-default/tmpin]   _CONDOR_CREDS=
+X[A-unpriv-default/tmpin]   X509_USER_PROXY=
+X[A-unpriv-default/tmpin]   KRB5CCNAME=
+X[A-unpriv-default/tmpin]   TMPDIR=/var/lib/condor/execute/dir_538/scratch TMP=/var/lib/condor/execute/dir_538/scratch TEMP=/var/lib/condor/execute/dir_538/scratch
+X[A-unpriv-default/tmpin]   hostname=84d8f4ff5881 id=1001
+X[A-unpriv-default/tmpin]   --- ls -A scratch
+X[A-unpriv-default/tmpin]     .job.ad
+X[A-unpriv-default/tmpin]     .machine.ad
+X[A-unpriv-default/tmpin]     _condor_stderr
+X[A-unpriv-default/tmpin]     _condor_stdout
+X[A-unpriv-default/tmpin]     inspect.sh
+X[A-unpriv-default/tmpin]     tmp
+X[A-unpriv-default/tmpin]   --- ls -A scratch/.. 
+X[A-unpriv-default/tmpin]     htcondor
+X[A-unpriv-default/tmpin]     scratch
+X[A-unpriv-default/tmpin]     user
+X[A-unpriv-default/tmpin]   --- find scratch (depth 3)
+X[A-unpriv-default/tmpin]     .
+X[A-unpriv-default/tmpin]     ./.job.ad
+X[A-unpriv-default/tmpin]     ./.machine.ad
+X[A-unpriv-default/tmpin]     ./_condor_stderr
+X[A-unpriv-default/tmpin]     ./_condor_stdout
+X[A-unpriv-default/tmpin]     ./inspect.sh
+X[A-unpriv-default/tmpin]     ./tmp
+X[A-unpriv-default/tmpin]     ./tmp/USERFILE
+X[A-unpriv-default/tmpin]   --- env names
+X[A-unpriv-default/tmpin]   APPTAINER_CACHEDIR BATCH_SYSTEM CONDOR_STARTER_PID CUBACORES CUDA_VISIBLE_DEVICES GOMAXPROCS GPU_DEVICE_ORDINAL HOME JULIA_NUM_THREADS MKL_NUM_THREADS NUMEXPR_NUM_THREADS NVIDIA_VISIBLE_DEVICES OMP_NUM_THREADS OMP_THREAD_LIMIT OPENBLAS_NUM_THREADS PWD PYTHON_CPU_COUNT ROOT_MAX_THREADS SHLVL SINGULARITY_CACHEDIR TEMP TF_LOOP_PARALLEL_ITERATIONS TF_NUM_THREADS TMP TMPDIR _ _CHIRP_DELAYED_UPDATE_PREFIX _CONDOR_ANCESTOR_18 _CONDOR_ANCESTOR_39 _CONDOR_ANCESTOR_538 _CONDOR_AssignedGPUs _CONDOR_BIN _CONDOR_CHIRP_CONFIG _CONDOR_JOB_AD _CONDOR_JOB_IWD _CONDOR_JOB_PIDS _CONDOR_MACHINE_AD _CONDOR_SCRATCH_DIR _CONDOR_SLOT 
+X[A-unpriv-default/tmpin]   --- PATH=/usr/local/bin:/usr/bin HOME=/home/submituser
+X[A-unpriv-default/tmpin]   --- mounts under scratch
+X[A-unpriv-default/tmpin]   --- /tmp write
+X[A-unpriv-default/tmpin]     -rw-r--r-- 1 submituser submituser 6 Sep 29 17:48 /tmp/surf-probe-548
+X[A-unpriv-default/tmpin]   --- tmp/ contents
+X[A-unpriv-default/tmpin]     USERFILE
+X[A-unpriv-default/tmpin]   --- /tmp has USERFILE?
+X[A-unpriv-default/tmpin]     ls: cannot access '/tmp/USERFILE': No such file or directory
+X-done A-unpriv-default
+## config B-unpriv-nested-false on surf-scr: STARTER_NESTED_SCRATCH = false;
+# probe_surface_scratch config=B-unpriv-nested-false
+# $CondorVersion: 25.13.2 2026-08-19 BuildID: 943576 PackageID: 25.13.2-1 GitSHA: 589a5b38 $
+# STARTER_NESTED_SCRATCH = False
+# MOUNT_UNDER_SCRATCH = "/tmp,/var/tmp"
+# PERIODIC_EXPR_INTERVAL = 60
+# DAGMAN_USE_STRICT = 1
+# SINGULARITY_JOB = False
+# SINGULARITY_TARGET_DIR = None
+# MOUNT_PRIVATE_DEV_SHM = True
+X[B-unpriv-nested-false/plain] final: {'JobStatus': 4, 'ExitCode': 0}
+X[B-unpriv-nested-false/plain]   pwd=/var/lib/condor/execute/dir_695
+X[B-unpriv-nested-false/plain]   _CONDOR_SCRATCH_DIR=/var/lib/condor/execute/dir_695
+X[B-unpriv-nested-false/plain]   _CONDOR_JOB_AD=/var/lib/condor/execute/dir_695/.job.ad
+X[B-unpriv-nested-false/plain]   _CONDOR_MACHINE_AD=/var/lib/condor/execute/dir_695/.machine.ad
+X[B-unpriv-nested-false/plain]   _CONDOR_CREDS=
+X[B-unpriv-nested-false/plain]   X509_USER_PROXY=
+X[B-unpriv-nested-false/plain]   KRB5CCNAME=
+X[B-unpriv-nested-false/plain]   TMPDIR=/var/lib/condor/execute/dir_695 TMP=/var/lib/condor/execute/dir_695 TEMP=/var/lib/condor/execute/dir_695
+X[B-unpriv-nested-false/plain]   hostname=84d8f4ff5881 id=1001
+X[B-unpriv-nested-false/plain]   --- ls -A scratch
+X[B-unpriv-nested-false/plain]     .chirp.config
+X[B-unpriv-nested-false/plain]     .job.ad
+X[B-unpriv-nested-false/plain]     .machine.ad
+X[B-unpriv-nested-false/plain]     .update.ad
+X[B-unpriv-nested-false/plain]     _condor_stderr
+X[B-unpriv-nested-false/plain]     _condor_stdout
+X[B-unpriv-nested-false/plain]     in.txt
+X[B-unpriv-nested-false/plain]     inspect.sh
+X[B-unpriv-nested-false/plain]     models
+X[B-unpriv-nested-false/plain]   --- ls -A scratch/.. 
+X[B-unpriv-nested-false/plain]     dir_695
+X[B-unpriv-nested-false/plain]   --- find scratch (depth 3)
+X[B-unpriv-nested-false/plain]     .
+X[B-unpriv-nested-false/plain]     ./.chirp.config
+X[B-unpriv-nested-false/plain]     ./.job.ad
+X[B-unpriv-nested-false/plain]     ./.machine.ad
+X[B-unpriv-nested-false/plain]     ./.update.ad
+X[B-unpriv-nested-false/plain]     ./_condor_stderr
+X[B-unpriv-nested-false/plain]     ./_condor_stdout
+X[B-unpriv-nested-false/plain]     ./in.txt
+X[B-unpriv-nested-false/plain]     ./inspect.sh
+X[B-unpriv-nested-false/plain]     ./models
+X[B-unpriv-nested-false/plain]     ./models/m.txt
+X[B-unpriv-nested-false/plain]   --- env names
+X[B-unpriv-nested-false/plain]   APPTAINER_CACHEDIR BATCH_SYSTEM CONDOR_STARTER_PID CUBACORES CUDA_VISIBLE_DEVICES GOMAXPROCS GPU_DEVICE_ORDINAL HOME JULIA_NUM_THREADS MKL_NUM_THREADS NUMEXPR_NUM_THREADS NVIDIA_VISIBLE_DEVICES OMP_NUM_THREADS OMP_THREAD_LIMIT OPENBLAS_NUM_THREADS PWD PYTHON_CPU_COUNT ROOT_MAX_THREADS SHLVL SINGULARITY_CACHEDIR TEMP TF_LOOP_PARALLEL_ITERATIONS TF_NUM_THREADS TMP TMPDIR _ _CHIRP_DELAYED_UPDATE_PREFIX _CONDOR_ANCESTOR_18 _CONDOR_ANCESTOR_39 _CONDOR_ANCESTOR_695 _CONDOR_AssignedGPUs _CONDOR_BIN _CONDOR_CHIRP_CONFIG _CONDOR_JOB_AD _CONDOR_JOB_IWD _CONDOR_JOB_PIDS _CONDOR_MACHINE_AD _CONDOR_SCRATCH_DIR _CONDOR_SLOT 
+X[B-unpriv-nested-false/plain]   --- PATH=/usr/local/bin:/usr/bin HOME=/home/submituser
+X[B-unpriv-nested-false/plain]   --- mounts under scratch
+X[B-unpriv-nested-false/plain]   --- /tmp write
+X[B-unpriv-nested-false/plain]     -rw-r--r-- 1 submituser submituser 6 Sep 29 17:49 /tmp/surf-probe-705
+X[B-unpriv-nested-false/proxy] final: {'JobStatus': 4, 'ExitCode': 0}
+X[B-unpriv-nested-false/proxy]   pwd=/var/lib/condor/execute/dir_740
+X[B-unpriv-nested-false/proxy]   _CONDOR_SCRATCH_DIR=/var/lib/condor/execute/dir_740
+X[B-unpriv-nested-false/proxy]   _CONDOR_JOB_AD=/var/lib/condor/execute/dir_740/.job.ad
+X[B-unpriv-nested-false/proxy]   _CONDOR_MACHINE_AD=/var/lib/condor/execute/dir_740/.machine.ad
+X[B-unpriv-nested-false/proxy]   _CONDOR_CREDS=
+X[B-unpriv-nested-false/proxy]   X509_USER_PROXY=/var/lib/condor/execute/dir_740/x509up_u1001
+X[B-unpriv-nested-false/proxy]   KRB5CCNAME=
+X[B-unpriv-nested-false/proxy]   TMPDIR=/var/lib/condor/execute/dir_740 TMP=/var/lib/condor/execute/dir_740 TEMP=/var/lib/condor/execute/dir_740
+X[B-unpriv-nested-false/proxy]   hostname=84d8f4ff5881 id=1001
+X[B-unpriv-nested-false/proxy]   --- ls -A scratch
+X[B-unpriv-nested-false/proxy]     .chirp.config
+X[B-unpriv-nested-false/proxy]     .job.ad
+X[B-unpriv-nested-false/proxy]     .machine.ad
+X[B-unpriv-nested-false/proxy]     _condor_stderr
+X[B-unpriv-nested-false/proxy]     _condor_stdout
+X[B-unpriv-nested-false/proxy]     in.txt
+X[B-unpriv-nested-false/proxy]     inspect.sh
+X[B-unpriv-nested-false/proxy]     x509up_u1001
+X[B-unpriv-nested-false/proxy]   --- ls -A scratch/.. 
+X[B-unpriv-nested-false/proxy]     dir_740
+X[B-unpriv-nested-false/proxy]   --- find scratch (depth 3)
+X[B-unpriv-nested-false/proxy]     .
+X[B-unpriv-nested-false/proxy]     ./.chirp.config
+X[B-unpriv-nested-false/proxy]     ./.job.ad
+X[B-unpriv-nested-false/proxy]     ./.machine.ad
+X[B-unpriv-nested-false/proxy]     ./_condor_stderr
+X[B-unpriv-nested-false/proxy]     ./_condor_stdout
+X[B-unpriv-nested-false/proxy]     ./in.txt
+X[B-unpriv-nested-false/proxy]     ./inspect.sh
+X[B-unpriv-nested-false/proxy]     ./x509up_u1001
+X[B-unpriv-nested-false/proxy]   --- env names
+X[B-unpriv-nested-false/proxy]   APPTAINER_CACHEDIR BATCH_SYSTEM CONDOR_STARTER_PID CUBACORES CUDA_VISIBLE_DEVICES GOMAXPROCS GPU_DEVICE_ORDINAL HOME JULIA_NUM_THREADS MKL_NUM_THREADS NUMEXPR_NUM_THREADS NVIDIA_VISIBLE_DEVICES OMP_NUM_THREADS OMP_THREAD_LIMIT OPENBLAS_NUM_THREADS PWD PYTHON_CPU_COUNT ROOT_MAX_THREADS SHLVL SINGULARITY_CACHEDIR TEMP TF_LOOP_PARALLEL_ITERATIONS TF_NUM_THREADS TMP TMPDIR X509_USER_PROXY _ _CHIRP_DELAYED_UPDATE_PREFIX _CONDOR_ANCESTOR_18 _CONDOR_ANCESTOR_39 _CONDOR_ANCESTOR_740 _CONDOR_AssignedGPUs _CONDOR_BIN _CONDOR_CHIRP_CONFIG _CONDOR_JOB_AD _CONDOR_JOB_IWD _CONDOR_JOB_PIDS _CONDOR_MACHINE_AD _CONDOR_SCRATCH_DIR _CONDOR_SLOT 
+X[B-unpriv-nested-false/proxy]   --- PATH=/usr/local/bin:/usr/bin HOME=/home/submituser
+X[B-unpriv-nested-false/proxy]   --- mounts under scratch
+X[B-unpriv-nested-false/proxy]   --- /tmp write
+X[B-unpriv-nested-false/proxy]     -rw-r--r-- 1 submituser submituser 6 Sep 29 17:49 /tmp/surf-probe-743
+X-done B-unpriv-nested-false
+## config B2-unpriv-sing-attr-only on surf-scr: # defaults: MY.SingularityImage set, SINGULARITY_JOB not configured;
+# probe_surface_scratch config=B2-unpriv-sing-attr-only
+# $CondorVersion: 25.13.2 2026-08-19 BuildID: 943576 PackageID: 25.13.2-1 GitSHA: 589a5b38 $
+# STARTER_NESTED_SCRATCH = True
+# MOUNT_UNDER_SCRATCH = "/tmp,/var/tmp"
+# PERIODIC_EXPR_INTERVAL = 60
+# DAGMAN_USE_STRICT = 1
+# SINGULARITY_JOB = False
+# SINGULARITY_TARGET_DIR = None
+# MOUNT_PRIVATE_DEV_SHM = True
+X[B2-unpriv-sing-attr-only/sing] final: {'JobStatus': 4, 'ExitCode': 0}
+X[B2-unpriv-sing-attr-only/sing]   pwd=/var/lib/condor/execute/dir_893/scratch
+X[B2-unpriv-sing-attr-only/sing]   _CONDOR_SCRATCH_DIR=/var/lib/condor/execute/dir_893/scratch
+X[B2-unpriv-sing-attr-only/sing]   _CONDOR_JOB_AD=/var/lib/condor/execute/dir_893/scratch/.job.ad
+X[B2-unpriv-sing-attr-only/sing]   _CONDOR_MACHINE_AD=/var/lib/condor/execute/dir_893/scratch/.machine.ad
+X[B2-unpriv-sing-attr-only/sing]   _CONDOR_CREDS=
+X[B2-unpriv-sing-attr-only/sing]   X509_USER_PROXY=
+X[B2-unpriv-sing-attr-only/sing]   KRB5CCNAME=
+X[B2-unpriv-sing-attr-only/sing]   TMPDIR=/var/lib/condor/execute/dir_893/scratch TMP=/var/lib/condor/execute/dir_893/scratch TEMP=/var/lib/condor/execute/dir_893/scratch
+X[B2-unpriv-sing-attr-only/sing]   hostname=84d8f4ff5881 id=1001
+X[B2-unpriv-sing-attr-only/sing]   --- ls -A scratch
+X[B2-unpriv-sing-attr-only/sing]     .job.ad
+X[B2-unpriv-sing-attr-only/sing]     .machine.ad
+X[B2-unpriv-sing-attr-only/sing]     _condor_stderr
+X[B2-unpriv-sing-attr-only/sing]     _condor_stdout
+X[B2-unpriv-sing-attr-only/sing]     in.txt
+X[B2-unpriv-sing-attr-only/sing]     inspect.sh
+X[B2-unpriv-sing-attr-only/sing]   --- ls -A scratch/.. 
+X[B2-unpriv-sing-attr-only/sing]     htcondor
+X[B2-unpriv-sing-attr-only/sing]     scratch
+X[B2-unpriv-sing-attr-only/sing]     user
+X[B2-unpriv-sing-attr-only/sing]   --- find scratch (depth 3)
+X[B2-unpriv-sing-attr-only/sing]     .
+X[B2-unpriv-sing-attr-only/sing]     ./.job.ad
+X[B2-unpriv-sing-attr-only/sing]     ./.machine.ad
+X[B2-unpriv-sing-attr-only/sing]     ./_condor_stderr
+X[B2-unpriv-sing-attr-only/sing]     ./_condor_stdout
+X[B2-unpriv-sing-attr-only/sing]     ./in.txt
+X[B2-unpriv-sing-attr-only/sing]     ./inspect.sh
+X[B2-unpriv-sing-attr-only/sing]   --- env names
+X[B2-unpriv-sing-attr-only/sing]   APPTAINER_CACHEDIR BATCH_SYSTEM CONDOR_STARTER_PID CUBACORES CUDA_VISIBLE_DEVICES GOMAXPROCS GPU_DEVICE_ORDINAL HOME JULIA_NUM_THREADS MKL_NUM_THREADS NUMEXPR_NUM_THREADS NVIDIA_VISIBLE_DEVICES OMP_NUM_THREADS OMP_THREAD_LIMIT OPENBLAS_NUM_THREADS PWD PYTHON_CPU_COUNT ROOT_MAX_THREADS SHLVL SINGULARITY_CACHEDIR TEMP TF_LOOP_PARALLEL_ITERATIONS TF_NUM_THREADS TMP TMPDIR _ _CHIRP_DELAYED_UPDATE_PREFIX _CONDOR_ANCESTOR_18 _CONDOR_ANCESTOR_39 _CONDOR_ANCESTOR_893 _CONDOR_AssignedGPUs _CONDOR_BIN _CONDOR_CHIRP_CONFIG _CONDOR_JOB_AD _CONDOR_JOB_IWD _CONDOR_JOB_PIDS _CONDOR_MACHINE_AD _CONDOR_SCRATCH_DIR _CONDOR_SLOT 
+X[B2-unpriv-sing-attr-only/sing]   --- PATH=/usr/local/bin:/usr/bin HOME=/home/submituser
+X[B2-unpriv-sing-attr-only/sing]   --- mounts under scratch
+X[B2-unpriv-sing-attr-only/sing]   --- /tmp write
+X[B2-unpriv-sing-attr-only/sing]     -rw-r--r-- 1 submituser submituser 6 Sep 29 17:49 /tmp/surf-probe-903
+X-done B2-unpriv-sing-attr-only
+## config C-priv-default on surf-priv: # defaults;
+# probe_surface_scratch config=C-priv-default
+# $CondorVersion: 25.13.2 2026-08-19 BuildID: 943576 PackageID: 25.13.2-1 GitSHA: 589a5b38 $
+# STARTER_NESTED_SCRATCH = True
+# MOUNT_UNDER_SCRATCH = "/tmp,/var/tmp"
+# PERIODIC_EXPR_INTERVAL = 60
+# DAGMAN_USE_STRICT = 1
+# SINGULARITY_JOB = False
+# SINGULARITY_TARGET_DIR = None
+# MOUNT_PRIVATE_DEV_SHM = True
+X[C-priv-default/plain] final: {'JobStatus': 4, 'ExitCode': 0}
+X[C-priv-default/plain]   pwd=/var/lib/condor/execute/dir_466/scratch
+X[C-priv-default/plain]   _CONDOR_SCRATCH_DIR=/var/lib/condor/execute/dir_466/scratch
+X[C-priv-default/plain]   _CONDOR_JOB_AD=/var/lib/condor/execute/dir_466/scratch/.job.ad
+X[C-priv-default/plain]   _CONDOR_MACHINE_AD=/var/lib/condor/execute/dir_466/scratch/.machine.ad
+X[C-priv-default/plain]   _CONDOR_CREDS=
+X[C-priv-default/plain]   X509_USER_PROXY=
+X[C-priv-default/plain]   KRB5CCNAME=
+X[C-priv-default/plain]   TMPDIR=/tmp TMP=/tmp TEMP=/tmp
+X[C-priv-default/plain]   hostname=abcfe678da75 id=1001
+X[C-priv-default/plain]   --- ls -A scratch
+X[C-priv-default/plain]     .job.ad
+X[C-priv-default/plain]     .machine.ad
+X[C-priv-default/plain]     _condor_stderr
+X[C-priv-default/plain]     _condor_stdout
+X[C-priv-default/plain]     in.txt
+X[C-priv-default/plain]     inspect.sh
+X[C-priv-default/plain]     models
+X[C-priv-default/plain]     tmp
+X[C-priv-default/plain]     var
+X[C-priv-default/plain]   --- ls -A scratch/.. 
+X[C-priv-default/plain]     htcondor
+X[C-priv-default/plain]     scratch
+X[C-priv-default/plain]     user
+X[C-priv-default/plain]   --- find scratch (depth 3)
+X[C-priv-default/plain]     .
+X[C-priv-default/plain]     ./.job.ad
+X[C-priv-default/plain]     ./.machine.ad
+X[C-priv-default/plain]     ./_condor_stderr
+X[C-priv-default/plain]     ./_condor_stdout
+X[C-priv-default/plain]     ./in.txt
+X[C-priv-default/plain]     ./inspect.sh
+X[C-priv-default/plain]     ./models
+X[C-priv-default/plain]     ./models/m.txt
+X[C-priv-default/plain]     ./tmp
+X[C-priv-default/plain]     ./var
+X[C-priv-default/plain]     ./var/tmp
+X[C-priv-default/plain]   --- env names
+X[C-priv-default/plain]   APPTAINER_CACHEDIR BATCH_SYSTEM CONDOR_STARTER_PID CUBACORES CUDA_VISIBLE_DEVICES GOMAXPROCS GPU_DEVICE_ORDINAL HOME JULIA_NUM_THREADS MKL_NUM_THREADS NUMEXPR_NUM_THREADS NVIDIA_VISIBLE_DEVICES OMP_NUM_THREADS OMP_THREAD_LIMIT OPENBLAS_NUM_THREADS PWD PYTHON_CPU_COUNT ROOT_MAX_THREADS SHLVL SINGULARITY_CACHEDIR TEMP TF_LOOP_PARALLEL_ITERATIONS TF_NUM_THREADS TMP TMPDIR _ _CHIRP_DELAYED_UPDATE_PREFIX _CONDOR_ANCESTOR_18 _CONDOR_ANCESTOR_39 _CONDOR_ANCESTOR_466 _CONDOR_AssignedGPUs _CONDOR_BIN _CONDOR_CHIRP_CONFIG _CONDOR_JOB_AD _CONDOR_JOB_IWD _CONDOR_JOB_PIDS _CONDOR_MACHINE_AD _CONDOR_SCRATCH_DIR _CONDOR_SLOT 
+X[C-priv-default/plain]   --- PATH=/usr/local/bin:/usr/bin HOME=/home/submituser
+X[C-priv-default/plain]   --- mounts under scratch
+X[C-priv-default/plain]     /var/lib/condor/execute/dir_466/scratch/tmp -> /tmp
+X[C-priv-default/plain]     /var/lib/condor/execute/dir_466/scratch/var/tmp -> /var/tmp
+X[C-priv-default/plain]   --- /tmp write
+X[C-priv-default/plain]     -rw-r--r-- 1 submituser submituser 6 Sep 29 17:49 /tmp/surf-probe-469
+X[C-priv-default/plain]     found in scratch: ./tmp/surf-probe-469
+X[C-priv-default/proxy] final: {'JobStatus': 4, 'ExitCode': 0}
+X[C-priv-default/proxy]   pwd=/var/lib/condor/execute/dir_503/scratch
+X[C-priv-default/proxy]   _CONDOR_SCRATCH_DIR=/var/lib/condor/execute/dir_503/scratch
+X[C-priv-default/proxy]   _CONDOR_JOB_AD=/var/lib/condor/execute/dir_503/scratch/.job.ad
+X[C-priv-default/proxy]   _CONDOR_MACHINE_AD=/var/lib/condor/execute/dir_503/scratch/.machine.ad
+X[C-priv-default/proxy]   _CONDOR_CREDS=
+X[C-priv-default/proxy]   X509_USER_PROXY=/var/lib/condor/execute/dir_503/scratch/x509up_u1001
+X[C-priv-default/proxy]   KRB5CCNAME=
+X[C-priv-default/proxy]   TMPDIR=/tmp TMP=/tmp TEMP=/tmp
+X[C-priv-default/proxy]   hostname=abcfe678da75 id=1001
+X[C-priv-default/proxy]   --- ls -A scratch
+X[C-priv-default/proxy]     .job.ad
+X[C-priv-default/proxy]     .machine.ad
+X[C-priv-default/proxy]     _condor_stderr
+X[C-priv-default/proxy]     _condor_stdout
+X[C-priv-default/proxy]     in.txt
+X[C-priv-default/proxy]     inspect.sh
+X[C-priv-default/proxy]     tmp
+X[C-priv-default/proxy]     var
+X[C-priv-default/proxy]     x509up_u1001
+X[C-priv-default/proxy]   --- ls -A scratch/.. 
+X[C-priv-default/proxy]     htcondor
+X[C-priv-default/proxy]     scratch
+X[C-priv-default/proxy]     user
+X[C-priv-default/proxy]   --- find scratch (depth 3)
+X[C-priv-default/proxy]     .
+X[C-priv-default/proxy]     ./.job.ad
+X[C-priv-default/proxy]     ./.machine.ad
+X[C-priv-default/proxy]     ./_condor_stderr
+X[C-priv-default/proxy]     ./_condor_stdout
+X[C-priv-default/proxy]     ./in.txt
+X[C-priv-default/proxy]     ./inspect.sh
+X[C-priv-default/proxy]     ./tmp
+X[C-priv-default/proxy]     ./var
+X[C-priv-default/proxy]     ./var/tmp
+X[C-priv-default/proxy]     ./x509up_u1001
+X[C-priv-default/proxy]   --- env names
+X[C-priv-default/proxy]   APPTAINER_CACHEDIR BATCH_SYSTEM CONDOR_STARTER_PID CUBACORES CUDA_VISIBLE_DEVICES GOMAXPROCS GPU_DEVICE_ORDINAL HOME JULIA_NUM_THREADS MKL_NUM_THREADS NUMEXPR_NUM_THREADS NVIDIA_VISIBLE_DEVICES OMP_NUM_THREADS OMP_THREAD_LIMIT OPENBLAS_NUM_THREADS PWD PYTHON_CPU_COUNT ROOT_MAX_THREADS SHLVL SINGULARITY_CACHEDIR TEMP TF_LOOP_PARALLEL_ITERATIONS TF_NUM_THREADS TMP TMPDIR X509_USER_PROXY _ _CHIRP_DELAYED_UPDATE_PREFIX _CONDOR_ANCESTOR_18 _CONDOR_ANCESTOR_39 _CONDOR_ANCESTOR_503 _CONDOR_AssignedGPUs _CONDOR_BIN _CONDOR_CHIRP_CONFIG _CONDOR_JOB_AD _CONDOR_JOB_IWD _CONDOR_JOB_PIDS _CONDOR_MACHINE_AD _CONDOR_SCRATCH_DIR _CONDOR_SLOT 
+X[C-priv-default/proxy]   --- PATH=/usr/local/bin:/usr/bin HOME=/home/submituser
+X[C-priv-default/proxy]   --- mounts under scratch
+X[C-priv-default/proxy]     /var/lib/condor/execute/dir_503/scratch/tmp -> /tmp
+X[C-priv-default/proxy]     /var/lib/condor/execute/dir_503/scratch/var/tmp -> /var/tmp
+X[C-priv-default/proxy]   --- /tmp write
+X[C-priv-default/proxy]     -rw-r--r-- 1 submituser submituser 6 Sep 29 17:49 /tmp/surf-probe-507
+X[C-priv-default/proxy]     found in scratch: ./tmp/surf-probe-507
+X[C-priv-default/cred] not done after 90 s: {'JobStatus': 1, 'HoldReasonCode': None, 'NumJobStarts': 0} None
+X[C-priv-default/cred]   better-analyze: 0 slots are rejected by your job's requirements
+X[C-priv-default/cred]   better-analyze: 0 slots reject your job because of their own requirements
+X[C-priv-default/cred]   better-analyze: 1 slots match and are willing to run your job
+X[C-priv-default/cred]   better-analyze: Last successful match: Tue Sep 29 17:51:19 2026
+X[C-priv-default/cred]   better-analyze: Last successful match for this autocluster: Tue Sep 29 17:51:19 2026
+X[C-priv-default/tmpin] final: {'JobStatus': 4, 'ExitCode': 0}
+X[C-priv-default/tmpin]   pwd=/var/lib/condor/execute/dir_725/scratch
+X[C-priv-default/tmpin]   _CONDOR_SCRATCH_DIR=/var/lib/condor/execute/dir_725/scratch
+X[C-priv-default/tmpin]   _CONDOR_JOB_AD=/var/lib/condor/execute/dir_725/scratch/.job.ad
+X[C-priv-default/tmpin]   _CONDOR_MACHINE_AD=/var/lib/condor/execute/dir_725/scratch/.machine.ad
+X[C-priv-default/tmpin]   _CONDOR_CREDS=
+X[C-priv-default/tmpin]   X509_USER_PROXY=
+X[C-priv-default/tmpin]   KRB5CCNAME=
+X[C-priv-default/tmpin]   TMPDIR=/tmp TMP=/tmp TEMP=/tmp
+X[C-priv-default/tmpin]   hostname=abcfe678da75 id=1001
+X[C-priv-default/tmpin]   --- ls -A scratch
+X[C-priv-default/tmpin]     .job.ad
+X[C-priv-default/tmpin]     .machine.ad
+X[C-priv-default/tmpin]     _condor_stderr
+X[C-priv-default/tmpin]     _condor_stdout
+X[C-priv-default/tmpin]     inspect.sh
+X[C-priv-default/tmpin]     tmp
+X[C-priv-default/tmpin]     var
+X[C-priv-default/tmpin]   --- ls -A scratch/.. 
+X[C-priv-default/tmpin]     htcondor
+X[C-priv-default/tmpin]     scratch
+X[C-priv-default/tmpin]     user
+X[C-priv-default/tmpin]   --- find scratch (depth 3)
+X[C-priv-default/tmpin]     .
+X[C-priv-default/tmpin]     ./.job.ad
+X[C-priv-default/tmpin]     ./.machine.ad
+X[C-priv-default/tmpin]     ./_condor_stderr
+X[C-priv-default/tmpin]     ./_condor_stdout
+X[C-priv-default/tmpin]     ./inspect.sh
+X[C-priv-default/tmpin]     ./tmp
+X[C-priv-default/tmpin]     ./tmp/USERFILE
+X[C-priv-default/tmpin]     ./var
+X[C-priv-default/tmpin]     ./var/tmp
+X[C-priv-default/tmpin]   --- env names
+X[C-priv-default/tmpin]   APPTAINER_CACHEDIR BATCH_SYSTEM CONDOR_STARTER_PID CUBACORES CUDA_VISIBLE_DEVICES GOMAXPROCS GPU_DEVICE_ORDINAL HOME JULIA_NUM_THREADS MKL_NUM_THREADS NUMEXPR_NUM_THREADS NVIDIA_VISIBLE_DEVICES OMP_NUM_THREADS OMP_THREAD_LIMIT OPENBLAS_NUM_THREADS PWD PYTHON_CPU_COUNT ROOT_MAX_THREADS SHLVL SINGULARITY_CACHEDIR TEMP TF_LOOP_PARALLEL_ITERATIONS TF_NUM_THREADS TMP TMPDIR _ _CHIRP_DELAYED_UPDATE_PREFIX _CONDOR_ANCESTOR_18 _CONDOR_ANCESTOR_39 _CONDOR_ANCESTOR_725 _CONDOR_AssignedGPUs _CONDOR_BIN _CONDOR_CHIRP_CONFIG _CONDOR_JOB_AD _CONDOR_JOB_IWD _CONDOR_JOB_PIDS _CONDOR_MACHINE_AD _CONDOR_SCRATCH_DIR _CONDOR_SLOT 
+X[C-priv-default/tmpin]   --- PATH=/usr/local/bin:/usr/bin HOME=/home/submituser
+X[C-priv-default/tmpin]   --- mounts under scratch
+X[C-priv-default/tmpin]     /var/lib/condor/execute/dir_725/scratch/tmp -> /tmp
+X[C-priv-default/tmpin]     /var/lib/condor/execute/dir_725/scratch/var/tmp -> /var/tmp
+X[C-priv-default/tmpin]   --- /tmp write
+X[C-priv-default/tmpin]     -rw-r--r-- 1 submituser submituser 6 Sep 29 17:51 /tmp/surf-probe-728
+X[C-priv-default/tmpin]     found in scratch: ./tmp/surf-probe-728
+X[C-priv-default/tmpin]   --- tmp/ contents
+X[C-priv-default/tmpin]     USERFILE
+X[C-priv-default/tmpin]     surf-probe-728
+X[C-priv-default/tmpin]   --- /tmp has USERFILE?
+X[C-priv-default/tmpin]     /tmp/USERFILE
+X-done C-priv-default
+## config D-priv-mus-empty on surf-priv: MOUNT_UNDER_SCRATCH = "";
+# probe_surface_scratch config=D-priv-mus-empty
+# $CondorVersion: 25.13.2 2026-08-19 BuildID: 943576 PackageID: 25.13.2-1 GitSHA: 589a5b38 $
+# STARTER_NESTED_SCRATCH = True
+# MOUNT_UNDER_SCRATCH = None
+# PERIODIC_EXPR_INTERVAL = 60
+# DAGMAN_USE_STRICT = 1
+# SINGULARITY_JOB = False
+# SINGULARITY_TARGET_DIR = None
+# MOUNT_PRIVATE_DEV_SHM = True
+X[D-priv-mus-empty/plain] final: {'JobStatus': 4, 'ExitCode': 0}
+X[D-priv-mus-empty/plain]   pwd=/var/lib/condor/execute/dir_925/scratch
+X[D-priv-mus-empty/plain]   _CONDOR_SCRATCH_DIR=/var/lib/condor/execute/dir_925/scratch
+X[D-priv-mus-empty/plain]   _CONDOR_JOB_AD=/var/lib/condor/execute/dir_925/scratch/.job.ad
+X[D-priv-mus-empty/plain]   _CONDOR_MACHINE_AD=/var/lib/condor/execute/dir_925/scratch/.machine.ad
+X[D-priv-mus-empty/plain]   _CONDOR_CREDS=
+X[D-priv-mus-empty/plain]   X509_USER_PROXY=
+X[D-priv-mus-empty/plain]   KRB5CCNAME=
+X[D-priv-mus-empty/plain]   TMPDIR=/var/lib/condor/execute/dir_925/scratch TMP=/var/lib/condor/execute/dir_925/scratch TEMP=/var/lib/condor/execute/dir_925/scratch
+X[D-priv-mus-empty/plain]   hostname=abcfe678da75 id=1001
+X[D-priv-mus-empty/plain]   --- ls -A scratch
+X[D-priv-mus-empty/plain]     .job.ad
+X[D-priv-mus-empty/plain]     .machine.ad
+X[D-priv-mus-empty/plain]     _condor_stderr
+X[D-priv-mus-empty/plain]     _condor_stdout
+X[D-priv-mus-empty/plain]     in.txt
+X[D-priv-mus-empty/plain]     inspect.sh
+X[D-priv-mus-empty/plain]     models
+X[D-priv-mus-empty/plain]   --- ls -A scratch/.. 
+X[D-priv-mus-empty/plain]     htcondor
+X[D-priv-mus-empty/plain]     scratch
+X[D-priv-mus-empty/plain]     user
+X[D-priv-mus-empty/plain]   --- find scratch (depth 3)
+X[D-priv-mus-empty/plain]     .
+X[D-priv-mus-empty/plain]     ./.job.ad
+X[D-priv-mus-empty/plain]     ./.machine.ad
+X[D-priv-mus-empty/plain]     ./_condor_stderr
+X[D-priv-mus-empty/plain]     ./_condor_stdout
+X[D-priv-mus-empty/plain]     ./in.txt
+X[D-priv-mus-empty/plain]     ./inspect.sh
+X[D-priv-mus-empty/plain]     ./models
+X[D-priv-mus-empty/plain]     ./models/m.txt
+X[D-priv-mus-empty/plain]   --- env names
+X[D-priv-mus-empty/plain]   APPTAINER_CACHEDIR BATCH_SYSTEM CONDOR_STARTER_PID CUBACORES CUDA_VISIBLE_DEVICES GOMAXPROCS GPU_DEVICE_ORDINAL HOME JULIA_NUM_THREADS MKL_NUM_THREADS NUMEXPR_NUM_THREADS NVIDIA_VISIBLE_DEVICES OMP_NUM_THREADS OMP_THREAD_LIMIT OPENBLAS_NUM_THREADS PWD PYTHON_CPU_COUNT ROOT_MAX_THREADS SHLVL SINGULARITY_CACHEDIR TEMP TF_LOOP_PARALLEL_ITERATIONS TF_NUM_THREADS TMP TMPDIR _ _CHIRP_DELAYED_UPDATE_PREFIX _CONDOR_ANCESTOR_18 _CONDOR_ANCESTOR_39 _CONDOR_ANCESTOR_925 _CONDOR_AssignedGPUs _CONDOR_BIN _CONDOR_CHIRP_CONFIG _CONDOR_JOB_AD _CONDOR_JOB_IWD _CONDOR_JOB_PIDS _CONDOR_MACHINE_AD _CONDOR_SCRATCH_DIR _CONDOR_SLOT 
+X[D-priv-mus-empty/plain]   --- PATH=/usr/local/bin:/usr/bin HOME=/home/submituser
+X[D-priv-mus-empty/plain]   --- mounts under scratch
+X[D-priv-mus-empty/plain]   --- /tmp write
+X[D-priv-mus-empty/plain]     -rw-r--r-- 1 submituser submituser 6 Sep 29 17:51 /tmp/surf-probe-928
+X[D-priv-mus-empty/tmpin] final: {'JobStatus': 4, 'ExitCode': 0}
+X[D-priv-mus-empty/tmpin]   pwd=/var/lib/condor/execute/dir_970/scratch
+X[D-priv-mus-empty/tmpin]   _CONDOR_SCRATCH_DIR=/var/lib/condor/execute/dir_970/scratch
+X[D-priv-mus-empty/tmpin]   _CONDOR_JOB_AD=/var/lib/condor/execute/dir_970/scratch/.job.ad
+X[D-priv-mus-empty/tmpin]   _CONDOR_MACHINE_AD=/var/lib/condor/execute/dir_970/scratch/.machine.ad
+X[D-priv-mus-empty/tmpin]   _CONDOR_CREDS=
+X[D-priv-mus-empty/tmpin]   X509_USER_PROXY=
+X[D-priv-mus-empty/tmpin]   KRB5CCNAME=
+X[D-priv-mus-empty/tmpin]   TMPDIR=/var/lib/condor/execute/dir_970/scratch TMP=/var/lib/condor/execute/dir_970/scratch TEMP=/var/lib/condor/execute/dir_970/scratch
+X[D-priv-mus-empty/tmpin]   hostname=abcfe678da75 id=1001
+X[D-priv-mus-empty/tmpin]   --- ls -A scratch
+X[D-priv-mus-empty/tmpin]     .job.ad
+X[D-priv-mus-empty/tmpin]     .machine.ad
+X[D-priv-mus-empty/tmpin]     _condor_stderr
+X[D-priv-mus-empty/tmpin]     _condor_stdout
+X[D-priv-mus-empty/tmpin]     inspect.sh
+X[D-priv-mus-empty/tmpin]     tmp
+X[D-priv-mus-empty/tmpin]   --- ls -A scratch/.. 
+X[D-priv-mus-empty/tmpin]     htcondor
+X[D-priv-mus-empty/tmpin]     scratch
+X[D-priv-mus-empty/tmpin]     user
+X[D-priv-mus-empty/tmpin]   --- find scratch (depth 3)
+X[D-priv-mus-empty/tmpin]     .
+X[D-priv-mus-empty/tmpin]     ./.job.ad
+X[D-priv-mus-empty/tmpin]     ./.machine.ad
+X[D-priv-mus-empty/tmpin]     ./_condor_stderr
+X[D-priv-mus-empty/tmpin]     ./_condor_stdout
+X[D-priv-mus-empty/tmpin]     ./inspect.sh
+X[D-priv-mus-empty/tmpin]     ./tmp
+X[D-priv-mus-empty/tmpin]     ./tmp/USERFILE
+X[D-priv-mus-empty/tmpin]   --- env names
+X[D-priv-mus-empty/tmpin]   APPTAINER_CACHEDIR BATCH_SYSTEM CONDOR_STARTER_PID CUBACORES CUDA_VISIBLE_DEVICES GOMAXPROCS GPU_DEVICE_ORDINAL HOME JULIA_NUM_THREADS MKL_NUM_THREADS NUMEXPR_NUM_THREADS NVIDIA_VISIBLE_DEVICES OMP_NUM_THREADS OMP_THREAD_LIMIT OPENBLAS_NUM_THREADS PWD PYTHON_CPU_COUNT ROOT_MAX_THREADS SHLVL SINGULARITY_CACHEDIR TEMP TF_LOOP_PARALLEL_ITERATIONS TF_NUM_THREADS TMP TMPDIR _ _CHIRP_DELAYED_UPDATE_PREFIX _CONDOR_ANCESTOR_18 _CONDOR_ANCESTOR_39 _CONDOR_ANCESTOR_970 _CONDOR_AssignedGPUs _CONDOR_BIN _CONDOR_CHIRP_CONFIG _CONDOR_JOB_AD _CONDOR_JOB_IWD _CONDOR_JOB_PIDS _CONDOR_MACHINE_AD _CONDOR_SCRATCH_DIR _CONDOR_SLOT 
+X[D-priv-mus-empty/tmpin]   --- PATH=/usr/local/bin:/usr/bin HOME=/home/submituser
+X[D-priv-mus-empty/tmpin]   --- mounts under scratch
+X[D-priv-mus-empty/tmpin]   --- /tmp write
+X[D-priv-mus-empty/tmpin]     -rw-r--r-- 1 submituser submituser 6 Sep 29 17:51 /tmp/surf-probe-980
+X[D-priv-mus-empty/tmpin]   --- tmp/ contents
+X[D-priv-mus-empty/tmpin]     USERFILE
+X[D-priv-mus-empty/tmpin]   --- /tmp has USERFILE?
+X[D-priv-mus-empty/tmpin]     ls: cannot access '/tmp/USERFILE': No such file or directory
+X-done D-priv-mus-empty
+## config E-priv-mus-devshm on surf-priv: MOUNT_UNDER_SCRATCH = "/tmp,/var/tmp,/dev/shm";
+# probe_surface_scratch config=E-priv-mus-devshm
+# $CondorVersion: 25.13.2 2026-08-19 BuildID: 943576 PackageID: 25.13.2-1 GitSHA: 589a5b38 $
+# STARTER_NESTED_SCRATCH = True
+# MOUNT_UNDER_SCRATCH = /tmp,/var/tmp,/dev/shm
+# PERIODIC_EXPR_INTERVAL = 60
+# DAGMAN_USE_STRICT = 1
+# SINGULARITY_JOB = False
+# SINGULARITY_TARGET_DIR = None
+# MOUNT_PRIVATE_DEV_SHM = True
+X[E-priv-mus-devshm/plain] final: {'JobStatus': 4, 'ExitCode': 0}
+X[E-priv-mus-devshm/plain]   pwd=/var/lib/condor/execute/dir_1175/scratch
+X[E-priv-mus-devshm/plain]   _CONDOR_SCRATCH_DIR=/var/lib/condor/execute/dir_1175/scratch
+X[E-priv-mus-devshm/plain]   _CONDOR_JOB_AD=/var/lib/condor/execute/dir_1175/scratch/.job.ad
+X[E-priv-mus-devshm/plain]   _CONDOR_MACHINE_AD=/var/lib/condor/execute/dir_1175/scratch/.machine.ad
+X[E-priv-mus-devshm/plain]   _CONDOR_CREDS=
+X[E-priv-mus-devshm/plain]   X509_USER_PROXY=
+X[E-priv-mus-devshm/plain]   KRB5CCNAME=
+X[E-priv-mus-devshm/plain]   TMPDIR=/tmp TMP=/tmp TEMP=/tmp
+X[E-priv-mus-devshm/plain]   hostname=abcfe678da75 id=1001
+X[E-priv-mus-devshm/plain]   --- ls -A scratch
+X[E-priv-mus-devshm/plain]     .job.ad
+X[E-priv-mus-devshm/plain]     .machine.ad
+X[E-priv-mus-devshm/plain]     _condor_stderr
+X[E-priv-mus-devshm/plain]     _condor_stdout
+X[E-priv-mus-devshm/plain]     dev
+X[E-priv-mus-devshm/plain]     in.txt
+X[E-priv-mus-devshm/plain]     inspect.sh
+X[E-priv-mus-devshm/plain]     models
+X[E-priv-mus-devshm/plain]     tmp
+X[E-priv-mus-devshm/plain]     var
+X[E-priv-mus-devshm/plain]   --- ls -A scratch/.. 
+X[E-priv-mus-devshm/plain]     htcondor
+X[E-priv-mus-devshm/plain]     scratch
+X[E-priv-mus-devshm/plain]     user
+X[E-priv-mus-devshm/plain]   --- find scratch (depth 3)
+X[E-priv-mus-devshm/plain]     .
+X[E-priv-mus-devshm/plain]     ./.job.ad
+X[E-priv-mus-devshm/plain]     ./.machine.ad
+X[E-priv-mus-devshm/plain]     ./_condor_stderr
+X[E-priv-mus-devshm/plain]     ./_condor_stdout
+X[E-priv-mus-devshm/plain]     ./dev
+X[E-priv-mus-devshm/plain]     ./dev/shm
+X[E-priv-mus-devshm/plain]     ./in.txt
+X[E-priv-mus-devshm/plain]     ./inspect.sh
+X[E-priv-mus-devshm/plain]     ./models
+X[E-priv-mus-devshm/plain]     ./models/m.txt
+X[E-priv-mus-devshm/plain]     ./tmp
+X[E-priv-mus-devshm/plain]     ./var
+X[E-priv-mus-devshm/plain]     ./var/tmp
+X[E-priv-mus-devshm/plain]   --- env names
+X[E-priv-mus-devshm/plain]   APPTAINER_CACHEDIR BATCH_SYSTEM CONDOR_STARTER_PID CUBACORES CUDA_VISIBLE_DEVICES GOMAXPROCS GPU_DEVICE_ORDINAL HOME JULIA_NUM_THREADS MKL_NUM_THREADS NUMEXPR_NUM_THREADS NVIDIA_VISIBLE_DEVICES OMP_NUM_THREADS OMP_THREAD_LIMIT OPENBLAS_NUM_THREADS PWD PYTHON_CPU_COUNT ROOT_MAX_THREADS SHLVL SINGULARITY_CACHEDIR TEMP TF_LOOP_PARALLEL_ITERATIONS TF_NUM_THREADS TMP TMPDIR _ _CHIRP_DELAYED_UPDATE_PREFIX _CONDOR_ANCESTOR_1175 _CONDOR_ANCESTOR_18 _CONDOR_ANCESTOR_39 _CONDOR_AssignedGPUs _CONDOR_BIN _CONDOR_CHIRP_CONFIG _CONDOR_JOB_AD _CONDOR_JOB_IWD _CONDOR_JOB_PIDS _CONDOR_MACHINE_AD _CONDOR_SCRATCH_DIR _CONDOR_SLOT 
+X[E-priv-mus-devshm/plain]   --- PATH=/usr/local/bin:/usr/bin HOME=/home/submituser
+X[E-priv-mus-devshm/plain]   --- mounts under scratch
+X[E-priv-mus-devshm/plain]     /var/lib/condor/execute/dir_1175/scratch/tmp -> /tmp
+X[E-priv-mus-devshm/plain]     /var/lib/condor/execute/dir_1175/scratch/var/tmp -> /var/tmp
+X[E-priv-mus-devshm/plain]     /var/lib/condor/execute/dir_1175/scratch/dev/shm -> /dev/shm
+X[E-priv-mus-devshm/plain]   --- /tmp write
+X[E-priv-mus-devshm/plain]     -rw-r--r-- 1 submituser submituser 6 Sep 29 17:52 /tmp/surf-probe-1178
+X[E-priv-mus-devshm/plain]     found in scratch: ./tmp/surf-probe-1178
+X-done E-priv-mus-devshm
+## config F-priv-nested-false on surf-priv: STARTER_NESTED_SCRATCH = false;
+# probe_surface_scratch config=F-priv-nested-false
+# $CondorVersion: 25.13.2 2026-08-19 BuildID: 943576 PackageID: 25.13.2-1 GitSHA: 589a5b38 $
+# STARTER_NESTED_SCRATCH = False
+# MOUNT_UNDER_SCRATCH = "/tmp,/var/tmp"
+# PERIODIC_EXPR_INTERVAL = 60
+# DAGMAN_USE_STRICT = 1
+# SINGULARITY_JOB = False
+# SINGULARITY_TARGET_DIR = None
+# MOUNT_PRIVATE_DEV_SHM = True
+X[F-priv-nested-false/plain] final: {'JobStatus': 4, 'ExitCode': 0}
+X[F-priv-nested-false/plain]   pwd=/var/lib/condor/execute/dir_1363
+X[F-priv-nested-false/plain]   _CONDOR_SCRATCH_DIR=/var/lib/condor/execute/dir_1363
+X[F-priv-nested-false/plain]   _CONDOR_JOB_AD=/var/lib/condor/execute/dir_1363/.job.ad
+X[F-priv-nested-false/plain]   _CONDOR_MACHINE_AD=/var/lib/condor/execute/dir_1363/.machine.ad
+X[F-priv-nested-false/plain]   _CONDOR_CREDS=
+X[F-priv-nested-false/plain]   X509_USER_PROXY=
+X[F-priv-nested-false/plain]   KRB5CCNAME=
+X[F-priv-nested-false/plain]   TMPDIR=/tmp TMP=/tmp TEMP=/tmp
+X[F-priv-nested-false/plain]   hostname=abcfe678da75 id=1001
+X[F-priv-nested-false/plain]   --- ls -A scratch
+X[F-priv-nested-false/plain]     .chirp.config
+X[F-priv-nested-false/plain]     .job.ad
+X[F-priv-nested-false/plain]     .machine.ad
+X[F-priv-nested-false/plain]     _condor_stderr
+X[F-priv-nested-false/plain]     _condor_stdout
+X[F-priv-nested-false/plain]     in.txt
+X[F-priv-nested-false/plain]     inspect.sh
+X[F-priv-nested-false/plain]     models
+X[F-priv-nested-false/plain]     tmp
+X[F-priv-nested-false/plain]     var
+X[F-priv-nested-false/plain]   --- ls -A scratch/.. 
+X[F-priv-nested-false/plain]     dir_1363
+X[F-priv-nested-false/plain]   --- find scratch (depth 3)
+X[F-priv-nested-false/plain]     .
+X[F-priv-nested-false/plain]     ./.chirp.config
+X[F-priv-nested-false/plain]     ./.job.ad
+X[F-priv-nested-false/plain]     ./.machine.ad
+X[F-priv-nested-false/plain]     ./_condor_stderr
+X[F-priv-nested-false/plain]     ./_condor_stdout
+X[F-priv-nested-false/plain]     ./in.txt
+X[F-priv-nested-false/plain]     ./inspect.sh
+X[F-priv-nested-false/plain]     ./models
+X[F-priv-nested-false/plain]     ./models/m.txt
+X[F-priv-nested-false/plain]     ./tmp
+X[F-priv-nested-false/plain]     ./var
+X[F-priv-nested-false/plain]     ./var/tmp
+X[F-priv-nested-false/plain]   --- env names
+X[F-priv-nested-false/plain]   APPTAINER_CACHEDIR BATCH_SYSTEM CONDOR_STARTER_PID CUBACORES CUDA_VISIBLE_DEVICES GOMAXPROCS GPU_DEVICE_ORDINAL HOME JULIA_NUM_THREADS MKL_NUM_THREADS NUMEXPR_NUM_THREADS NVIDIA_VISIBLE_DEVICES OMP_NUM_THREADS OMP_THREAD_LIMIT OPENBLAS_NUM_THREADS PWD PYTHON_CPU_COUNT ROOT_MAX_THREADS SHLVL SINGULARITY_CACHEDIR TEMP TF_LOOP_PARALLEL_ITERATIONS TF_NUM_THREADS TMP TMPDIR _ _CHIRP_DELAYED_UPDATE_PREFIX _CONDOR_ANCESTOR_1363 _CONDOR_ANCESTOR_18 _CONDOR_ANCESTOR_39 _CONDOR_AssignedGPUs _CONDOR_BIN _CONDOR_CHIRP_CONFIG _CONDOR_JOB_AD _CONDOR_JOB_IWD _CONDOR_JOB_PIDS _CONDOR_MACHINE_AD _CONDOR_SCRATCH_DIR _CONDOR_SLOT 
+X[F-priv-nested-false/plain]   --- PATH=/usr/local/bin:/usr/bin HOME=/home/submituser
+X[F-priv-nested-false/plain]   --- mounts under scratch
+X[F-priv-nested-false/plain]     /var/lib/condor/execute/dir_1363/tmp -> /tmp
+X[F-priv-nested-false/plain]     /var/lib/condor/execute/dir_1363/var/tmp -> /var/tmp
+X[F-priv-nested-false/plain]   --- /tmp write
+X[F-priv-nested-false/plain]     -rw-r--r-- 1 submituser submituser 6 Sep 29 17:52 /tmp/surf-probe-1366
+X[F-priv-nested-false/plain]     found in scratch: ./tmp/surf-probe-1366
+X[F-priv-nested-false/proxy] final: {'JobStatus': 4, 'ExitCode': 0}
+X[F-priv-nested-false/proxy]   pwd=/var/lib/condor/execute/dir_1400
+X[F-priv-nested-false/proxy]   _CONDOR_SCRATCH_DIR=/var/lib/condor/execute/dir_1400
+X[F-priv-nested-false/proxy]   _CONDOR_JOB_AD=/var/lib/condor/execute/dir_1400/.job.ad
+X[F-priv-nested-false/proxy]   _CONDOR_MACHINE_AD=/var/lib/condor/execute/dir_1400/.machine.ad
+X[F-priv-nested-false/proxy]   _CONDOR_CREDS=
+X[F-priv-nested-false/proxy]   X509_USER_PROXY=/var/lib/condor/execute/dir_1400/x509up_u1001
+X[F-priv-nested-false/proxy]   KRB5CCNAME=
+X[F-priv-nested-false/proxy]   TMPDIR=/tmp TMP=/tmp TEMP=/tmp
+X[F-priv-nested-false/proxy]   hostname=abcfe678da75 id=1001
+X[F-priv-nested-false/proxy]   --- ls -A scratch
+X[F-priv-nested-false/proxy]     .chirp.config
+X[F-priv-nested-false/proxy]     .job.ad
+X[F-priv-nested-false/proxy]     .machine.ad
+X[F-priv-nested-false/proxy]     _condor_stderr
+X[F-priv-nested-false/proxy]     _condor_stdout
+X[F-priv-nested-false/proxy]     in.txt
+X[F-priv-nested-false/proxy]     inspect.sh
+X[F-priv-nested-false/proxy]     tmp
+X[F-priv-nested-false/proxy]     var
+X[F-priv-nested-false/proxy]     x509up_u1001
+X[F-priv-nested-false/proxy]   --- ls -A scratch/.. 
+X[F-priv-nested-false/proxy]     dir_1400
+X[F-priv-nested-false/proxy]   --- find scratch (depth 3)
+X[F-priv-nested-false/proxy]     .
+X[F-priv-nested-false/proxy]     ./.chirp.config
+X[F-priv-nested-false/proxy]     ./.job.ad
+X[F-priv-nested-false/proxy]     ./.machine.ad
+X[F-priv-nested-false/proxy]     ./_condor_stderr
+X[F-priv-nested-false/proxy]     ./_condor_stdout
+X[F-priv-nested-false/proxy]     ./in.txt
+X[F-priv-nested-false/proxy]     ./inspect.sh
+X[F-priv-nested-false/proxy]     ./tmp
+X[F-priv-nested-false/proxy]     ./var
+X[F-priv-nested-false/proxy]     ./var/tmp
+X[F-priv-nested-false/proxy]     ./x509up_u1001
+X[F-priv-nested-false/proxy]   --- env names
+X[F-priv-nested-false/proxy]   APPTAINER_CACHEDIR BATCH_SYSTEM CONDOR_STARTER_PID CUBACORES CUDA_VISIBLE_DEVICES GOMAXPROCS GPU_DEVICE_ORDINAL HOME JULIA_NUM_THREADS MKL_NUM_THREADS NUMEXPR_NUM_THREADS NVIDIA_VISIBLE_DEVICES OMP_NUM_THREADS OMP_THREAD_LIMIT OPENBLAS_NUM_THREADS PWD PYTHON_CPU_COUNT ROOT_MAX_THREADS SHLVL SINGULARITY_CACHEDIR TEMP TF_LOOP_PARALLEL_ITERATIONS TF_NUM_THREADS TMP TMPDIR X509_USER_PROXY _ _CHIRP_DELAYED_UPDATE_PREFIX _CONDOR_ANCESTOR_1400 _CONDOR_ANCESTOR_18 _CONDOR_ANCESTOR_39 _CONDOR_AssignedGPUs _CONDOR_BIN _CONDOR_CHIRP_CONFIG _CONDOR_JOB_AD _CONDOR_JOB_IWD _CONDOR_JOB_PIDS _CONDOR_MACHINE_AD _CONDOR_SCRATCH_DIR _CONDOR_SLOT 
+X[F-priv-nested-false/proxy]   --- PATH=/usr/local/bin:/usr/bin HOME=/home/submituser
+X[F-priv-nested-false/proxy]   --- mounts under scratch
+X[F-priv-nested-false/proxy]     /var/lib/condor/execute/dir_1400/tmp -> /tmp
+X[F-priv-nested-false/proxy]     /var/lib/condor/execute/dir_1400/var/tmp -> /var/tmp
+X[F-priv-nested-false/proxy]   --- /tmp write
+X[F-priv-nested-false/proxy]     -rw-r--r-- 1 submituser submituser 6 Sep 29 17:52 /tmp/surf-probe-1403
+X[F-priv-nested-false/proxy]     found in scratch: ./tmp/surf-probe-1403
+X[F-priv-nested-false/tmpin] final: {'JobStatus': 4, 'ExitCode': 0}
+X[F-priv-nested-false/tmpin]   pwd=/var/lib/condor/execute/dir_1438
+X[F-priv-nested-false/tmpin]   _CONDOR_SCRATCH_DIR=/var/lib/condor/execute/dir_1438
+X[F-priv-nested-false/tmpin]   _CONDOR_JOB_AD=/var/lib/condor/execute/dir_1438/.job.ad
+X[F-priv-nested-false/tmpin]   _CONDOR_MACHINE_AD=/var/lib/condor/execute/dir_1438/.machine.ad
+X[F-priv-nested-false/tmpin]   _CONDOR_CREDS=
+X[F-priv-nested-false/tmpin]   X509_USER_PROXY=
+X[F-priv-nested-false/tmpin]   KRB5CCNAME=
+X[F-priv-nested-false/tmpin]   TMPDIR=/tmp TMP=/tmp TEMP=/tmp
+X[F-priv-nested-false/tmpin]   hostname=abcfe678da75 id=1001
+X[F-priv-nested-false/tmpin]   --- ls -A scratch
+X[F-priv-nested-false/tmpin]     .chirp.config
+X[F-priv-nested-false/tmpin]     .job.ad
+X[F-priv-nested-false/tmpin]     .machine.ad
+X[F-priv-nested-false/tmpin]     _condor_stderr
+X[F-priv-nested-false/tmpin]     _condor_stdout
+X[F-priv-nested-false/tmpin]     inspect.sh
+X[F-priv-nested-false/tmpin]     tmp
+X[F-priv-nested-false/tmpin]     var
+X[F-priv-nested-false/tmpin]   --- ls -A scratch/.. 
+X[F-priv-nested-false/tmpin]     dir_1438
+X[F-priv-nested-false/tmpin]   --- find scratch (depth 3)
+X[F-priv-nested-false/tmpin]     .
+X[F-priv-nested-false/tmpin]     ./.chirp.config
+X[F-priv-nested-false/tmpin]     ./.job.ad
+X[F-priv-nested-false/tmpin]     ./.machine.ad
+X[F-priv-nested-false/tmpin]     ./_condor_stderr
+X[F-priv-nested-false/tmpin]     ./_condor_stdout
+X[F-priv-nested-false/tmpin]     ./inspect.sh
+X[F-priv-nested-false/tmpin]     ./tmp
+X[F-priv-nested-false/tmpin]     ./tmp/USERFILE
+X[F-priv-nested-false/tmpin]     ./var
+X[F-priv-nested-false/tmpin]     ./var/tmp
+X[F-priv-nested-false/tmpin]   --- env names
+X[F-priv-nested-false/tmpin]   APPTAINER_CACHEDIR BATCH_SYSTEM CONDOR_STARTER_PID CUBACORES CUDA_VISIBLE_DEVICES GOMAXPROCS GPU_DEVICE_ORDINAL HOME JULIA_NUM_THREADS MKL_NUM_THREADS NUMEXPR_NUM_THREADS NVIDIA_VISIBLE_DEVICES OMP_NUM_THREADS OMP_THREAD_LIMIT OPENBLAS_NUM_THREADS PWD PYTHON_CPU_COUNT ROOT_MAX_THREADS SHLVL SINGULARITY_CACHEDIR TEMP TF_LOOP_PARALLEL_ITERATIONS TF_NUM_THREADS TMP TMPDIR _ _CHIRP_DELAYED_UPDATE_PREFIX _CONDOR_ANCESTOR_1438 _CONDOR_ANCESTOR_18 _CONDOR_ANCESTOR_39 _CONDOR_AssignedGPUs _CONDOR_BIN _CONDOR_CHIRP_CONFIG _CONDOR_JOB_AD _CONDOR_JOB_IWD _CONDOR_JOB_PIDS _CONDOR_MACHINE_AD _CONDOR_SCRATCH_DIR _CONDOR_SLOT 
+X[F-priv-nested-false/tmpin]   --- PATH=/usr/local/bin:/usr/bin HOME=/home/submituser
+X[F-priv-nested-false/tmpin]   --- mounts under scratch
+X[F-priv-nested-false/tmpin]     /var/lib/condor/execute/dir_1438/tmp -> /tmp
+X[F-priv-nested-false/tmpin]     /var/lib/condor/execute/dir_1438/var/tmp -> /var/tmp
+X[F-priv-nested-false/tmpin]   --- /tmp write
+X[F-priv-nested-false/tmpin]     -rw-r--r-- 1 submituser submituser 6 Sep 29 17:52 /tmp/surf-probe-1441
+X[F-priv-nested-false/tmpin]     found in scratch: ./tmp/surf-probe-1441
+X[F-priv-nested-false/tmpin]   --- tmp/ contents
+X[F-priv-nested-false/tmpin]     USERFILE
+X[F-priv-nested-false/tmpin]     surf-probe-1441
+X[F-priv-nested-false/tmpin]   --- /tmp has USERFILE?
+X[F-priv-nested-false/tmpin]     /tmp/USERFILE
+X-done F-priv-nested-false
+## config F2-priv-sing-srv-nested-false on surf-priv: SINGULARITY_JOB = !isUndefined(TARGET.SingularityImage);SINGULARITY_IMAGE_EXPR = TARGET.SingularityImage;SINGULARITY_TARGET_DIR = /srv;STARTER_NESTED_SCRATCH = false;
+# probe_surface_scratch config=F2-priv-sing-srv-nested-false
+# $CondorVersion: 25.13.2 2026-08-19 BuildID: 943576 PackageID: 25.13.2-1 GitSHA: 589a5b38 $
+# STARTER_NESTED_SCRATCH = False
+# MOUNT_UNDER_SCRATCH = "/tmp,/var/tmp"
+# PERIODIC_EXPR_INTERVAL = 60
+# DAGMAN_USE_STRICT = 1
+# SINGULARITY_JOB = False
+# SINGULARITY_TARGET_DIR = /srv
+# MOUNT_PRIVATE_DEV_SHM = True
+X[F2-priv-sing-srv-nested-false/sing] final: {'JobStatus': 4, 'ExitCode': 0}
+X[F2-priv-sing-srv-nested-false/sing]   pwd=/srv
+X[F2-priv-sing-srv-nested-false/sing]   _CONDOR_SCRATCH_DIR=/srv
+X[F2-priv-sing-srv-nested-false/sing]   _CONDOR_JOB_AD=/srv/.job.ad
+X[F2-priv-sing-srv-nested-false/sing]   _CONDOR_MACHINE_AD=/srv/.machine.ad
+X[F2-priv-sing-srv-nested-false/sing]   _CONDOR_CREDS=
+X[F2-priv-sing-srv-nested-false/sing]   X509_USER_PROXY=
+X[F2-priv-sing-srv-nested-false/sing]   KRB5CCNAME=
+X[F2-priv-sing-srv-nested-false/sing]   TMPDIR=/tmp TMP=/tmp TEMP=/tmp
+X[F2-priv-sing-srv-nested-false/sing]   hostname=abcfe678da75 id=1001
+X[F2-priv-sing-srv-nested-false/sing]   --- ls -A scratch
+X[F2-priv-sing-srv-nested-false/sing]     .chirp.config
+X[F2-priv-sing-srv-nested-false/sing]     .docker_sock
+X[F2-priv-sing-srv-nested-false/sing]     .job.ad
+X[F2-priv-sing-srv-nested-false/sing]     .machine.ad
+X[F2-priv-sing-srv-nested-false/sing]     .update.ad
+X[F2-priv-sing-srv-nested-false/sing]     _condor_stderr
+X[F2-priv-sing-srv-nested-false/sing]     _condor_stdout
+X[F2-priv-sing-srv-nested-false/sing]     in.txt
+X[F2-priv-sing-srv-nested-false/sing]     inspect.sh
+X[F2-priv-sing-srv-nested-false/sing]     scratch
+X[F2-priv-sing-srv-nested-false/sing]     tmp
+X[F2-priv-sing-srv-nested-false/sing]     var
+X[F2-priv-sing-srv-nested-false/sing]     var_tmp
+X[F2-priv-sing-srv-nested-false/sing]   --- ls -A scratch/.. 
+X[F2-priv-sing-srv-nested-false/sing]     .exec
+X[F2-priv-sing-srv-nested-false/sing]     .run
+X[F2-priv-sing-srv-nested-false/sing]     .shell
+X[F2-priv-sing-srv-nested-false/sing]     .singularity.d
+X[F2-priv-sing-srv-nested-false/sing]     .test
+X[F2-priv-sing-srv-nested-false/sing]     bin
+X[F2-priv-sing-srv-nested-false/sing]     dev
+X[F2-priv-sing-srv-nested-false/sing]     environment
+X[F2-priv-sing-srv-nested-false/sing]     etc
+X[F2-priv-sing-srv-nested-false/sing]     home
+X[F2-priv-sing-srv-nested-false/sing]     lib
+X[F2-priv-sing-srv-nested-false/sing]     lib64
+X[F2-priv-sing-srv-nested-false/sing]     proc
+X[F2-priv-sing-srv-nested-false/sing]     root
+X[F2-priv-sing-srv-nested-false/sing]     sbin
+X[F2-priv-sing-srv-nested-false/sing]     singularity
+X[F2-priv-sing-srv-nested-false/sing]     srv
+X[F2-priv-sing-srv-nested-false/sing]     sys
+X[F2-priv-sing-srv-nested-false/sing]     tmp
+X[F2-priv-sing-srv-nested-false/sing]     usr
+X[F2-priv-sing-srv-nested-false/sing]     var
+X[F2-priv-sing-srv-nested-false/sing]   --- find scratch (depth 3)
+X[F2-priv-sing-srv-nested-false/sing]     .
+X[F2-priv-sing-srv-nested-false/sing]     ./.chirp.config
+X[F2-priv-sing-srv-nested-false/sing]     ./.docker_sock
+X[F2-priv-sing-srv-nested-false/sing]     ./.job.ad
+X[F2-priv-sing-srv-nested-false/sing]     ./.machine.ad
+X[F2-priv-sing-srv-nested-false/sing]     ./.update.ad
+X[F2-priv-sing-srv-nested-false/sing]     ./_condor_stderr
+X[F2-priv-sing-srv-nested-false/sing]     ./_condor_stdout
+X[F2-priv-sing-srv-nested-false/sing]     ./in.txt
+X[F2-priv-sing-srv-nested-false/sing]     ./inspect.sh
+X[F2-priv-sing-srv-nested-false/sing]     ./scratch
+X[F2-priv-sing-srv-nested-false/sing]     ./scratch/tmp
+X[F2-priv-sing-srv-nested-false/sing]     ./scratch/var
+X[F2-priv-sing-srv-nested-false/sing]     ./scratch/var/tmp
+X[F2-priv-sing-srv-nested-false/sing]     ./tmp
+X[F2-priv-sing-srv-nested-false/sing]     ./var
+X[F2-priv-sing-srv-nested-false/sing]     ./var/tmp
+X[F2-priv-sing-srv-nested-false/sing]     ./var_tmp
+X[F2-priv-sing-srv-nested-false/sing]   --- env names
+X[F2-priv-sing-srv-nested-false/sing]   APPTAINER_APPNAME APPTAINER_BIND APPTAINER_CACHEDIR APPTAINER_COMMAND APPTAINER_CONTAINER APPTAINER_ENVIRONMENT APPTAINER_NAME APPTAINER_TMPDIR BATCH_SYSTEM CONDOR_STARTER_PID CUBACORES CUDA_VISIBLE_DEVICES GOMAXPROCS GPU_DEVICE_ORDINAL HOME JULIA_NUM_THREADS LANG LD_LIBRARY_PATH MKL_NUM_THREADS NUMEXPR_NUM_THREADS NVIDIA_VISIBLE_DEVICES OMP_NUM_THREADS OMP_THREAD_LIMIT OPENBLAS_NUM_THREADS PATH PROMPT_COMMAND PWD PYTHON_CPU_COUNT ROOT_MAX_THREADS SHLVL SINGULARITY_BIND SINGULARITY_CACHEDIR SINGULARITY_CONTAINER SINGULARITY_ENVIRONMENT SINGULARITY_NAME TEMP TF_LOOP_PARALLEL_ITERATIONS TF_NUM_THREADS TMP TMPDIR _ _CHIRP_DELAYED_UPDATE_PREFIX _CONDOR_AssignedGPUs _CONDOR_BIN _CONDOR_CHIRP_CONFIG _CONDOR_JOB_AD _CONDOR_JOB_IWD _CONDOR_JOB_PIDS _CONDOR_MACHINE_AD _CONDOR_SCRATCH_DIR _CONDOR_SCRATCH_DIR_OUTSIDE_CONTAINER _CONDOR_SLOT 
+X[F2-priv-sing-srv-nested-false/sing]   --- PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin HOME=/var/lib/condor/execute/dir_1633
+X[F2-priv-sing-srv-nested-false/sing]   --- mounts under scratch
+X[F2-priv-sing-srv-nested-false/sing]     /var/lib/condor/execute/dir_1633 -> /srv
+X[F2-priv-sing-srv-nested-false/sing]   --- /tmp write
+X[F2-priv-sing-srv-nested-false/sing]     -rw-r--r-- 1 submituser submituser 6 Sep 29 17:52 /tmp/surf-probe-14
+X[F2-priv-sing-srv-nested-false/sing]     found in scratch: ./scratch/tmp/surf-probe-14
+X[F2-priv-sing-srv-nested-false/singall] final: {'JobStatus': 4, 'ExitCode': 0}
+X[F2-priv-sing-srv-nested-false/singall]   pwd=/srv
+X[F2-priv-sing-srv-nested-false/singall]   _CONDOR_SCRATCH_DIR=/srv
+X[F2-priv-sing-srv-nested-false/singall]   _CONDOR_JOB_AD=/srv/.job.ad
+X[F2-priv-sing-srv-nested-false/singall]   _CONDOR_MACHINE_AD=/srv/.machine.ad
+X[F2-priv-sing-srv-nested-false/singall]   _CONDOR_CREDS=
+X[F2-priv-sing-srv-nested-false/singall]   X509_USER_PROXY=/srv/x509up_u1001
+X[F2-priv-sing-srv-nested-false/singall]   KRB5CCNAME=
+X[F2-priv-sing-srv-nested-false/singall]   TMPDIR=/tmp TMP=/tmp TEMP=/tmp
+X[F2-priv-sing-srv-nested-false/singall]   hostname=abcfe678da75 id=1001
+X[F2-priv-sing-srv-nested-false/singall]   --- ls -A scratch
+X[F2-priv-sing-srv-nested-false/singall]     .chirp.config
+X[F2-priv-sing-srv-nested-false/singall]     .docker_sock
+X[F2-priv-sing-srv-nested-false/singall]     .job.ad
+X[F2-priv-sing-srv-nested-false/singall]     .machine.ad
+X[F2-priv-sing-srv-nested-false/singall]     _condor_stderr
+X[F2-priv-sing-srv-nested-false/singall]     _condor_stdout
+X[F2-priv-sing-srv-nested-false/singall]     in.txt
+X[F2-priv-sing-srv-nested-false/singall]     inspect.sh
+X[F2-priv-sing-srv-nested-false/singall]     scratch
+X[F2-priv-sing-srv-nested-false/singall]     tmp
+X[F2-priv-sing-srv-nested-false/singall]     var
+X[F2-priv-sing-srv-nested-false/singall]     var_tmp
+X[F2-priv-sing-srv-nested-false/singall]     x509up_u1001
+X[F2-priv-sing-srv-nested-false/singall]   --- ls -A scratch/.. 
+X[F2-priv-sing-srv-nested-false/singall]     .exec
+X[F2-priv-sing-srv-nested-false/singall]     .run
+X[F2-priv-sing-srv-nested-false/singall]     .shell
+X[F2-priv-sing-srv-nested-false/singall]     .singularity.d
+X[F2-priv-sing-srv-nested-false/singall]     .test
+X[F2-priv-sing-srv-nested-false/singall]     bin
+X[F2-priv-sing-srv-nested-false/singall]     dev
+X[F2-priv-sing-srv-nested-false/singall]     environment
+X[F2-priv-sing-srv-nested-false/singall]     etc
+X[F2-priv-sing-srv-nested-false/singall]     home
+X[F2-priv-sing-srv-nested-false/singall]     lib
+X[F2-priv-sing-srv-nested-false/singall]     lib64
+X[F2-priv-sing-srv-nested-false/singall]     proc
+X[F2-priv-sing-srv-nested-false/singall]     root
+X[F2-priv-sing-srv-nested-false/singall]     sbin
+X[F2-priv-sing-srv-nested-false/singall]     singularity
+X[F2-priv-sing-srv-nested-false/singall]     srv
+X[F2-priv-sing-srv-nested-false/singall]     sys
+X[F2-priv-sing-srv-nested-false/singall]     tmp
+X[F2-priv-sing-srv-nested-false/singall]     usr
+X[F2-priv-sing-srv-nested-false/singall]     var
+X[F2-priv-sing-srv-nested-false/singall]   --- find scratch (depth 3)
+X[F2-priv-sing-srv-nested-false/singall]     .
+X[F2-priv-sing-srv-nested-false/singall]     ./.chirp.config
+X[F2-priv-sing-srv-nested-false/singall]     ./.docker_sock
+X[F2-priv-sing-srv-nested-false/singall]     ./.job.ad
+X[F2-priv-sing-srv-nested-false/singall]     ./.machine.ad
+X[F2-priv-sing-srv-nested-false/singall]     ./_condor_stderr
+X[F2-priv-sing-srv-nested-false/singall]     ./_condor_stdout
+X[F2-priv-sing-srv-nested-false/singall]     ./in.txt
+X[F2-priv-sing-srv-nested-false/singall]     ./inspect.sh
+X[F2-priv-sing-srv-nested-false/singall]     ./scratch
+X[F2-priv-sing-srv-nested-false/singall]     ./scratch/tmp
+X[F2-priv-sing-srv-nested-false/singall]     ./scratch/var
+X[F2-priv-sing-srv-nested-false/singall]     ./scratch/var/tmp
+X[F2-priv-sing-srv-nested-false/singall]     ./tmp
+X[F2-priv-sing-srv-nested-false/singall]     ./tmp/USERFILE
+X[F2-priv-sing-srv-nested-false/singall]     ./var
+X[F2-priv-sing-srv-nested-false/singall]     ./var/tmp
+X[F2-priv-sing-srv-nested-false/singall]     ./var_tmp
+X[F2-priv-sing-srv-nested-false/singall]     ./x509up_u1001
+X[F2-priv-sing-srv-nested-false/singall]   --- env names
+X[F2-priv-sing-srv-nested-false/singall]   APPTAINER_APPNAME APPTAINER_BIND APPTAINER_CACHEDIR APPTAINER_COMMAND APPTAINER_CONTAINER APPTAINER_ENVIRONMENT APPTAINER_NAME APPTAINER_TMPDIR BATCH_SYSTEM CONDOR_STARTER_PID CUBACORES CUDA_VISIBLE_DEVICES GOMAXPROCS GPU_DEVICE_ORDINAL HOME JULIA_NUM_THREADS LANG LD_LIBRARY_PATH MKL_NUM_THREADS NUMEXPR_NUM_THREADS NVIDIA_VISIBLE_DEVICES OMP_NUM_THREADS OMP_THREAD_LIMIT OPENBLAS_NUM_THREADS PATH PROMPT_COMMAND PWD PYTHON_CPU_COUNT ROOT_MAX_THREADS SHLVL SINGULARITY_BIND SINGULARITY_CACHEDIR SINGULARITY_CONTAINER SINGULARITY_ENVIRONMENT SINGULARITY_NAME TEMP TF_LOOP_PARALLEL_ITERATIONS TF_NUM_THREADS TMP TMPDIR X509_USER_PROXY _ _CHIRP_DELAYED_UPDATE_PREFIX _CONDOR_AssignedGPUs _CONDOR_BIN _CONDOR_CHIRP_CONFIG _CONDOR_JOB_AD _CONDOR_JOB_IWD _CONDOR_JOB_PIDS _CONDOR_MACHINE_AD _CONDOR_SCRATCH_DIR _CONDOR_SCRATCH_DIR_OUTSIDE_CONTAINER _CONDOR_SLOT 
+X[F2-priv-sing-srv-nested-false/singall]   --- PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin HOME=/var/lib/condor/execute/dir_1763
+X[F2-priv-sing-srv-nested-false/singall]   --- mounts under scratch
+X[F2-priv-sing-srv-nested-false/singall]     /var/lib/condor/execute/dir_1763 -> /srv
+X[F2-priv-sing-srv-nested-false/singall]   --- /tmp write
+X[F2-priv-sing-srv-nested-false/singall]     -rw-r--r-- 1 submituser submituser 6 Sep 29 17:52 /tmp/surf-probe-14
+X[F2-priv-sing-srv-nested-false/singall]     found in scratch: ./scratch/tmp/surf-probe-14
+X[F2-priv-sing-srv-nested-false/singall]   --- tmp/ contents
+X[F2-priv-sing-srv-nested-false/singall]     USERFILE
+X[F2-priv-sing-srv-nested-false/singall]   --- /tmp has USERFILE?
+X[F2-priv-sing-srv-nested-false/singall]     ls: cannot access '/tmp/USERFILE': No such file or directory
+X-done F2-priv-sing-srv-nested-false
+## config G-priv-sing on surf-priv: SINGULARITY_JOB = !isUndefined(TARGET.SingularityImage);SINGULARITY_IMAGE_EXPR = TARGET.SingularityImage;
+# probe_surface_scratch config=G-priv-sing
+# $CondorVersion: 25.13.2 2026-08-19 BuildID: 943576 PackageID: 25.13.2-1 GitSHA: 589a5b38 $
+# STARTER_NESTED_SCRATCH = True
+# MOUNT_UNDER_SCRATCH = "/tmp,/var/tmp"
+# PERIODIC_EXPR_INTERVAL = 60
+# DAGMAN_USE_STRICT = 1
+# SINGULARITY_JOB = False
+# SINGULARITY_TARGET_DIR = None
+# MOUNT_PRIVATE_DEV_SHM = True
+X[G-priv-sing/sing] final: {'JobStatus': 4, 'ExitCode': 0}
+X[G-priv-sing/sing]   pwd=/var/lib/condor/execute/dir_2045/scratch
+X[G-priv-sing/sing]   _CONDOR_SCRATCH_DIR=/var/lib/condor/execute/dir_2045/scratch
+X[G-priv-sing/sing]   _CONDOR_JOB_AD=/var/lib/condor/execute/dir_2045/scratch/.job.ad
+X[G-priv-sing/sing]   _CONDOR_MACHINE_AD=/var/lib/condor/execute/dir_2045/scratch/.machine.ad
+X[G-priv-sing/sing]   _CONDOR_CREDS=
+X[G-priv-sing/sing]   X509_USER_PROXY=
+X[G-priv-sing/sing]   KRB5CCNAME=
+X[G-priv-sing/sing]   TMPDIR=/tmp TMP=/tmp TEMP=/tmp
+X[G-priv-sing/sing]   hostname=abcfe678da75 id=1001
+X[G-priv-sing/sing]   --- ls -A scratch
+X[G-priv-sing/sing]     .docker_sock
+X[G-priv-sing/sing]     .job.ad
+X[G-priv-sing/sing]     .machine.ad
+X[G-priv-sing/sing]     _condor_stderr
+X[G-priv-sing/sing]     _condor_stdout
+X[G-priv-sing/sing]     in.txt
+X[G-priv-sing/sing]     inspect.sh
+X[G-priv-sing/sing]     scratch
+X[G-priv-sing/sing]     tmp
+X[G-priv-sing/sing]     var
+X[G-priv-sing/sing]     var_tmp
+X[G-priv-sing/sing]   --- ls -A scratch/.. 
+X[G-priv-sing/sing]     htcondor
+X[G-priv-sing/sing]     scratch
+X[G-priv-sing/sing]     user
+X[G-priv-sing/sing]   --- find scratch (depth 3)
+X[G-priv-sing/sing]     .
+X[G-priv-sing/sing]     ./.docker_sock
+X[G-priv-sing/sing]     ./.job.ad
+X[G-priv-sing/sing]     ./.machine.ad
+X[G-priv-sing/sing]     ./_condor_stderr
+X[G-priv-sing/sing]     ./_condor_stdout
+X[G-priv-sing/sing]     ./in.txt
+X[G-priv-sing/sing]     ./inspect.sh
+X[G-priv-sing/sing]     ./scratch
+X[G-priv-sing/sing]     ./scratch/tmp
+X[G-priv-sing/sing]     ./scratch/var
+X[G-priv-sing/sing]     ./scratch/var/tmp
+X[G-priv-sing/sing]     ./tmp
+X[G-priv-sing/sing]     ./var
+X[G-priv-sing/sing]     ./var/tmp
+X[G-priv-sing/sing]     ./var_tmp
+X[G-priv-sing/sing]   --- env names
+X[G-priv-sing/sing]   APPTAINER_APPNAME APPTAINER_BIND APPTAINER_CACHEDIR APPTAINER_COMMAND APPTAINER_CONTAINER APPTAINER_ENVIRONMENT APPTAINER_NAME APPTAINER_TMPDIR BATCH_SYSTEM CONDOR_STARTER_PID CUBACORES CUDA_VISIBLE_DEVICES GOMAXPROCS GPU_DEVICE_ORDINAL HOME JULIA_NUM_THREADS LANG LD_LIBRARY_PATH MKL_NUM_THREADS NUMEXPR_NUM_THREADS NVIDIA_VISIBLE_DEVICES OMP_NUM_THREADS OMP_THREAD_LIMIT OPENBLAS_NUM_THREADS PATH PROMPT_COMMAND PWD PYTHON_CPU_COUNT ROOT_MAX_THREADS SHLVL SINGULARITY_BIND SINGULARITY_CACHEDIR SINGULARITY_CONTAINER SINGULARITY_ENVIRONMENT SINGULARITY_NAME TEMP TF_LOOP_PARALLEL_ITERATIONS TF_NUM_THREADS TMP TMPDIR _ _CHIRP_DELAYED_UPDATE_PREFIX _CONDOR_AssignedGPUs _CONDOR_BIN _CONDOR_CHIRP_CONFIG _CONDOR_JOB_AD _CONDOR_JOB_IWD _CONDOR_JOB_PIDS _CONDOR_MACHINE_AD _CONDOR_SCRATCH_DIR _CONDOR_SLOT 
+X[G-priv-sing/sing]   --- PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin HOME=/var/lib/condor/execute/dir_2045/scratch
+X[G-priv-sing/sing]   --- mounts under scratch
+X[G-priv-sing/sing]     /var/lib/condor/execute/dir_2045/scratch -> /var/lib/condor/execute/dir_2045/scratch
+X[G-priv-sing/sing]     /var/lib/condor/execute/dir_2045/scratch/tmp -> /tmp
+X[G-priv-sing/sing]     /var/lib/condor/execute/dir_2045/scratch/var_tmp -> /var/tmp
+X[G-priv-sing/sing]     /var/lib/condor/execute/dir_2045/scratch/scratch/tmp -> /tmp
+X[G-priv-sing/sing]     /var/lib/condor/execute/dir_2045/scratch/scratch/var/tmp -> /var/tmp
+X[G-priv-sing/sing]   --- /tmp write
+X[G-priv-sing/sing]     -rw-r--r-- 1 submituser submituser 6 Sep 29 17:53 /tmp/surf-probe-15
+X[G-priv-sing/sing]     found in scratch: ./scratch/tmp/surf-probe-15
+X[G-priv-sing/singall] final: {'JobStatus': 4, 'ExitCode': 0}
+X[G-priv-sing/singall]   pwd=/var/lib/condor/execute/dir_2172/scratch
+X[G-priv-sing/singall]   _CONDOR_SCRATCH_DIR=/var/lib/condor/execute/dir_2172/scratch
+X[G-priv-sing/singall]   _CONDOR_JOB_AD=/var/lib/condor/execute/dir_2172/scratch/.job.ad
+X[G-priv-sing/singall]   _CONDOR_MACHINE_AD=/var/lib/condor/execute/dir_2172/scratch/.machine.ad
+X[G-priv-sing/singall]   _CONDOR_CREDS=
+X[G-priv-sing/singall]   X509_USER_PROXY=/var/lib/condor/execute/dir_2172/scratch/x509up_u1001
+X[G-priv-sing/singall]   KRB5CCNAME=
+X[G-priv-sing/singall]   TMPDIR=/tmp TMP=/tmp TEMP=/tmp
+X[G-priv-sing/singall]   hostname=abcfe678da75 id=1001
+X[G-priv-sing/singall]   --- ls -A scratch
+X[G-priv-sing/singall]     .docker_sock
+X[G-priv-sing/singall]     .job.ad
+X[G-priv-sing/singall]     .machine.ad
+X[G-priv-sing/singall]     _condor_stderr
+X[G-priv-sing/singall]     _condor_stdout
+X[G-priv-sing/singall]     in.txt
+X[G-priv-sing/singall]     inspect.sh
+X[G-priv-sing/singall]     scratch
+X[G-priv-sing/singall]     tmp
+X[G-priv-sing/singall]     var
+X[G-priv-sing/singall]     var_tmp
+X[G-priv-sing/singall]     x509up_u1001
+X[G-priv-sing/singall]   --- ls -A scratch/.. 
+X[G-priv-sing/singall]     htcondor
+X[G-priv-sing/singall]     scratch
+X[G-priv-sing/singall]     user
+X[G-priv-sing/singall]   --- find scratch (depth 3)
+X[G-priv-sing/singall]     .
+X[G-priv-sing/singall]     ./.docker_sock
+X[G-priv-sing/singall]     ./.job.ad
+X[G-priv-sing/singall]     ./.machine.ad
+X[G-priv-sing/singall]     ./_condor_stderr
+X[G-priv-sing/singall]     ./_condor_stdout
+X[G-priv-sing/singall]     ./in.txt
+X[G-priv-sing/singall]     ./inspect.sh
+X[G-priv-sing/singall]     ./scratch
+X[G-priv-sing/singall]     ./scratch/tmp
+X[G-priv-sing/singall]     ./scratch/var
+X[G-priv-sing/singall]     ./scratch/var/tmp
+X[G-priv-sing/singall]     ./tmp
+X[G-priv-sing/singall]     ./tmp/USERFILE
+X[G-priv-sing/singall]     ./var
+X[G-priv-sing/singall]     ./var/tmp
+X[G-priv-sing/singall]     ./var_tmp
+X[G-priv-sing/singall]     ./x509up_u1001
+X[G-priv-sing/singall]   --- env names
+X[G-priv-sing/singall]   APPTAINER_APPNAME APPTAINER_BIND APPTAINER_CACHEDIR APPTAINER_COMMAND APPTAINER_CONTAINER APPTAINER_ENVIRONMENT APPTAINER_NAME APPTAINER_TMPDIR BATCH_SYSTEM CONDOR_STARTER_PID CUBACORES CUDA_VISIBLE_DEVICES GOMAXPROCS GPU_DEVICE_ORDINAL HOME JULIA_NUM_THREADS LANG LD_LIBRARY_PATH MKL_NUM_THREADS NUMEXPR_NUM_THREADS NVIDIA_VISIBLE_DEVICES OMP_NUM_THREADS OMP_THREAD_LIMIT OPENBLAS_NUM_THREADS PATH PROMPT_COMMAND PWD PYTHON_CPU_COUNT ROOT_MAX_THREADS SHLVL SINGULARITY_BIND SINGULARITY_CACHEDIR SINGULARITY_CONTAINER SINGULARITY_ENVIRONMENT SINGULARITY_NAME TEMP TF_LOOP_PARALLEL_ITERATIONS TF_NUM_THREADS TMP TMPDIR X509_USER_PROXY _ _CHIRP_DELAYED_UPDATE_PREFIX _CONDOR_AssignedGPUs _CONDOR_BIN _CONDOR_CHIRP_CONFIG _CONDOR_JOB_AD _CONDOR_JOB_IWD _CONDOR_JOB_PIDS _CONDOR_MACHINE_AD _CONDOR_SCRATCH_DIR _CONDOR_SLOT 
+X[G-priv-sing/singall]   --- PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin HOME=/var/lib/condor/execute/dir_2172/scratch
+X[G-priv-sing/singall]   --- mounts under scratch
+X[G-priv-sing/singall]     /var/lib/condor/execute/dir_2172/scratch -> /var/lib/condor/execute/dir_2172/scratch
+X[G-priv-sing/singall]     /var/lib/condor/execute/dir_2172/scratch/tmp -> /tmp
+X[G-priv-sing/singall]     /var/lib/condor/execute/dir_2172/scratch/var_tmp -> /var/tmp
+X[G-priv-sing/singall]     /var/lib/condor/execute/dir_2172/scratch/scratch/tmp -> /tmp
+X[G-priv-sing/singall]     /var/lib/condor/execute/dir_2172/scratch/scratch/var/tmp -> /var/tmp
+X[G-priv-sing/singall]   --- /tmp write
+X[G-priv-sing/singall]     -rw-r--r-- 1 submituser submituser 6 Sep 29 17:53 /tmp/surf-probe-14
+X[G-priv-sing/singall]     found in scratch: ./scratch/tmp/surf-probe-14
+X[G-priv-sing/singall]   --- tmp/ contents
+X[G-priv-sing/singall]     USERFILE
+X[G-priv-sing/singall]   --- /tmp has USERFILE?
+X[G-priv-sing/singall]     ls: cannot access '/tmp/USERFILE': No such file or directory
+X-done G-priv-sing
+## config H-priv-sing-srv on surf-priv: SINGULARITY_JOB = !isUndefined(TARGET.SingularityImage);SINGULARITY_IMAGE_EXPR = TARGET.SingularityImage;SINGULARITY_TARGET_DIR = /srv;
+# probe_surface_scratch config=H-priv-sing-srv
+# $CondorVersion: 25.13.2 2026-08-19 BuildID: 943576 PackageID: 25.13.2-1 GitSHA: 589a5b38 $
+# STARTER_NESTED_SCRATCH = True
+# MOUNT_UNDER_SCRATCH = "/tmp,/var/tmp"
+# PERIODIC_EXPR_INTERVAL = 60
+# DAGMAN_USE_STRICT = 1
+# SINGULARITY_JOB = False
+# SINGULARITY_TARGET_DIR = /srv
+# MOUNT_PRIVATE_DEV_SHM = True
+X[H-priv-sing-srv/sing] final: {'JobStatus': 4, 'ExitCode': 0}
+X[H-priv-sing-srv/sing]   pwd=/srv/scratch
+X[H-priv-sing-srv/sing]   _CONDOR_SCRATCH_DIR=/srv/scratch
+X[H-priv-sing-srv/sing]   _CONDOR_JOB_AD=/srv/scratch/.job.ad
+X[H-priv-sing-srv/sing]   _CONDOR_MACHINE_AD=/srv/scratch/.machine.ad
+X[H-priv-sing-srv/sing]   _CONDOR_CREDS=
+X[H-priv-sing-srv/sing]   X509_USER_PROXY=
+X[H-priv-sing-srv/sing]   KRB5CCNAME=
+X[H-priv-sing-srv/sing]   TMPDIR=/tmp TMP=/tmp TEMP=/tmp
+X[H-priv-sing-srv/sing]   hostname=abcfe678da75 id=1001
+X[H-priv-sing-srv/sing]   --- ls -A scratch
+X[H-priv-sing-srv/sing]     .docker_sock
+X[H-priv-sing-srv/sing]     .job.ad
+X[H-priv-sing-srv/sing]     .machine.ad
+X[H-priv-sing-srv/sing]     _condor_stderr
+X[H-priv-sing-srv/sing]     _condor_stdout
+X[H-priv-sing-srv/sing]     in.txt
+X[H-priv-sing-srv/sing]     inspect.sh
+X[H-priv-sing-srv/sing]     scratch
+X[H-priv-sing-srv/sing]     tmp
+X[H-priv-sing-srv/sing]     var
+X[H-priv-sing-srv/sing]     var_tmp
+X[H-priv-sing-srv/sing]   --- ls -A scratch/.. 
+X[H-priv-sing-srv/sing]     htcondor
+X[H-priv-sing-srv/sing]     scratch
+X[H-priv-sing-srv/sing]     user
+X[H-priv-sing-srv/sing]   --- find scratch (depth 3)
+X[H-priv-sing-srv/sing]     .
+X[H-priv-sing-srv/sing]     ./.docker_sock
+X[H-priv-sing-srv/sing]     ./.job.ad
+X[H-priv-sing-srv/sing]     ./.machine.ad
+X[H-priv-sing-srv/sing]     ./_condor_stderr
+X[H-priv-sing-srv/sing]     ./_condor_stdout
+X[H-priv-sing-srv/sing]     ./in.txt
+X[H-priv-sing-srv/sing]     ./inspect.sh
+X[H-priv-sing-srv/sing]     ./scratch
+X[H-priv-sing-srv/sing]     ./scratch/tmp
+X[H-priv-sing-srv/sing]     ./scratch/var
+X[H-priv-sing-srv/sing]     ./scratch/var/tmp
+X[H-priv-sing-srv/sing]     ./tmp
+X[H-priv-sing-srv/sing]     ./var
+X[H-priv-sing-srv/sing]     ./var/tmp
+X[H-priv-sing-srv/sing]     ./var_tmp
+X[H-priv-sing-srv/sing]   --- env names
+X[H-priv-sing-srv/sing]   APPTAINER_APPNAME APPTAINER_BIND APPTAINER_CACHEDIR APPTAINER_COMMAND APPTAINER_CONTAINER APPTAINER_ENVIRONMENT APPTAINER_NAME APPTAINER_TMPDIR BATCH_SYSTEM CONDOR_STARTER_PID CUBACORES CUDA_VISIBLE_DEVICES GOMAXPROCS GPU_DEVICE_ORDINAL HOME JULIA_NUM_THREADS LANG LD_LIBRARY_PATH MKL_NUM_THREADS NUMEXPR_NUM_THREADS NVIDIA_VISIBLE_DEVICES OMP_NUM_THREADS OMP_THREAD_LIMIT OPENBLAS_NUM_THREADS PATH PROMPT_COMMAND PWD PYTHON_CPU_COUNT ROOT_MAX_THREADS SHLVL SINGULARITY_BIND SINGULARITY_CACHEDIR SINGULARITY_CONTAINER SINGULARITY_ENVIRONMENT SINGULARITY_NAME TEMP TF_LOOP_PARALLEL_ITERATIONS TF_NUM_THREADS TMP TMPDIR _ _CHIRP_DELAYED_UPDATE_PREFIX _CONDOR_AssignedGPUs _CONDOR_BIN _CONDOR_CHIRP_CONFIG _CONDOR_JOB_AD _CONDOR_JOB_IWD _CONDOR_JOB_PIDS _CONDOR_MACHINE_AD _CONDOR_SCRATCH_DIR _CONDOR_SCRATCH_DIR_OUTSIDE_CONTAINER _CONDOR_SLOT 
+X[H-priv-sing-srv/sing]   --- PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin HOME=/var/lib/condor/execute/dir_2445/scratch
+X[H-priv-sing-srv/sing]   --- mounts under scratch
+X[H-priv-sing-srv/sing]   --- /tmp write
+X[H-priv-sing-srv/sing]     -rw-r--r-- 1 submituser submituser 6 Sep 29 17:53 /tmp/surf-probe-14
+X[H-priv-sing-srv/sing]     found in scratch: ./scratch/tmp/surf-probe-14
+X[H-priv-sing-srv/singall] final: {'JobStatus': 4, 'ExitCode': 0}
+X[H-priv-sing-srv/singall]   pwd=/srv/scratch
+X[H-priv-sing-srv/singall]   _CONDOR_SCRATCH_DIR=/srv/scratch
+X[H-priv-sing-srv/singall]   _CONDOR_JOB_AD=/srv/scratch/.job.ad
+X[H-priv-sing-srv/singall]   _CONDOR_MACHINE_AD=/srv/scratch/.machine.ad
+X[H-priv-sing-srv/singall]   _CONDOR_CREDS=
+X[H-priv-sing-srv/singall]   X509_USER_PROXY=/srv/scratch/x509up_u1001
+X[H-priv-sing-srv/singall]   KRB5CCNAME=
+X[H-priv-sing-srv/singall]   TMPDIR=/tmp TMP=/tmp TEMP=/tmp
+X[H-priv-sing-srv/singall]   hostname=abcfe678da75 id=1001
+X[H-priv-sing-srv/singall]   --- ls -A scratch
+X[H-priv-sing-srv/singall]     .docker_sock
+X[H-priv-sing-srv/singall]     .job.ad
+X[H-priv-sing-srv/singall]     .machine.ad
+X[H-priv-sing-srv/singall]     _condor_stderr
+X[H-priv-sing-srv/singall]     _condor_stdout
+X[H-priv-sing-srv/singall]     in.txt
+X[H-priv-sing-srv/singall]     inspect.sh
+X[H-priv-sing-srv/singall]     scratch
+X[H-priv-sing-srv/singall]     tmp
+X[H-priv-sing-srv/singall]     var
+X[H-priv-sing-srv/singall]     var_tmp
+X[H-priv-sing-srv/singall]     x509up_u1001
+X[H-priv-sing-srv/singall]   --- ls -A scratch/.. 
+X[H-priv-sing-srv/singall]     htcondor
+X[H-priv-sing-srv/singall]     scratch
+X[H-priv-sing-srv/singall]     user
+X[H-priv-sing-srv/singall]   --- find scratch (depth 3)
+X[H-priv-sing-srv/singall]     .
+X[H-priv-sing-srv/singall]     ./.docker_sock
+X[H-priv-sing-srv/singall]     ./.job.ad
+X[H-priv-sing-srv/singall]     ./.machine.ad
+X[H-priv-sing-srv/singall]     ./_condor_stderr
+X[H-priv-sing-srv/singall]     ./_condor_stdout
+X[H-priv-sing-srv/singall]     ./in.txt
+X[H-priv-sing-srv/singall]     ./inspect.sh
+X[H-priv-sing-srv/singall]     ./scratch
+X[H-priv-sing-srv/singall]     ./scratch/tmp
+X[H-priv-sing-srv/singall]     ./scratch/var
+X[H-priv-sing-srv/singall]     ./scratch/var/tmp
+X[H-priv-sing-srv/singall]     ./tmp
+X[H-priv-sing-srv/singall]     ./tmp/USERFILE
+X[H-priv-sing-srv/singall]     ./var
+X[H-priv-sing-srv/singall]     ./var/tmp
+X[H-priv-sing-srv/singall]     ./var_tmp
+X[H-priv-sing-srv/singall]     ./x509up_u1001
+X[H-priv-sing-srv/singall]   --- env names
+X[H-priv-sing-srv/singall]   APPTAINER_APPNAME APPTAINER_BIND APPTAINER_CACHEDIR APPTAINER_COMMAND APPTAINER_CONTAINER APPTAINER_ENVIRONMENT APPTAINER_NAME APPTAINER_TMPDIR BATCH_SYSTEM CONDOR_STARTER_PID CUBACORES CUDA_VISIBLE_DEVICES GOMAXPROCS GPU_DEVICE_ORDINAL HOME JULIA_NUM_THREADS LANG LD_LIBRARY_PATH MKL_NUM_THREADS NUMEXPR_NUM_THREADS NVIDIA_VISIBLE_DEVICES OMP_NUM_THREADS OMP_THREAD_LIMIT OPENBLAS_NUM_THREADS PATH PROMPT_COMMAND PWD PYTHON_CPU_COUNT ROOT_MAX_THREADS SHLVL SINGULARITY_BIND SINGULARITY_CACHEDIR SINGULARITY_CONTAINER SINGULARITY_ENVIRONMENT SINGULARITY_NAME TEMP TF_LOOP_PARALLEL_ITERATIONS TF_NUM_THREADS TMP TMPDIR X509_USER_PROXY _ _CHIRP_DELAYED_UPDATE_PREFIX _CONDOR_AssignedGPUs _CONDOR_BIN _CONDOR_CHIRP_CONFIG _CONDOR_JOB_AD _CONDOR_JOB_IWD _CONDOR_JOB_PIDS _CONDOR_MACHINE_AD _CONDOR_SCRATCH_DIR _CONDOR_SCRATCH_DIR_OUTSIDE_CONTAINER _CONDOR_SLOT 
+X[H-priv-sing-srv/singall]   --- PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin HOME=/var/lib/condor/execute/dir_2572/scratch
+X[H-priv-sing-srv/singall]   --- mounts under scratch
+X[H-priv-sing-srv/singall]   --- /tmp write
+X[H-priv-sing-srv/singall]     -rw-r--r-- 1 submituser submituser 6 Sep 29 17:53 /tmp/surf-probe-15
+X[H-priv-sing-srv/singall]     found in scratch: ./scratch/tmp/surf-probe-15
+X[H-priv-sing-srv/singall]   --- tmp/ contents
+X[H-priv-sing-srv/singall]     USERFILE
+X[H-priv-sing-srv/singall]   --- /tmp has USERFILE?
+X[H-priv-sing-srv/singall]     ls: cannot access '/tmp/USERFILE': No such file or directory
+X-done H-priv-sing-srv

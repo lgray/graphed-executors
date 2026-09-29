@@ -1,0 +1,15 @@
+## surf-scr StarterLog, SendCredential
+09/29/26 17:48:33 (pid:513) Job has SendCredential=true; Attempting to fetch Kerberos credentials
+09/29/26 17:48:33 (pid:513) ERROR: job has SendCredential=true but SEC_CREDENTIAL_DIRECTORY_KRB not defined!
+09/29/26 17:48:38 (pid:523) Job has SendCredential=true; Attempting to fetch Kerberos credentials
+09/29/26 17:48:38 (pid:523) ERROR: job has SendCredential=true but SEC_CREDENTIAL_DIRECTORY_KRB not defined!
+## surf-priv StarterLog, SendCredential
+09/29/26 17:51:19 (pid:711) Job has SendCredential=true; Attempting to fetch Kerberos credentials
+09/29/26 17:51:19 (pid:711) ERROR: job has SendCredential=true but SEC_CREDENTIAL_DIRECTORY_KRB not defined!
+## surf-priv StarterLog, apptainer invocations (last 4 distinct)
+About to exec /usr/bin/singularity -s exec -S /tmp -S /var/tmp -W /var/lib/condor/execute/dir_1763 --pwd /srv -B /var/lib/condor/execute/dir_1763:/srv --home /var/lib/condor/execute/dir_1763 -C /opt/img /srv//inspect.sh
+About to exec /usr/bin/singularity -s exec -S /tmp -S /var/tmp -W /var/lib/condor/execute/dir_2045/scratch --pwd /var/lib/condor/execute/dir_2045/scratch -B /var/lib/condor/execute/dir_2045 --home /var/lib/condor/execute/dir_2045/scratch -C /opt/img /var/lib/condor/execute/dir_2045/scratch/inspect.sh
+About to exec /usr/bin/singularity -s exec -S /tmp -S /var/tmp -W /var/lib/condor/execute/dir_2172/scratch --pwd /var/lib/condor/execute/dir_2172/scratch -B /var/lib/condor/execute/dir_2172 --home /var/lib/condor/execute/dir_2172/scratch -C /opt/img /var/lib/condor/execute/dir_2172/scratch/inspect.sh
+About to exec /usr/bin/singularity -s exec -S /tmp -S /var/tmp -W /var/lib/condor/execute/dir_2445/scratch --pwd /srv/scratch -B /var/lib/condor/execute/dir_2445:/srv --home /var/lib/condor/execute/dir_2445/scratch -C /opt/img /srv//scratch/inspect.sh
+About to exec /usr/bin/singularity -s exec -S /tmp -S /var/tmp -W /var/lib/condor/execute/dir_2572/scratch --pwd /srv/scratch -B /var/lib/condor/execute/dir_2572:/srv --home /var/lib/condor/execute/dir_2572/scratch -C /opt/img /srv//scratch/inspect.sh
+Running job via singularity.

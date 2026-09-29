@@ -1,0 +1,14 @@
+# bindings $CondorVersion: 25.13.2 2026-08-19 BuildID: 943576 PackageID: 25.13.2-1 GitSHA: 589a5b38 $ | interpreter /usr/bin/python3
+L7 act(Remove, constraint str reason=...) -> history {'JobStatus': 3, 'ExitReason': 'died on signal 15 (Terminated)'}
+L7 act(Remove, int cluster    reason=...) -> history {'JobStatus': 3, 'ExitReason': 'died on signal 15 (Terminated)'}
+L7 act(Remove, 'c.0' str      reason=...) -> history {'JobStatus': 3, 'ExitReason': 'died on signal 15 (Terminated)'}
+L7 act(Remove, ExprTree       reason=...) -> history {'JobStatus': 3, 'ExitReason': 'died on signal 15 (Terminated)'}
+L7 act(Hold, reason=...) -> queue {'JobStatus': 5, 'HoldReasonCode': 1, 'HoldReason': ''}
+L7 condor_rm -reason (CLI control) -> history {'JobStatus': 3, 'RemoveReason': 'graphed: via condor_rm -reason (by user submituser)'}
+# bindings $CondorVersion: 25.14.1 2026-09-24 BuildID: UW_Python_Wheel_Build $ | interpreter /opt/wheelvenv/bin/python
+L7 act(Remove, constraint str reason=...) -> history {'JobStatus': 3, 'ExitReason': 'died on signal 15 (Terminated)'}
+L7 act(Remove, int cluster    reason=...) -> history {'JobStatus': 3, 'ExitReason': 'died on signal 15 (Terminated)'}
+L7 act(Remove, 'c.0' str      reason=...) -> history {'JobStatus': 3, 'ExitReason': 'died on signal 15 (Terminated)'}
+L7 act(Remove, ExprTree       reason=...) -> history {'JobStatus': 3, 'ExitReason': 'died on signal 15 (Terminated)'}
+L7 act(Hold, reason=...) -> queue {'JobStatus': 5, 'HoldReasonCode': 1, 'HoldReason': ''}
+L7 condor_rm -reason (CLI control) -> history {'JobStatus': 3, 'RemoveReason': 'graphed: via condor_rm -reason (by user submituser)'}

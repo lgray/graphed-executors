@@ -1,0 +1,20 @@
+# probe_surface_query
+# $CondorVersion: 25.13.2 2026-08-19 BuildID: 943576 PackageID: 25.13.2-1 GitSHA: 589a5b38 $
+# STARTER_NESTED_SCRATCH = True
+# MOUNT_UNDER_SCRATCH = "/tmp,/var/tmp"
+# PERIODIC_EXPR_INTERVAL = 60
+# DAGMAN_USE_STRICT = 1
+Q1 query() without projection: 108 attributes
+Q2 projection ['JobStatus'] -> keys ['JobStatus', 'ServerTime']
+Q2 projection ['JobStatus', 'HoldReasonCode', 'ExitCode'] -> keys ['JobStatus', 'ServerTime']
+Q2 projection ['JobStatus', 'DAG_JobsHeld', 'NoSuchAttr'] -> keys ['JobStatus', 'ServerTime']
+Q3 constraint 'DAG_JobsHeld > 0'                       on a non-DAG job matches 0
+Q3 constraint 'DAG_JobsHeld =?= 0'                     on a non-DAG job matches 0
+Q3 constraint '!(DAG_JobsHeld > 0)'                    on a non-DAG job matches 0
+Q3 constraint 'NoSuchAttr == 1 || ClusterId == 58'     on a non-DAG job matches 1
+Q4 history projection ['JobStatus'] -> keys ['JobStatus']
+Q4 history projection ['JobStatus', 'ExitCode', 'RemoveReason', 'NoSuchAttr'] -> keys ['JobStatus']
+Q5 history(match=2) over clusters [59, 60, 61] returns [60, 61] (most recent first?)
+Q5b history(since=59) returns [60, 61]
+Q6 history(constraint, projection, 1) positional match accepted
+Q-done

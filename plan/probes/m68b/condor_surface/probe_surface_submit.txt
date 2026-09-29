@@ -1,0 +1,67 @@
+# probe_surface_submit
+# $CondorVersion: 25.13.2 2026-08-19 BuildID: 943576 PackageID: 25.13.2-1 GitSHA: 589a5b38 $
+# STARTER_NESTED_SCRATCH = True
+# MOUNT_UNDER_SCRATCH = "/tmp,/var/tmp"
+# PERIODIC_EXPR_INTERVAL = 60
+# DAGMAN_USE_STRICT = 1
+S1a relative executable, initialdir holds it, submit cwd does not: JobStatus 5 HoldReasonCode 13 | Transfer input files failure at access point 4daa3cb052c8 while sending files to execution point slot1_1@4daa3cb052c8. Details: 1 total failures: first failure:
+S1b absolute executable: {'JobStatus': 4, 'ExitCode': 0} out: ['ran', 'argv0=/var/lib/condor/execute/dir_1939/scratch/svc.sh args=service.json']
+S2 argv0 is the executable's own basename in scratch (not condor_exec.exe); arguments passed verbatim
+S3a initialdir absent at submit: submit raised HTCondorException Failed to create job ad, errmsg=Submit:-1:No such directory: /home/submituser/surf/s3/run-nonce-1
+S3b just after submit, initialdir holds: ['logs'] sub/dir: None
+S3c after exit: {'JobStatus': 4, 'ExitCode': 0} sub/dir: ['job.err', 'job.out'] logs: ['job.log']
+S3d just after submit (output/error in initialdir itself): {'service.log': 152}
+S4a job env (no getenv) names: ['APPTAINER_CACHEDIR', 'BATCH_SYSTEM', 'CONDOR_STARTER_PID', 'CUBACORES', 'CUDA_VISIBLE_DEVICES', 'GOMAXPROCS', 'GPU_DEVICE_ORDINAL', 'HOME', 'JULIA_NUM_THREADS', 'MKL_NUM_THREADS', 'NUMEXPR_NUM_THREADS', 'NVIDIA_VISIBLE_DEVICES', 'OMP_NUM_THREADS', 'OMP_THREAD_LIMIT', 'OPENBLAS_NUM_THREADS', 'PWD', 'PYTHON_CPU_COUNT', 'ROOT_MAX_THREADS', 'SHLVL', 'SINGULARITY_CACHEDIR', 'TEMP', 'TF_LOOP_PARALLEL_ITERATIONS', 'TF_NUM_THREADS', 'TMP', 'TMPDIR', '_', '_CHIRP_DELAYED_UPDATE_PREFIX', '_CONDOR_ANCESTOR_1795', '_CONDOR_ANCESTOR_18', '_CONDOR_ANCESTOR_1986', '_CONDOR_AssignedGPUs', '_CONDOR_BIN', '_CONDOR_CHIRP_CONFIG', '_CONDOR_JOB_AD', '_CONDOR_JOB_IWD', '_CONDOR_JOB_PIDS', '_CONDOR_MACHINE_AD', '_CONDOR_SCRATCH_DIR', '_CONDOR_SLOT']
+S4d TMPDIR/TMP/TEMP/HOME: ['HOME=/home/submituser', 'TEMP=/var/lib/condor/execute/dir_1986/scratch', 'TMP=/var/lib/condor/execute/dir_1986/scratch', 'TMPDIR=/var/lib/condor/execute/dir_1986/scratch']
+S4b PATH: [] python3: /usr/bin/python3
+S4e `exec python3` from sh in a job: sys.executable, os.environ PATH = '' None 
+S4c environment= new syntax + getenv matchlist: ['A=1', 'B=x y']
+S5 shapes job: {'JobStatus': 4, 'ExitCode': 0}
+S5    ./_condor_stderr
+S5    ./_condor_stdout
+S5    ./emptydir
+S5    ./file.txt
+S5    ./filelink
+S5    ./inner.txt
+S5    ./ls.sh
+S5    ./models
+S5    ./models/link_to_file
+S5    ./models/m1
+S5    ./models/m1/config.pbtxt
+S5    ./models/top.txt
+S5    ./with space
+S5    ./with space/s.txt
+S5    filelink not-symlink
+S5    models/link_to_file not-symlink
+S5a directory holding a symlink to a directory: held 13 Transfer input files failure at access point 4daa3cb052c8 while sending files to execution point slot1_1@4daa3cb052c8. Details: 1 total failures: first failure: reading from file /home/submituser/surf/s5src/dirlinks/link_to_dir: (errno 21) Is a directory- Transfer of symlinks to directories is not supported.
+S5b top-level symlink to a directory: held 13 Transfer input files failure at access point 4daa3cb052c8 while sending files to execution point slot1_1@4daa3cb052c8. Details: 1 total failures: first failure: reading from file /home/submituser/surf/s5src/models_link: (errno 21) Is a directory- Transfer of symlinks to directories is not supported.
+S5c input path with a comma: JobStatus 5 13 Transfer input files failure at access point 4daa3cb052c8 while sending files to execution point slot1_1@4daa3cb052c8. Details: 2 total failures: first failure: reading from file /home/submituser/surf/s5src/a: (errno 2) No such file or directory
+S6a job's service.json then two user service.json (list order job,one,two): {'JobStatus': 4, 'ExitCode': 0} service.json=USER-TWO
+S6b input with the executable's basename: {'JobStatus': 4, 'ExitCode': 0} service.json= | echo "service.json=$(cat service.json)"; cat svc.sh | head -2 | tail -1 | 
+S6c input named .job.ad         {'JobStatus': 4, 'ExitCode': 0} | JOB_AD=/var/lib/condor/execute/dir_2195/scratch/.job.ad | .job.ad .machine.ad _condor_stderr _condor_stdout c.sh  | file .job.ad: USER-.job.ad  | stdout-line | 
+S6c input named .machine.ad     {'JobStatus': 4, 'ExitCode': 0} | JOB_AD=/var/lib/condor/execute/dir_2217/scratch/.job.ad | .job.ad .machine.ad _condor_stderr _condor_stdout c.sh  | file .machine.ad: USER-.machine.ad  | stdout-line | 
+S6c input named _condor_stdout  {'JobStatus': 4, 'ExitCode': 0} | JOB_AD=/var/lib/condor/execute/dir_2239/scratch/.job.ad | .job.ad .machine.ad _condor_stderr _condor_stdout c.sh  | file _condor_stdout: JOB_AD=/var/lib/condor/execute/dir_2239/scratch/.job.ad .job | stdout-line | 
+S6c input named tmp             {'JobStatus': 4, 'ExitCode': 0} | JOB_AD=/var/lib/condor/execute/dir_2261/scratch/.job.ad | .job.ad .machine.ad _condor_stderr _condor_stdout c.sh tmp  | dir tmp: USERFILE  | stdout-line | 
+S6c input named var             {'JobStatus': 4, 'ExitCode': 0} | JOB_AD=/var/lib/condor/execute/dir_2282/scratch/.job.ad | .job.ad .machine.ad _condor_stderr _condor_stdout c.sh var  | dir var: USERFILE  | stdout-line | 
+S7 missing input: JobStatus 5 HoldReasonCode 13 HoldReasonSubCode 2 | Transfer input files failure at access point 4daa3cb052c8 while sending files to execution point slot1_1@4daa3cb052c8. Details: 1 total failures: first failure: reading from file /home/submituser/surf/s5src/no-such-models: (errno 2) No such file or directory
+S8 preserve_relative_paths (relative service/models, service/cfg.json; absolute file.txt): {'JobStatus': 4, 'ExitCode': 0} | ./_condor_stderr ./_condor_stdout ./file.txt ./ls.sh ./service ./service/cfg.json ./service/models ./service/models/m.txt
+S9 exit0-missing-ON_EXIT            JobStatus 5 HoldReasonCode 12 | Transfer output files failure at execution point slot1_1@4daa3cb052c8 while sending files to access point 4daa3cb052c8. Details: 1 total failures: first failure: reading from file /var/lib/condor/execute/dir_2354/scratch/result.pkl: (errno 2) No such file or directory
+S9 exit1-missing-ON_EXIT            JobStatus 5 HoldReasonCode 12 | Transfer output files failure at execution point slot1_2@4daa3cb052c8 while sending files to access point 4daa3cb052c8. Details: 1 total failures: first failure: reading from file /var/lib/condor/execute/dir_2356/scratch/result.pkl: (errno 2) No such file or directory
+S9 exit1-missing-ON_EXIT_OR_EVICT   JobStatus 5 HoldReasonCode 12 | Transfer output files failure at execution point slot1_3@4daa3cb052c8 while sending files to access point 4daa3cb052c8. Details: 1 total failures: first failure: reading from file /var/lib/condor/execute/dir_2358/scratch/result.pkl: (errno 2) No such file or directory
+S9 kill9-missing-ON_EXIT            JobStatus 5 HoldReasonCode 12 | Transfer output files failure at execution point slot1_4@4daa3cb052c8 while sending files to access point 4daa3cb052c8. Details: 1 total failures: first failure: reading from file /var/lib/condor/execute/dir_2361/scratch/result.pkl: (errno 2) No such file or directory
+S9 kill9-present-ON_EXIT            left queue: {'JobStatus': 4, 'ExitBySignal': True, 'ExitSignal': 9} result.pkl back: True
+S9 exit3-present-ON_EXIT            left queue: {'JobStatus': 4, 'ExitCode': 3, 'ExitBySignal': False} result.pkl back: True
+S9 exit1-missing-ON_SUCCESS         left queue: {'JobStatus': 4, 'ExitCode': 1, 'ExitBySignal': False} result.pkl back: False
+S9 exit3-present-ON_SUCCESS         left queue: {'JobStatus': 4, 'ExitCode': 3, 'ExitBySignal': False} result.pkl back: False
+S10 MY.* -> {'SingularityImage': ("'/cvmfs/x/img:1'", 'str'), 'SendFlag': ('True', 'bool'), 'JobFlavour': ("'espresso'", 'str'), 'JobBatchName': ("'graphed-service-k1'", 'str')} unquoted MY.Unquoted = some_name evaluates to <Value.Undefined: 2> (expr: some_name )
+S11 request_cpus=1.0     accepted: {'RequestCpus': '1.0', 'RequestMemory': '64', 'RequestGPUs': 'None'} GPUs in Requirements: False
+S11 request_memory=64.0  accepted: {'RequestCpus': '1', 'RequestMemory': '64', 'RequestGPUs': 'None'} GPUs in Requirements: False
+S11 request_gpus=0       accepted: {'RequestCpus': '1', 'RequestMemory': '64', 'RequestGPUs': '0'} GPUs in Requirements: False
+S12a request_gpus=1: {'JobStatus': 4, 'ExitCode': 0, 'AssignedGPUs': 'GPU-a0223334'} | env: CUDA_VISIBLE_DEVICES=GPU-a0223334-4445-5667-899a-abbccddeeff0 GPU_DEVICE_ORDINAL=GPU-a0223334 NVIDIA_VISIBLE_DEVICES=GPU-a0223334-4445-5667-899a-abbccddeeff0 _CONDOR_AssignedGPUs=GPU-a0223334
+S12b request_gpus=2 on a one-GPU pool after 10 s: 
+    [
+        JobStatus = 1; 
+        ServerTime = 1790703266; 
+        NumJobStarts = 0
+    ]
+S-done
