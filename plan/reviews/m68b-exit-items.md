@@ -328,3 +328,26 @@ These are wording, citation and test-precision items from review r17-B2 (`plan-s
 - The attached live identity witness uses history times (`EnteredCurrentStatus`, `JobCurrentStartDate`, `JobBatchName`) around the task's GET time. Reason: the job's own files are outside `service/`, so `GET /service.json` is 404.
 - `RunHandle(dag=True)` maps every DAGMan JobStatus: 3 removed, 5 held, 1/2 via the driver-node query, 4 (queued or history) via the latest driver try from `history(..., match=3)`. Reason: M45; a queued-4 ad must exercise the no-retrieve path.
 - RESULTS.md gets an appended section (superseded consequence lines; rows S-19, D-08a). Reason: the plan must rely on nothing the matrix contradicts; the surface agent is done.
+
+## r18-B2 exit items
+These are test-precision and wording items from review r18-B2 (`plan-services-m68b-r18-b2.md`, a delta round). There is no design finding.
+
+- **L644–650 and L708, the rest of the DAGMan state map.** The plan now maps every JobStatus that DAGMan can take here, but the frozen row pins only some of them.
+  - Pinned: gone at 4, queued at 4, 1 with no driver ad, and 2 with a held driver.
+  - Not pinned: DAGMan's own 3 → `removed` and 5 → `held` (an implementation that sent 5 through the driver-node query would read `queued`), and 2 with a running driver ad → `running`.
+  - Add these three recorder cases.
+  - Say what any other JobStatus (6/7, not expected for a scheduler-universe job) gives, e.g. "any other → `running`, as m67's `_poll`".
+- **L722–726, "Fails on (B2)".** Add the failure the M45 leg catches: "a finished DAG read as running, or retrieved on a spooled profile".
+
+## r18-B1 exit items
+These are wording and test-precision items from review r18-B1 (`plan-services-m68b-r18-b1.md`, a delta round). There is no design finding.
+
+- **L706, the leftover absolute wording.** The `ServiceJob` keys clause still says "`transfer_input_files` names `dir/service` once", but the same row later says every entry is relative and names `service`. Say "names `service` (relative to `initialdir`, the `dir/service/` tree) once", so the test does not assert `"<dir>/service"`.
+- **L706, the detached argv[0] clause.** The clause "the service announces (a relative path would make `Popen` raise) and the child's `argv[0]`, read with `ps -o args=` …, is absolute" belongs to the `service.json.python = ./env/bin/python` case. With the `serve.sh` and `./missing` legs now inserted between them, that is no longer clear.
+  - Move the clause next to its case.
+  - Say that the `./serve.sh` leg's argv[0] stays relative (no `ps` absoluteness check there).
+- **L505, citing the evidence for the `env.tgz` symlink.** The plan says "`env.tgz` a file symlink in `initialdir` … followed by condor", but it cites nothing for a relative top-level symlink entry, which matters when spooled (lpc and lxplus both spool). Cite `probes/m68b/probe_r18_b1_envlink.txt` there, and add it to S-19's probe column in RESULTS' appended section.
+- **L707, what "left the queue" means.** In "left the queue (`EnteredCurrentStatus`)", that attribute is the time the job entered `JobStatus` 3 (its removal), not the time it left the queue. Also note that `t` and the history times come from one clock, the one-host pool.
+  - Say "was removed (history `EnteredCurrentStatus`, JobStatus 3) before `t`".
+  - Note that the task's `t` is `time.time()` on the pool host.
+- **Evidence r18-B1:** `probes/m68b/probe_r18_b1_envlink.{py,txt}`.

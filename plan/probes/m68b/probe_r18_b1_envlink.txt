@@ -1,0 +1,7 @@
+# r18-B1 probe (htcondor/mini 25.13.2, container r18b1-mini, removed): transfer_input_files = "env.tgz,service",
+# both relative to initialdir=<log_dir>/service-k<spool>; env.tgz there is a file symlink to <log_dir>/env.tgz
+# (absolute target); service/ a mirror (file symlink inp.txt). Script: probe_r18_b1_envlink.py (run as submituser)
+plain log_dir spool=False ran: ['env.tgz-regular', 'venv-marker', 'input'] | stderr: 
+comma log_dir spool=False ran: ['env.tgz-regular', 'venv-marker', 'input'] | stderr: 
+plain log_dir spool=True ran: ['env.tgz-regular', 'venv-marker', 'input'] | stderr: 
+comma log_dir spool=True ran: ['env.tgz-regular', 'venv-marker', 'input'] | stderr: 
