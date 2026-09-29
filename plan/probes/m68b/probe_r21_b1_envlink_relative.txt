@@ -1,0 +1,3 @@
+# htcondor/mini 25.13.2 (container r21b1-mini, removed), run as submituser: python3 probe_r21_b1_envlink_relative.py
+A relative target: link -> logs/env.tgz, resolves on the submit side: False; job: {'JobStatus': 5, 'ExitCode': None, 'HoldReasonCode': 13, 'HoldReason': 'Transfer input files failure at access point 5126c89dcebb while sending files to execution point slot1_1@5126c89dcebb. Details: 1 total failures: first failure: reading from file /home/submituser/r21b1-relink/logs/service-A/env.tgz: (errno 2) No such file or directory'}
+B absolute target: link -> /home/submituser/r21b1-relink/logs/env.tgz, resolves on the submit side: True; job: {'JobStatus': 4, 'ExitCode': 0, 'HoldReasonCode': None, 'HoldReason': None}

@@ -1,0 +1,5 @@
+python 3.11.15 | announce.py's sys.executable: /usr/local/bin/python3 | python3 on os.defpath: /bin/python3
+proto  leg 1 (PATH removed, python3): argv[0] /bin/python3 | absolute True | == os.defpath python3 True | == sys.executable False
+proto  leg 2 (./env/bin/python):     argv[0] /tmp/r21b1-job-wywz6mrp/env/bin/python | absolute True | == <job dir>/env/bin/python True
+mutant leg 1 (PATH removed, python3): argv[0] /usr/local/bin/python3 | absolute True | == os.defpath python3 False | == sys.executable True
+mutant leg 2 (./env/bin/python):     argv[0] /usr/local/bin/python3 | absolute True | == <job dir>/env/bin/python False
