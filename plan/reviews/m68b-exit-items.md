@@ -437,3 +437,12 @@ These are wording, citation and test-precision items from review r21-B1 (`plan-s
 - M39: every path a `ServiceJob`'s submitting process resolves is absolute (its dir under `os.path.abspath(launcher.log_dir)`, every link target; names condor resolves against `initialdir` stay relative), with a relative-`log_dir`, relative-input leg asserting the links resolve. Reason: a relative link target resolves against the link's directory: the `env.tgz` job is held (13), and an input link silently leaves the job without the file (probe_r22_b1_relative_paths). For B2's `files()` call the change is a no-op, since its launcher's `log_dir` is already absolute.
 - Dropped: m66's `CondorPilots.stop` unlinks a secret spelled from a relative `log_dir` at a later cwd. Reason: outside B1, and the leftover file is inert once the run's task server closes.
 - r21-B1 exit items applied. The held-port listener binds `("", port)`: on macOS a `127.0.0.1` listener does not refuse `free()`'s bind, so the prototype would announce the held port, and the wildcard fails the no-scan mutant on both OSes (probe_r22_b1_held_port). A child already reaped is not signalled (probe_announce_rules L17; L1–L17 hold on 3.9.25 and on macOS 3.9.6).
+
+## r22-B1 exit items
+These are test-precision and placement items from review r22-B1 (`plan-services-m68b-r22-b1.md`, a delta round). The design finding is M40-B1 in that review.
+
+- **B1 row, the L17 rule has no leg.** The plan now says a recorded child whose `returncode` is set is not signalled, but no leg of `test_cluster_service_job.py` exercises it, and the ≥ 90% per-file gate does not force that branch. Lift `probe_announce_rules.py` L17 as an in-process leg: `os.kill` spied, `main()`'s `_Stop` path over a reaped `Popen` makes no call; control: an unreaped one gets one SIGTERM.
+- **B1 row, where the in-process legs sit.** The L16 handler leg, and an L17 leg if added, are listed inside the row's "subprocess legs", which are `skipif(sys.platform == "win32")`. They run in process and also run on Windows, as r21-B1 noted. List them outside that group.
+- **Evidence r22-B1:**
+  - `probes/m68b/probe_r22r_b1_cwd_between_runs.{py,txt}` (M40-B1, htcondor/mini 25.13.2, container `r22r-mini`, removed);
+  - scratch `/private/tmp/r22r-b1/`: `witness_rerun_mac312.txt` (`probe_r22_b1_python_witness.py` reproduced under miniforge 3.12.10), `listener_kinds.py` (`free()` against five listener forms on macOS 3.12.10 and 3.9.6), `rules_mac396.txt` (`probe_announce_rules.py` L1–L17 on macOS 3.9.6).
