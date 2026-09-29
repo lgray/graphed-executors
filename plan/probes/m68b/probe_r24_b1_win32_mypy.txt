@@ -1,0 +1,11 @@
+# mypy 2.3.1, python 3.12.10 (darwin)
+G win32 : 36 errors, 0 attr-defined []
+G linux : 36 errors, 0 attr-defined []
+G error codes on linux: ['call-overload', 'no-untyped-call', 'no-untyped-def']
+G errors only on win32: []
+G errors only on linux: []
+C win32 : 42 errors, 8 attr-defined ['123: WNOHANG', '126: SIGKILL', '156: pthread_sigmask', '156: SIG_BLOCK', '160: pthread_sigmask', '160: SIG_UNBLOCK', '165: pthread_sigmask', '165: SIG_UNBLOCK']
+C linux : 34 errors, 0 attr-defined []
+C error codes on linux: ['call-overload', 'no-untyped-call', 'no-untyped-def']
+C errors only on win32: ['123: error: Module has no attribute "WNOHANG"  [attr-defined]', '126: error: Module has no attribute "SIGKILL"; maybe "SIGILL"?  [attr-defined]', '156: error: Module has no attribute "SIG_BLOCK"  [attr-defined]', '156: error: Module has no attribute "pthread_sigmask"  [attr-defined]', '160: error: Module has no attribute "SIG_UNBLOCK"  [attr-defined]', '160: error: Module has no attribute "pthread_sigmask"  [attr-defined]', '165: error: Module has no attribute "SIG_UNBLOCK"  [attr-defined]', '165: error: Module has no attribute "pthread_sigmask"  [attr-defined]']
+C errors only on linux: []

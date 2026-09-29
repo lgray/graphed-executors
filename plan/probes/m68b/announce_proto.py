@@ -114,7 +114,8 @@ def reap(child):
 def hard_reap(pid):
     """The reap after a SIGTERM: on the pid, never through Popen (whose waitpid lock an interrupted poll/wait may
     have leaked): SIGTERM, poll os.waitpid(WNOHANG) for at most 5 s, then SIGKILL and a blocking os.waitpid."""
-    if pid is None:
+    # after the None return, so the in-process legs' reaped path still runs on Windows (only its mypy needs the guard)
+    if pid is None or sys.platform == "win32":
         return
     try:
         os.kill(pid, signal.SIGTERM)
@@ -136,6 +137,11 @@ def on_sigterm(*_):
     raise _Stop
 
 
+def unblock_sigterm():
+    if sys.platform != "win32":  # Unix-only names; announce.py itself runs only in a Linux job
+        signal.pthread_sigmask(signal.SIG_UNBLOCK, {signal.SIGTERM})
+
+
 def start(cfg, ident):
     """(child, port) ready, or (None, reason)."""
     lo, hi = cfg["ports"]
@@ -153,16 +159,17 @@ def start(cfg, ident):
                   else shutil.which(cfg["python"], path=os.environ.get("PATH", os.defpath)) or cfg["python"])
         argv = [a.format(port=cand, host=ident, python=python) for a in cfg["argv"]]
         # SIGTERM is blocked while the child is created and recorded, so a removal cannot land between the two
-        signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM})
+        if sys.platform != "win32":
+            signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM})
         try:
             # the child must not inherit the blocked mask (it would then ignore condor's SIGTERM)
             child = subprocess.Popen(argv, env={**os.environ, **cfg.get("env", {})}, cwd=RUN_DIR,
-                                     preexec_fn=lambda: signal.pthread_sigmask(signal.SIG_UNBLOCK, {signal.SIGTERM}))
+                                     preexec_fn=unblock_sigterm)
             CHILD[0] = child
         except OSError as exc:
             return None, "cannot start %s: %r" % (argv[0], exc)
         finally:
-            signal.pthread_sigmask(signal.SIG_UNBLOCK, {signal.SIGTERM})
+            unblock_sigterm()
         while True:
             if child.poll() is not None:
                 if free(cand):

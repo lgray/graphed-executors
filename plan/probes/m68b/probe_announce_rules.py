@@ -1,8 +1,10 @@
 """m68b probe (local, stdlib, no condor): the start and orphan rules of announce_proto.py.
 
 Run: python3 probe_announce_rules.py > probe_announce_rules.txt   (POSIX)
-  committed output: htcondor/mini:25.13.2-el9's /usr/bin/python3 3.9.25, as submituser (container r22p-mini, removed);
-  macOS 26 arm64 /usr/bin/python3 3.9.6 gives the same L1-L17 (hostnames, errno and pids aside)
+  committed output: htcondor/mini:25.13.2-el9's /usr/bin/python3 3.9.25, as submituser (container r24p-mini, removed),
+  over the round-18 prototype (sys.platform guards); macOS 26 arm64 CommandLineTools python3 3.9.6
+  (`uv run --no-project --python 3.9`) gives the same L1-L17 (hostnames, errno, pids and L10's framework re-exec path
+  aside); that host's getfqdn() does not resolve, so it ran with a PYTHONPATH sitecustomize making getfqdn() "localhost"
 
  L1 a child that exits at once, 20-port range, timeout_s 600 -> exit 3 at once naming the returncode (no restarts)
  L2 a child alive but never ready, 3-port range, timeout_s 2 -> exit 3 after ~2 s total (the budget is the whole start)
