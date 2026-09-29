@@ -1,0 +1,10 @@
+# r19-B1 probe (local, python 3.11, no pool): announce_proto.py orphan path (url on a closed port, lease_s=3) with a child
+# that ignores SIGTERM. Script: probe_r19_b1_orphan_reap.py. A: after 'orphaned' announce.py stays in its unbounded child.wait()
+# (child alive, S). B: a SIGTERM then runs the handler inside that wait: the child is SIGKILLed (Z) but the handler's own
+# child.wait() blocks on Popen's waitpid lock held by the interrupted wait, so announce.py never exits (futex wait).
+  out: 127.0.0.1 - - [29/Sep/2026 18:42:24] "GET / HTTP/1.1" 200 -
+  out: [announce 18:42:24] ready pid=12429 body='k-1 localhost:18750 localhost'
+  out: [announce 18:42:27] orphaned (None, last 200 3.0s ago): stopping the service
+A orphaned at 3.6s; 12s later announce.py returncode=None, child state=S
+B 10s after SIGTERM to announce.py: returncode=None, child state=Z
+cleanup: announce.py returncode after SIGKILL=-9

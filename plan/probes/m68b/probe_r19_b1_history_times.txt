@@ -1,0 +1,8 @@
+# r19-B1 probe (htcondor/mini 25.13.2, container r19b1-mini, removed): a running job removed with act(Remove) keeps
+# JobBatchName, JobCurrentStartDate and EnteredCurrentStatus (= the removal second, JobStatus 3) in its history ad; a t
+# taken in the job while it ran lies between them. Script: probe_r19_b1_history_times.py (run as submituser)
+left the queue 1.0s after act(Remove)
+history {'JobStatus': 3, 'JobBatchName': 'graphed-service-nonce1-0123456789abcdef', 'JobCurrentStartDate': 1790707424, 'EnteredCurrentStatus': 1790707433}
+t (in job) = 1790707430.6
+JobCurrentStartDate <= t <= EnteredCurrentStatus: True
+EnteredCurrentStatus - int(t_rm) = 0

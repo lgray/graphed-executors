@@ -351,3 +351,37 @@ These are wording and test-precision items from review r18-B1 (`plan-services-m6
   - Say "was removed (history `EnteredCurrentStatus`, JobStatus 3) before `t`".
   - Note that the task's `t` is `time.time()` on the pool host.
 - **Evidence r18-B1:** `probes/m68b/probe_r18_b1_envlink.{py,txt}`.
+
+## r19-B2 exit items
+These are wording, file-list and test-precision items from review r19-B2 (`plan-services-m68b-r19-b2.md`, a whole-part read). There is no design finding.
+
+- **L580 header vs L659–664, where the placeholder is written.** `driver.sh` is written by `CondorPilots._stage` in `launch.py` (`launch.py:213-224`), which `pilot.sh` shares. The B2 header lists `sites.py`, `driverless.py`, `driver.py` and `backend.py` only. Name where the placeholder goes: `launch.py` (for example a `_stage` argument used only for the driver), or `driverless.py` writing its own `driver.sh`. Either way, `pilot.sh` is unchanged; m66's `test_htcondor_sites.py:149` reads it by name only.
+- **L632–635, the announce secret's file mode.** "Each through a temporary file and `os.replace`" does not give a mode.
+  - §9 (L996–998) says the DAG dir's `graphed-secret` is guarded by the directory's ACL, not the file mode. That holds on AFS only.
+  - On `generic` (`job_root="/"`, a local filesystem) the run dir is created with the default umask (0755), so a 0644 temporary file would let another local user sign `/announce`.
+  - Say the temporary file is written as `write_secret` writes the pilots' secret (0600) before the `os.replace`. Scope §9's sentence to AFS.
+- **L603–606, the `job_root` check is lexical.** "Under" is `Path(os.path.abspath(p))`, so an input (or a file inside a directory input) under `job_root` that is a symlink to a path outside it passes the refusal. Such inputs are common in model repositories (RESULTS S-08). Positive control: `/tmp/claude-0/review-r19-b2/jr_lexical.txt` shows abspath under root True and realpath False.
+  - A node whose input the schedd cannot read is held at transfer (S-13). A held SERVICE node is then removed by `periodic_remove`, and the driver fails after three × `timeout_s`, so it is not "waits on for ever". "For ever" is true of a held *driver* node (D-09), for an unreadable `user_modules` path.
+  - Either state that the check is lexical, with that consequence, in the text and in the docs commit's `job_root` paragraph, or check `os.path.realpath` of each file `ServiceJob.files()` links.
+  - Correct "which DAGMan waits on for ever" accordingly.
+- **L607 / B1 L505, when the SERVICE node's `env.tgz` link is made.** In attached mode the pilots' `env.tgz` already exists when `files()` runs. In the DAG it is built by `_stage` for `driver.sh`, in the same run dir. Say that `files()` runs after `_stage`: a dangling link holds the node (S-13), which leads to three driver timeouts. The frozen lxplus leg can use an image-less GPU spec and assert `os.path.isfile(<svc dir>/env.tgz)`, which follows the link.
+- **L710, the second live run's path.** "A second run whose plan process SIGKILLs … the driver (`pilots="local"`)" does not say whether it is a DAG (a GPU SERVICE spec, `RunHandle(dag=True)`, three driver clusters in history) or m67's plain job (no service, `NumJobStarts == 3`). Name the path, since the file is the DAG live file. The DAG case is probed (`probe_r17_b2_sigretry.txt`). The plain case rests on L-06 plus S-15 and has no probe with the placeholder present, so it is the one worth a live leg if only one is kept.
+- **Evidence r19-B2:** `/tmp/claude-0/review-r19-b2/jr_lexical.txt` (scratch; reproduced by three lines of Python: a symlink under root, then `abspath` vs `realpath` `is_relative_to`).
+
+## r19-B1 exit items
+These are wording, citation and test-precision items from review r19-B1 (`plan-services-m68b-r19-b1.md`, a whole-part read). The design finding is M37-B1 in that review.
+
+- **L707, the r18 item that was not applied.** The row's `ServiceJob` keys clause still says "`transfer_input_files` names `dir/service` once, never an input itself". The same row later says every entry is relative and names `service`. Replace the first wording with "names `service` (relative to `initialdir`, the `dir/service/` tree) once", so no test asserts `"<dir>/service"`.
+- **L708, the live witness's history attributes.** The witness relies on three attributes in the history ad of a removed running job: `JobBatchName`, `JobCurrentStartDate` and `EnteredCurrentStatus` (= the removal second, `JobStatus` 3). No committed probe or matrix row pinned them; r18 checked them only in scratch.
+  - They are now measured in `probes/m68b/probe_r19_b1_history_times.txt`: all three are present, and a `t` taken in the job lies between them.
+  - Cite that file in the row, and add it to RESULTS' appended section (for example as Q-04).
+- **L541 / §3.1 L268, the child's environment.** The plan says what `announce.py` passes to `Popen` but not how the recipe's `env` combines with the job's own environment. The prototype merges them (`announce_proto.py:110`, `{**os.environ, **env}`).
+  - A replace would drop condor's `CUDA_VISIBLE_DEVICES` (S-18), and it would drop the image's `PATH`, which Popen uses to resolve a bare `tritonserver` (X-08). The B1 legs would all still pass.
+  - Say "the recipe's `env` over the job's environment".
+  - Optionally add a leg where the child records one variable from each.
+- **L708, which `http_server` spec the live test uses.** §3.1 L239 gives `http_server(name, *, root=".")`, but `root` appears neither in the argv nor in any stated `inputs`.
+  - If an implementation made `root` an input, `files()` would mirror pytest's whole cwd into `service/`, and a directory symlink anywhere in it would make construction refuse.
+  - The row should name the spec's `inputs` (for example `()`, the child serving the empty `service/`), and B1 should say that `root` is not an input.
+- **Evidence r19-B1:**
+  - `probes/m68b/probe_r19_b1_orphan_reap.{py,txt}` (M37-B1): the prototype's orphan reap never returns for a SIGTERM-ignoring child, and a SIGTERM during that reap never lets it exit.
+  - `probes/m68b/probe_r19_b1_history_times.{py,txt}` (htcondor/mini 25.13.2, container `r19b1-mini`, removed).
