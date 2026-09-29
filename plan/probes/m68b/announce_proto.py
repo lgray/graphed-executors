@@ -3,8 +3,9 @@
     python3 announce_proto.py service.json
 
 service.json: {"argv": [...], "env": {}, "check": "http:/"|"tcp"|"grpc:...", "ports": [lo, hi],
-               "key": str, "url": str | null, "watch": <dag dir> | null, "secret": <file>,
+               "key": str, "url": str | null, "watch": <dag dir> | null,
                "python": str, "timeout_s": float, "lease_s": float, "beat_s": float}
+The secret is not a field: attached mode reads ./graphed-secret, watch mode <watch>/graphed-secret.
 The child starts in ./service/, the transferred directory holding exactly the recipe's inputs; a relative {python}
 is made absolute.
 Start: `timeout_s` is the whole budget. A child that exits moves on to the next port only when its port is no
@@ -32,6 +33,7 @@ import urllib.request
 
 SIG_HEADER = "X-Graphed-Sig"
 RUN_DIR = "service"
+SECRET_FILE = "graphed-secret"
 
 
 def log(msg):
@@ -184,7 +186,9 @@ def main():
     except _Stop:
         # a SIGTERM (condor's removal, sent to the whole family) at any point, a reap in progress included: the
         # one bounded reap, then leave through sys.exit so coverage saves its data
-        hard_reap(CHILD[0].pid if CHILD[0] is not None else None)
+        # a child Popen already reaped (returncode set) is not signalled: its pid may be reused
+        child = CHILD[0]
+        hard_reap(child.pid if child is not None and child.returncode is None else None)
         log("SIGTERM: reaped")
         sys.exit(143)
 
@@ -195,8 +199,8 @@ def serve():
     secret_mem = None
     if not cfg.get("watch"):
         # attached: the announce secret lives in memory only, gone from the cwd the child may serve
-        secret_mem = open(cfg["secret"]).read().strip()
-        os.unlink(cfg["secret"])
+        secret_mem = open(SECRET_FILE).read().strip()
+        os.unlink(SECRET_FILE)
     # the child runs in RUN_DIR, which arrived as ONE transferred directory holding exactly the recipe's inputs;
     # nothing else in scratch (a ticket cache, the job ad, our files) is in the cwd it may serve
     if os.path.ismount(RUN_DIR):
@@ -215,7 +219,7 @@ def serve():
         if cfg.get("watch"):
             try:
                 url = open(os.path.join(cfg["watch"], "driver.url")).read().strip()
-                secret = open(os.path.join(cfg["watch"], "graphed-secret")).read().strip()
+                secret = open(os.path.join(cfg["watch"], SECRET_FILE)).read().strip()
             except OSError:
                 url = None
             if url and (url, secret) != last:

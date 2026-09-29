@@ -1,6 +1,8 @@
 """m68b probe (local, stdlib, no condor): the start and orphan rules of announce_proto.py.
 
 Run: python3 probe_announce_rules.py > probe_announce_rules.txt   (POSIX)
+  committed output: htcondor/mini:25.13.2-el9's /usr/bin/python3 3.9.25, as submituser (container r22p-mini, removed);
+  macOS 26 arm64 /usr/bin/python3 3.9.6 gives the same L1-L17 (hostnames, errno and pids aside)
 
  L1 a child that exits at once, 20-port range, timeout_s 600 -> exit 3 at once naming the returncode (no restarts)
  L2 a child alive but never ready, 3-port range, timeout_s 2 -> exit 3 after ~2 s total (the budget is the whole start)
@@ -23,6 +25,8 @@ Run: python3 probe_announce_rules.py > probe_announce_rules.txt   (POSIX)
  L14 the same, SIGTERM to announce.py ~1 s after its "orphaned" line (inside the reap): exits within 5 s
  L16 in-process: the SIGTERM handler, called with Popen.wait/poll spied, raises the private exception, leaves
     SIGTERM ignored, and never calls wait or poll
+ L17 in-process: the post-SIGTERM path signals no child Popen already reaped (os.kill spied); control: an unreaped
+    child is signalled
  L15 the child's environment is the recipe's env over the job's (a job variable and a recipe variable both seen)
  L9 the job dir holds a stand-in ticket cache (user.cc) beside the transferred `service/models/`: the child runs in
     service/, GET /user.cc -> 404, GET /models/m.txt -> 200 (the argv names inputs relatively)
@@ -44,7 +48,7 @@ PY = sys.executable
 work = tempfile.mkdtemp(prefix="m68b-rules-")
 os.chdir(work)
 SECRET = os.urandom(32).hex()
-open("secret", "w").write(SECRET)
+open("graphed-secret", "w").write(SECRET)
 open("other", "w").write(os.urandom(32).hex())
 RACER = os.path.join(work, "racer.py")
 open(RACER, "w").write(
@@ -72,8 +76,8 @@ def free_base(n):
 
 def run(label, cfg, until=None):
     print(label)
-    if not os.path.exists("secret"):
-        open("secret", "w").write(SECRET)
+    if not os.path.exists("graphed-secret"):  # attached mode reads and unlinks ./graphed-secret
+        open("graphed-secret", "w").write(SECRET)
     json.dump(cfg, open("svc.json", "w"))
     t = time.monotonic()
     p = subprocess.Popen([PY, PROTO, "svc.json"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
@@ -89,7 +93,7 @@ def run(label, cfg, until=None):
 
 def cfg(**kw):
     base = {"argv": ["{python}", "-m", "http.server", "{port}"], "env": {}, "check": "tcp", "key": "k",
-            "url": None, "watch": None, "secret": "secret", "python": PY, "timeout_s": 600, "lease_s": 30,
+            "url": None, "watch": None, "python": PY, "timeout_s": 600, "lease_s": 30,
             "beat_s": 10}
     base.update(kw)
     return base
@@ -159,7 +163,7 @@ for i in range(10):
     count = os.path.join(work, "count-%d" % i)
     json.dump(cfg(argv=["{python}", ONCE, "{port}", count], ports=[lo, lo + 4], check="http:/", timeout_s=60),
               open("svc.json", "w"))
-    open("secret", "w").write(SECRET)
+    open("graphed-secret", "w").write(SECRET)
     p = subprocess.run([PY, PROTO, "svc.json"], capture_output=True, text=True)
     starts.append(len(open(count).read().splitlines()))
     codes.append((p.returncode, "exited 7" in p.stdout))
@@ -185,7 +189,7 @@ def l8(p):
     r.terminate()
 
 
-run("L8 secret not served by the child", cfg(ports=[lo, lo + 2], url=url, secret="graphed-secret", lease_s=3, beat_s=1),
+run("L8 secret not served by the child", cfg(ports=[lo, lo + 2], url=url, lease_s=3, beat_s=1),
     until=l8)
 
 os.makedirs("service/models", exist_ok=True)  # as transferred: one `service/` dir holding exactly the inputs
@@ -208,7 +212,7 @@ def l9(p):
     r.terminate()
 
 
-run("L9 child cwd holds only the inputs", cfg(ports=[lo, lo + 2], url=url, secret="graphed-secret", lease_s=3, beat_s=1),
+run("L9 child cwd holds only the inputs", cfg(ports=[lo, lo + 2], url=url, lease_s=3, beat_s=1),
     until=l9)
 
 os.makedirs("env/bin", exist_ok=True)
@@ -222,12 +226,13 @@ lo = free_base(3)
 def l10(p):
     time.sleep(4)
     port = json.loads(open(rec).read().splitlines()[0])["fields"][1].rpartition(":")[2]
-    ps = subprocess.run(["pgrep", "-af", "http.server %s" % port], capture_output=True, text=True).stdout.split()
-    print("   child argv[0]:", ps[1] if len(ps) > 1 else None)
+    pid = subprocess.run(["pgrep", "-f", "http.server %s" % port], capture_output=True, text=True).stdout.split()
+    ps = subprocess.run(["ps", "-o", "args=", "-p", pid[0]], capture_output=True, text=True).stdout.split() if pid else []
+    print("   child argv[0]:", ps[0] if ps else None)
     r.terminate()
 
 
-run("L10 relative {python}", cfg(ports=[lo, lo + 2], url=url, secret="graphed-secret", lease_s=3, beat_s=1,
+run("L10 relative {python}", cfg(ports=[lo, lo + 2], url=url, lease_s=3, beat_s=1,
                                  python="./env/bin/python"), until=l10)
 try:
     subprocess.Popen(["./env/bin/python", "-c", "pass"], cwd="service").wait()
@@ -241,11 +246,11 @@ open("graphed-secret", "w").write(SECRET)
 r, url, rec = receiver("recv-secret")
 lo = free_base(3)
 run("L11 executable input as argv[0]", cfg(argv=["./serve.sh", "{port}"], ports=[lo, lo + 2], url=url,
-                                         secret="graphed-secret", lease_s=3, beat_s=1),
+                                         lease_s=3, beat_s=1),
     until=lambda p: (time.sleep(5), r.terminate()))
 print("   announces:", len(open(rec).read().splitlines()))
 open("graphed-secret", "w").write(SECRET)
-out = run("L12 missing argv[0]", cfg(argv=["./missing", "{port}"], ports=[lo, lo + 2], url=url, secret="graphed-secret"))
+out = run("L12 missing argv[0]", cfg(argv=["./missing", "{port}"], ports=[lo, lo + 2], url=url))
 print("   traceback in output:", "Traceback" in out)
 
 IGN = os.path.join(work, "ignorer.py")
@@ -270,7 +275,7 @@ for tag in ("L13", "L14"):
     lo = free_base(3)
     open("graphed-secret", "w").write(SECRET)
     json.dump(cfg(argv=["{python}", IGN, "{port}"], ports=[lo, lo + 2], url="http://127.0.0.1:%d" % closed,
-                  secret="graphed-secret", lease_s=3, beat_s=1), open("svc.json", "w"))
+                  lease_s=3, beat_s=1), open("svc.json", "w"))
     t0 = time.monotonic()
     p = subprocess.Popen([PY, PROTO, "svc.json"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
     child = None
@@ -305,7 +310,7 @@ open(ENVDUMP, "w").write(
     "sys.argv = ['http.server', sys.argv[1]]\n"
     "runpy.run_module('http.server', run_name='__main__')\n" % work)
 os.environ["JOBVAR"] = "from-job"
-run("L15 env merge", cfg(argv=["{python}", ENVDUMP, "{port}"], ports=[lo, lo + 2], url=url, secret="graphed-secret",
+run("L15 env merge", cfg(argv=["{python}", ENVDUMP, "{port}"], ports=[lo, lo + 2], url=url,
                          lease_s=3, beat_s=1, env={"RECVAR": "from-recipe"}),
     until=lambda p: (time.sleep(4), r.terminate()))
 print("   child saw JOBVAR RECVAR:", open(os.path.join(work, "env.txt")).read())
@@ -329,3 +334,35 @@ finally:
 print("L16 handler raised %s, SIGTERM afterwards SIG_IGN %s, Popen calls %s"
       % (raised, signal.getsignal(signal.SIGTERM) is signal.SIG_IGN, calls))
 signal.signal(signal.SIGTERM, prev)
+
+# L17: main()'s _Stop path with the recorded child already reaped (returncode set) vs one still running
+kills = []
+orig_kill, orig_serve = os.kill, mod.serve
+mod.log = lambda msg: None
+
+
+def raise_stop():
+    raise mod._Stop
+
+
+def stop_path(child):
+    mod.CHILD[0] = child
+    kills.clear()
+    mod.serve = raise_stop
+    os.kill = lambda pid, sig: kills.append((pid, sig))
+    try:
+        mod.main()
+    except SystemExit as exc:
+        code = exc.code
+    finally:
+        os.kill, mod.serve = orig_kill, orig_serve
+        signal.signal(signal.SIGTERM, prev)
+    return code, list(kills)
+
+
+reaped = subprocess.Popen([PY, "-c", "pass"]); reaped.wait()
+code, sent = stop_path(reaped)
+live = subprocess.Popen([PY, "-c", "import time; time.sleep(0.3)"])
+ccode, csent = stop_path(live)
+print("L17 reaped child: exit %s, os.kill calls %s; control (unreaped child): exit %s, os.kill calls %d (SIGTERM %s)"
+      % (code, sent, ccode, len(csent), bool(csent) and csent[0] == (live.pid, signal.SIGTERM)))

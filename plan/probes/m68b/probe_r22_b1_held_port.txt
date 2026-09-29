@@ -1,0 +1,22 @@
+# Linux: htcondor/mini:25.13.2-el9 (container r22p-mini)
+linux | python 3.9.25
+  listener 'wildcard'  check http:/ free(p) False | proto announces 24041 (leg PASS) | noscan ['not ready: child exited 1 on port 24040'] (leg FAIL)
+  listener 'wildcard'  check tcp    free(p) False | proto announces 24051 (leg PASS) | noscan 24050 (leg FAIL)
+  listener '127.0.0.1' check http:/ free(p) False | proto announces 24001 (leg PASS) | noscan ['not ready: child exited 1 on port 24000'] (leg FAIL)
+  listener '127.0.0.1' check tcp    free(p) False | proto announces 24001 (leg PASS) | noscan 24000 (leg FAIL)
+linux | python 3.12.14
+  listener 'wildcard'  check http:/ free(p) False | proto announces 24001 (leg PASS) | noscan ['not ready: child exited 1 on port 24000'] (leg FAIL)
+  listener 'wildcard'  check tcp    free(p) False | proto announces 24001 (leg PASS) | noscan 24000 (leg FAIL)
+  listener '127.0.0.1' check http:/ free(p) False | proto announces 24001 (leg PASS) | noscan ['not ready: child exited 1 on port 24000'] (leg FAIL)
+  listener '127.0.0.1' check tcp    free(p) False | proto announces 24001 (leg PASS) | noscan 24000 (leg FAIL)
+# macOS 26 arm64 (planner's host)
+darwin | python 3.9.6
+  listener 'wildcard'  check http:/ free(p) False | proto announces 24001 (leg PASS) | noscan 24000 (leg FAIL)
+  listener 'wildcard'  check tcp    free(p) False | proto announces 24001 (leg PASS) | noscan 24000 (leg FAIL)
+  listener '127.0.0.1' check http:/ free(p) True  | proto announces 24000 (leg FAIL) | noscan 24000 (leg FAIL)
+  listener '127.0.0.1' check tcp    free(p) True  | proto announces 24000 (leg FAIL) | noscan 24000 (leg FAIL)
+darwin | python 3.12.13
+  listener 'wildcard'  check http:/ free(p) False | proto announces 24001 (leg PASS) | noscan 24000 (leg FAIL)
+  listener 'wildcard'  check tcp    free(p) False | proto announces 24001 (leg PASS) | noscan 24000 (leg FAIL)
+  listener '127.0.0.1' check http:/ free(p) True  | proto announces 24000 (leg FAIL) | noscan 24000 (leg FAIL)
+  listener '127.0.0.1' check tcp    free(p) True  | proto announces 24000 (leg FAIL) | noscan 24000 (leg FAIL)

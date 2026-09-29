@@ -1,0 +1,47 @@
+# Linux: htcondor/mini:25.13.2-el9 (container r22p-mini), harness /opt/venv/bin/python then /usr/bin/python3
+linux | python 3.12.14 | harness sys.executable /opt/venv/bin/python | defpath python3 /bin/python3 prints P = '/bin/python3' | leg 1 runs: True
+  proto leg 1: ready True  rec True  ps True  ps== True  | record '/bin/python3' | ps argv[0] /bin/python3
+  proto leg 2: ready True  marker True  -> PASS
+  A     leg 1: ready True  rec False ps False ps== False | record '/opt/venv/bin/python' | ps argv[0] /opt/venv/bin/python
+  A     leg 2: ready True  marker False -> FAIL
+  B     leg 1: ready True  rec False ps False ps== False | record '/opt/venv/bin/python' | ps argv[0] /opt/venv/bin/python
+  B     leg 2: ready True  marker True  -> PASS
+  C     leg 1: ready True  rec False ps True  ps== False | record '' | ps argv[0] python3
+  C     leg 2: ready False marker False -> FAIL
+linux | python 3.9.25 | harness sys.executable /usr/bin/python3 | defpath python3 /bin/python3 prints P = '/bin/python3' | leg 1 runs: True
+  proto leg 1: ready True  rec True  ps True  ps== True  | record '/bin/python3' | ps argv[0] /bin/python3
+  proto leg 2: ready True  marker True  -> PASS
+  A     leg 1: ready True  rec False ps False ps== False | record '/usr/bin/python3' | ps argv[0] /usr/bin/python3
+  A     leg 2: ready True  marker False -> FAIL
+  B     leg 1: ready True  rec False ps False ps== False | record '/usr/bin/python3' | ps argv[0] /usr/bin/python3
+  B     leg 2: ready True  marker True  -> PASS
+  C     leg 1: ready True  rec False ps True  ps== False | record '' | ps argv[0] python3
+  C     leg 2: ready False marker False -> FAIL
+# macOS 26 arm64 (planner's host), harness uv 3.12, Homebrew 3.14 (framework), /usr/bin/python3 (CLT)
+darwin | python 3.12.13 | harness sys.executable /Users/lgray/.local/share/uv/python/cpython-3.12-macos-aarch64-none/bin/python3.12 | defpath python3 /usr/bin/python3 prints P = '/Library/Developer/CommandLineTools/usr/bin/python3' | leg 1 runs: True
+  proto leg 1: ready True  rec True  ps True  ps== False | record '/Library/Developer/CommandLineTools/usr/bin/python3' | ps argv[0] /Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python
+  proto leg 2: ready True  marker True  -> PASS
+  A     leg 1: ready True  rec False ps False ps== False | record '/Users/lgray/.local/share/uv/python/cpython-3.12-macos-aarch64-none/bin/python3.12' | ps argv[0] /Users/lgray/.local/share/uv/python/cpython-3.12-macos-aarch64-none/bin/python3.12
+  A     leg 2: ready True  marker False -> FAIL
+  B     leg 1: ready True  rec False ps False ps== False | record '/Users/lgray/.local/share/uv/python/cpython-3.12-macos-aarch64-none/bin/python3.12' | ps argv[0] /Users/lgray/.local/share/uv/python/cpython-3.12-macos-aarch64-none/bin/python3.12
+  B     leg 2: ready True  marker True  -> PASS
+  C     leg 1: ready True  rec True  ps True  ps== False | record '/Library/Developer/CommandLineTools/usr/bin/python3' | ps argv[0] /Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python
+  C     leg 2: ready False marker False -> FAIL
+darwin | python 3.14.5 | harness sys.executable /opt/homebrew/opt/python@3.14/bin/python3.14 | defpath python3 /usr/bin/python3 prints P = '/Library/Developer/CommandLineTools/usr/bin/python3' | leg 1 runs: True
+  proto leg 1: ready True  rec True  ps True  ps== False | record '/Library/Developer/CommandLineTools/usr/bin/python3' | ps argv[0] /Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python
+  proto leg 2: ready True  marker True  -> PASS
+  A     leg 1: ready True  rec False ps True  ps== False | record '/opt/homebrew/opt/python@3.14/bin/python3.14' | ps argv[0] /opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python
+  A     leg 2: ready True  marker False -> FAIL
+  B     leg 1: ready True  rec False ps True  ps== False | record '/opt/homebrew/opt/python@3.14/bin/python3.14' | ps argv[0] /opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python
+  B     leg 2: ready True  marker True  -> PASS
+  C     leg 1: ready True  rec True  ps True  ps== False | record '/Library/Developer/CommandLineTools/usr/bin/python3' | ps argv[0] /Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python
+  C     leg 2: ready False marker False -> FAIL
+darwin | python 3.9.6 | harness sys.executable /Library/Developer/CommandLineTools/usr/bin/python3 | defpath python3 /usr/bin/python3 prints P = '/Library/Developer/CommandLineTools/usr/bin/python3' | leg 1 runs: False
+  proto leg 1: ready True  rec True  ps True  ps== False | record '/Library/Developer/CommandLineTools/usr/bin/python3' | ps argv[0] /Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python
+  proto leg 2: ready True  marker True  -> PASS
+  A     leg 1: ready True  rec True  ps True  ps== False | record '/Library/Developer/CommandLineTools/usr/bin/python3' | ps argv[0] /Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python
+  A     leg 2: ready True  marker False -> FAIL
+  B     leg 1: ready True  rec True  ps True  ps== False | record '/Library/Developer/CommandLineTools/usr/bin/python3' | ps argv[0] /Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python
+  B     leg 2: ready True  marker True  -> PASS
+  C     leg 1: ready True  rec True  ps True  ps== False | record '/Library/Developer/CommandLineTools/usr/bin/python3' | ps argv[0] /Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python
+  C     leg 2: ready False marker False -> FAIL

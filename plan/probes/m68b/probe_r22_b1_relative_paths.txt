@@ -1,0 +1,8 @@
+CondorPilots(log_dir='logs').log_dir = 'logs'; _stage wrote logs/env.tgz: True
+rel: isfile(<initialdir>/env.tgz) False | isfile(<initialdir>/service/models/m.txt) False | initialdir absolute False | executable absolute False
+   job: {'JobStatus': 5, 'ExitCode': None, 'HoldReasonCode': 13}; service.out None
+   HoldReason: first failure: reading from file /home/submituser/r22b1-rel/logs/service-rel/env.tgz: (errno 2) No such file or directory
+abs: isfile(<initialdir>/env.tgz) True | isfile(<initialdir>/service/models/m.txt) True | initialdir absolute True | executable absolute True
+   job: {'JobStatus': 4, 'ExitCode': 0, 'HoldReasonCode': None}; service.out ['env', 'model']
+input-rel: isfile(<initialdir>/env.tgz) True | isfile(<initialdir>/service/models/m.txt) False | initialdir absolute True | executable absolute True
+   job: {'JobStatus': 4, 'ExitCode': 1, 'HoldReasonCode': None}; service.out ['env']

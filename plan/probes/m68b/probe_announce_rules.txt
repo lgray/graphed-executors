@@ -1,31 +1,31 @@
 L1 exits at once, 20 ports
    -> exit 3 after 0.6s
-   not ready: child exited 7 on port 23200
+   not ready: child exited 7 on port 23600
 L2 never ready, 3 ports, timeout_s 2
    -> exit 3 after 2.1s
    not ready: not ready within timeout_s=2: ConnectionRefusedError(111, 'Connection refused')
 L3 port taken after the scan (http:/ check)
    -> exit 0 after 30.1s
-   port 23400 taken after the scan (child exited 1), next
-   ready pid=27269 body='k localhost:23401 localhost'
-   announced to http://localhost:23200
+   port 23800 taken after the scan (child exited 1), next
+   ready pid=1025 body='k 2e8174e6fbb0:23801 2e8174e6fbb0'
+   announced to http://2e8174e6fbb0:23600
    orphaned (None, last 200 10.0s ago): stopping the service
-   announced ports: ['23401'] (range starts 23400)
+   announced ports: ['23801'] (range starts 23800)
 L4 no 200 ever (closed url), lease_s 3
-   child pid while waiting: ['27275']
+   child pid while waiting: ['1038']
    child pid after exit: []
    -> exit 0 after 4.1s
-   ready pid=27275 body='k localhost:23000 localhost'
+   ready pid=1038 body='k 2e8174e6fbb0:23000 2e8174e6fbb0'
    orphaned (None, last 200 3.0s ago): stopping the service
 L5 403 (another server's secret)
    -> exit 0 after 0.6s
    port 23000 taken, next
-   ready pid=27281 body='k localhost:23001 localhost'
+   ready pid=1046 body='k 2e8174e6fbb0:23001 2e8174e6fbb0'
    orphaned (403, last 200 0.0s ago): stopping the service
 L6 beats, then the server stops, lease_s 3, beat_s 1
    -> exit 0 after 7.6s
-   ready pid=27285 body='k localhost:23000 localhost'
-   announced to http://localhost:23200
+   ready pid=1050 body='k 2e8174e6fbb0:23000 2e8174e6fbb0'
+   announced to http://2e8174e6fbb0:23200
    orphaned (None, last 200 3.0s ago): stopping the service
    announces received before the stop: 5
 L7 503 once then exit 7, 5 ports, 10 runs: child starts per run [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] ; (exit, names 7): [(3, True)]
@@ -34,39 +34,40 @@ L8 secret not served by the child
    graphed-secret still in the cwd: False
    announces taking 200 so far: 7
    -> exit 0 after 9.6s
-   ready pid=27313 body='k localhost:25800 localhost'
-   announced to http://localhost:25600
+   ready pid=1082 body='k 2e8174e6fbb0:25600 2e8174e6fbb0'
+   announced to http://2e8174e6fbb0:25400
    orphaned (None, last 200 3.0s ago): stopping the service
 L9 child cwd holds only the inputs
    GET /user.cc -> 404
    GET /models/m.txt -> 200 b'model'
    -> exit 0 after 6.6s
-   ready pid=27318 body='k localhost:26200 localhost'
-   announced to http://localhost:26000
+   ready pid=1091 body='k 2e8174e6fbb0:26000 2e8174e6fbb0'
+   announced to http://2e8174e6fbb0:25800
    orphaned (None, last 200 3.0s ago): stopping the service
 L10 relative {python}
-   child argv[0]: /tmp/m68b-rules-sfnwn40g/env/bin/python
+   child argv[0]: /tmp/m68b-rules-j0289o27/env/bin/python
    -> exit 0 after 6.6s
-   ready pid=27324 body='k localhost:26400 localhost'
-   announced to http://localhost:23400
+   ready pid=1099 body='k 2e8174e6fbb0:26400 2e8174e6fbb0'
+   announced to http://2e8174e6fbb0:26200
    orphaned (None, last 200 3.0s ago): stopping the service
    control: relative ./env/bin/python with cwd=service/ -> FileNotFoundError
 L11 executable input as argv[0]
    -> exit 0 after 7.6s
-   ready pid=27330 body='k localhost:26600 localhost'
-   announced to http://localhost:26400
+   ready pid=1108 body='k 2e8174e6fbb0:26600 2e8174e6fbb0'
+   announced to http://2e8174e6fbb0:26400
    orphaned (None, last 200 3.0s ago): stopping the service
    announces: 5
 L12 missing argv[0]
-   -> exit 3 after 0.1s
+   -> exit 3 after 0.0s
    not ready: cannot start ./missing: FileNotFoundError(2, 'No such file or directory')
    traceback in output: False
 L13 orphan reap of a SIGTERM-ignoring child: exit 0, 8.6s after start (orphaned at 3.6s), child alive False
 L14 SIGTERM during the orphan reap: exit 143 5.0s after the SIGTERM, child alive False; ['SIGTERM: reaped']
 L15 env merge
    -> exit 0 after 6.6s
-   ready pid=27347 body='k localhost:23200 localhost'
-   announced to http://localhost:23000
+   ready pid=1132 body='k 2e8174e6fbb0:23200 2e8174e6fbb0'
+   announced to http://2e8174e6fbb0:23000
    orphaned (None, last 200 3.0s ago): stopping the service
    child saw JOBVAR RECVAR: from-job from-recipe
 L16 handler raised _Stop, SIGTERM afterwards SIG_IGN True, Popen calls []
+L17 reaped child: exit 143, os.kill calls []; control (unreaped child): exit 143, os.kill calls 1 (SIGTERM True)
