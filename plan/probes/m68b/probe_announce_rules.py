@@ -15,6 +15,9 @@ Run: python3 probe_announce_rules.py > probe_announce_rules.txt   (POSIX)
     the file is gone from the cwd, and the beats still take 200
  L10 {python} = ./env/bin/python (a symlink in the job dir to this interpreter): the child starts from service/ and
     announces, argv[0] absolute; control: Popen of the relative path with cwd=service/ raises FileNotFoundError
+ L11 an executable input service/serve.sh (execs python3 -m http.server "$1"), argv ("./serve.sh", "{port}"):
+    announces (a literal argv[0] resolves against service/)
+ L12 argv[0] "./missing": exit 3 at once naming ./missing, no traceback
  L9 the job dir holds a stand-in ticket cache (user.cc) beside the transferred `service/models/`: the child runs in
     service/, GET /user.cc -> 404, GET /models/m.txt -> 200 (the argv names inputs relatively)
 """
@@ -66,7 +69,7 @@ def run(label, cfg, until=None):
         open("secret", "w").write(SECRET)
     json.dump(cfg, open("svc.json", "w"))
     t = time.monotonic()
-    p = subprocess.Popen([PY, PROTO, "svc.json"], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True)
+    p = subprocess.Popen([PY, PROTO, "svc.json"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
     if until:
         until(p)
     out, _ = p.communicate(timeout=120)
@@ -224,3 +227,16 @@ try:
     print("   control: relative ./env/bin/python with cwd=service/ started")
 except FileNotFoundError as exc:
     print("   control: relative ./env/bin/python with cwd=service/ ->", type(exc).__name__)
+
+open("service/serve.sh", "w").write("#!/bin/sh\nexec %s -m http.server \"$1\"\n" % PY)
+os.chmod("service/serve.sh", 0o755)
+open("graphed-secret", "w").write(SECRET)
+r, url, rec = receiver("recv-secret")
+lo = free_base(3)
+run("L11 executable input as argv[0]", cfg(argv=["./serve.sh", "{port}"], ports=[lo, lo + 2], url=url,
+                                         secret="graphed-secret", lease_s=3, beat_s=1),
+    until=lambda p: (time.sleep(5), r.terminate()))
+print("   announces:", len(open(rec).read().splitlines()))
+open("graphed-secret", "w").write(SECRET)
+out = run("L12 missing argv[0]", cfg(argv=["./missing", "{port}"], ports=[lo, lo + 2], url=url, secret="graphed-secret"))
+print("   traceback in output:", "Traceback" in out)

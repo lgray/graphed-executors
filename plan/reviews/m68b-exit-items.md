@@ -321,3 +321,10 @@ These are wording, citation and test-precision items from review r17-B2 (`plan-s
   - the exit table (docs/htcondor.rst:279-296) gains a "killed" row.
 - **§2 L168 vs L616, the `announce_only` default.** §2 lists `announce_only: []` as an m68 key of `run.json`, while L616 says m68a's run dicts predate the key. `run.get("announce_only") or {}` accepts either form. Make the two texts agree: either m68a writes no `announce_only`, or L616 says an empty list is read as `{}`.
 - **Evidence r17-B2:** `probes/m68b/probe_r17_b2_sigretry.{py,txt}` and `probes/m68b/probe_r17_b2_fromdag_wheel.txt`.
+
+## decisions (round 12)
+- `{python}` is resolved against the job dir before rendering; a literal argv[0] is left as written (so relative to `service/`); a raising `Popen` exits 3 naming argv[0]. Reason: the interpreter lives beside `announce.py`, a recipe's executable input inside `service/` (probe_r17_b1_input_exec; probe_announce_rules L11, L12).
+- Every `ServiceJob` `transfer_input_files` entry is relative to `initialdir` (`env.tgz` a file symlink there); the input `,` refusal is dropped. Reason: a `,` splits only listed paths; names inside the one listed `service` dir transfer intact (probe_r17_b1_comma A–C).
+- The attached live identity witness uses history times (`EnteredCurrentStatus`, `JobCurrentStartDate`, `JobBatchName`) around the task's GET time. Reason: the job's own files are outside `service/`, so `GET /service.json` is 404.
+- `RunHandle(dag=True)` maps every DAGMan JobStatus: 3 removed, 5 held, 1/2 via the driver-node query, 4 (queued or history) via the latest driver try from `history(..., match=3)`. Reason: M45; a queued-4 ad must exercise the no-retrieve path.
+- RESULTS.md gets an appended section (superseded consequence lines; rows S-19, D-08a). Reason: the plan must rely on nothing the matrix contradicts; the surface agent is done.

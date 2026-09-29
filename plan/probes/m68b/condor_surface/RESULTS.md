@@ -159,3 +159,17 @@ Owner site checks (need a live site; fold into m68b site checks (1)/(2)):
 - lpc: `x509up_u<uid>` landing name and `X509_USER_PROXY` in a job (X-03 on the real proxy), EP `MOUNT_UNDER_SCRATCH`
   effect (`ls -A` of scratch).
 - Both: whether two jobs on one node share ports (N-02), and `act(reason=)` on the site schedd (L-09).
+
+## Superseded consequences and added rows (appended by the m68b planner, round 12)
+The plan's round-10/11 design (the service child's inputs reach the job as one submit-side `service/` directory of
+file symlinks, transferred once; nothing is moved in the job) replaces these consequence lines, which describe the
+earlier in-job move: S-14's "keep `announce.py` moving them", X-05's reserved set and "guard … before moving it",
+X-06's "confirms reserving `tmp`/`var`", and plan consequences 10 (reserved names) and 11's "moved inputs". Under the
+plan, no scratch name is reserved and no user input is listed at scratch top level; X-02/X-05/X-06 remain the
+reason for that design. Consequence 9 applies to the listed paths (the plan lists every `ServiceJob` entry relative
+to `initialdir`), not to names inside `service/` (`probes/m68b/probe_r17_b1_comma.txt`).
+
+| ID | Behaviour | Observed | Probe |
+|---|---|---|---|
+| S-19 | a submit-side directory whose files are symlinks (dirs real), listed once, lands with its link names, contents followed, file modes kept, spooled and not; an input named like a job file or `.machine.ad` stays inside it | match (S-07 extended) | `probes/m68b/probe_input_dir.txt` (mirror-plain, mirror-spool), `probe_r17_b1_input_exec.txt` |
+| D-08a | `RETRY driver 2 UNLESS-EXIT 3` with a driver killed by SIGKILL, or failing to exec (rc 127), while a placeholder `result.pkl` exists: retried three times, never held, DAGMan exits 1 | match | `probes/m68b/probe_r17_b2_sigretry.txt` |

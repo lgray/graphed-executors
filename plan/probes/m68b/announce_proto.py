@@ -99,12 +99,17 @@ def start(cfg, ident):
         if not free(cand):
             log("port %d taken, next" % cand)
             continue
-        # never sys.executable (empty for a bare `python3` in a job without PATH); a path with a separator is made
-        # absolute (the child's cwd is service/), a bare name is resolved on PATH or os.defpath, else left bare
+        # {python} is resolved against the JOB dir (announce.py's cwd, where env/ is): never sys.executable (empty
+        # for a bare `python3` in a job without PATH); a path with a separator is made absolute here, a bare name is
+        # resolved on PATH or os.defpath, else left bare. A literal argv[0] is left as written: Popen resolves a
+        # relative one against cwd=service/, where the recipe's inputs are.
         python = (os.path.abspath(cfg["python"]) if os.sep in cfg["python"]
                   else shutil.which(cfg["python"], path=os.environ.get("PATH", os.defpath)) or cfg["python"])
         argv = [a.format(port=cand, host=ident, python=python) for a in cfg["argv"]]
-        child = subprocess.Popen(argv, env={**os.environ, **cfg.get("env", {})}, cwd=RUN_DIR)
+        try:
+            child = subprocess.Popen(argv, env={**os.environ, **cfg.get("env", {})}, cwd=RUN_DIR)
+        except OSError as exc:
+            return None, "cannot start %s: %r" % (argv[0], exc)
         while True:
             if child.poll() is not None:
                 if free(cand):
