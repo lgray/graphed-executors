@@ -1,0 +1,9 @@
+graphed_executors from /Users/lgray/vibe-coding/cloud/code-m68b-main/src/graphed_executors/__init__.py
+1 status ('managed', 'cluster', 'service-node', True) endpoints {'a b': 'http://127.0.0.1:63325'}
+1 calls [('host_service', 'a b'), 'release_service:svc0']
+2 ValueError: 'img' is not in announce_only ['a b']
+3 status ('site', None) host_service calls []
+4 ServiceUnavailable: service 'a b' is unavailable: user: no endpoint given; site: the site has no endpoint for kind 'http'; managed: the recipe cannot run beside the driver (an image or GPUs) and InJob has no host_service to run it on the cluster
+5 fields ['worker_ports', 'jobs_can_submit', 'job_root', 'services']
+5 pickle True /tmp/root {} mappingproxy
+5 replace None {} {'triton': 'grpcs://triton.fnal.gov:443'}
