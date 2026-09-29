@@ -390,3 +390,27 @@ These are wording, citation and test-precision items from review r19-B1 (`plan-s
 - `announce.py` has one bounded reap (terminate, ≤ 5 s, kill) for every exit path; the SIGTERM handler sets SIGTERM to ignored and raises a private `BaseException` into the main thread, whose top level does the reap. Reason: M37 — the orphan path had no bound and nothing outside the job ends it; a handler that waits can deadlock on `Popen`'s waitpid lock held by the interrupted wait (probe_r19_b1_orphan_reap; probe_announce_rules L13, L14).
 - The child's env is the recipe's `env` over the job's. Reason: condor's `CUDA_VISIBLE_DEVICES` and an image's `PATH` must reach it (L15).
 - B2 wording only: the placeholder lives in `launch._stage` (driver-only argument); the DAG-dir announce secret is written 0600; the `job_root` check is stated as lexical with its consequence; `files()` runs after `_stage`; the killed-driver live leg is the DAG path.
+
+## r20-B2 exit items
+These are wording and test-precision items from review r20-B2 (`plan-services-m68b-r20-b2.md`, a delta check). There is no design finding.
+
+- **L750–751, commit 2's file list.** The list reads "sites, driverless, driver, in-job backend, the `driver.sh` placeholder". Name `launch.py` (the `_stage` argument) in it, so it matches the B2 header's `launch.py +10`.
+- **L752, the docs commit's `job_root` paragraph.** r19 asked for the lexical check and its consequence to appear in the docs as well. Commit 3 still says only "(with `job_root`; …)". Add: the check is lexical, and an input under the root that is a symlink leaving it passes the check. The node may then be held at transfer: a held SERVICE node costs three × `timeout_s`, and a held driver node stays `held`.
+- **L723, test precision (optional).**
+  - Nothing asserts the 0600 mode that L646 now specifies. A 0644 write passes every leg. Add a POSIX-only `stat.S_IMODE(os.stat(<dag_dir>/graphed-secret).st_mode) == 0o600` to the `driver._runner` leg that already spies on `os.replace`.
+  - Optionally add a leg that pins the lexical check: an input under `job_root` that is a symlink to a path outside it submits, the recorder is non-empty, and no refusal is raised.
+
+## r20-B1 exit items
+These are items from review r20-B1 (`plan-services-m68b-r20-b1.md`, a delta round). M37-B1 is closed, and there is no design finding.
+
+- **L561–565, the handler's residual window.** "The raise unwinds that `wait` first" does not hold at one point.
+  - `Popen._internal_poll` and `_wait`'s timeout loop run `if self._waitpid_lock.acquire(False):` before their `try`. A `_Stop` raised at the eval-breaker check right after `acquire` returns leaks the lock, and main's reap then blocks in `wait()` after `kill`, with SIGTERM ignored.
+  - A SIGTERM between `Popen` returning and `CHILD[0] = child` leaves that child unreferenced.
+  - Measured on 3.10 to 3.13: 5 leaks in 1200 SIGTERMs in a tight `poll()` loop, and each leak hung the reap. There were 0 in 240 SIGTERMs to the prototype's real loops, all of which exited 143 within 5.13 s.
+  - Both cases are bounded by L-02: a condor SIGTERM is a removal, and `job_max_vacate_time = 30` SIGKILLs the family.
+  - Either say "within 5 s, 30 s in a rare lock-leak window (the removal's `job_max_vacate_time`)", or have the post-`_Stop` reap skip `Popen`'s lock: `os.kill` plus `os.waitpid(pid, WNOHANG)` polled for 5 s, then SIGKILL and `os.waitpid(pid, 0)`, with `CHILD[0]` set from inside the `Popen` call's result before any other bytecode that can check signals (in practice, accept the window).
+- **L736 / L721, "a SIGTERM handler that waits" has no discriminating leg.** With the orphan reap bounded, a handler that runs `reap()` itself still exits 5.0 s after the row's "SIGTERM about 1 s after 'orphaned'" (`r20b1_double_waiting.py`). Either drop it from "Fails on", or add an in-process leg:
+  1. import the module;
+  2. call its SIGTERM handler with a `Popen.wait` spy installed;
+  3. assert that it raises the private exception, that `signal.getsignal(SIGTERM) is SIG_IGN` afterwards, and that the spy saw no call.
+- **Evidence r20-B1:** `/tmp/claude-0/review-r20-b1/r20b1_results.txt`, with `r20b1_lockleak.py`, `r20b1_stress.py`, `r20b1_double.py`, `r20b1_double_waiting.py` and `r20b1_rules.txt` (the `probe_announce_rules.py` re-run, matching the committed L1–L15) beside it. All local; no container was started.
