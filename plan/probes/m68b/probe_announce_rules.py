@@ -15,8 +15,8 @@ Run: python3 probe_announce_rules.py > probe_announce_rules.txt   (POSIX)
     the file is gone from the cwd, and the beats still take 200
  L10 {python} = ./env/bin/python (a symlink in the job dir to this interpreter): the child starts from service/ and
     announces, argv[0] absolute; control: Popen of the relative path with cwd=service/ raises FileNotFoundError
- L9 the job dir also holds a stand-in ticket cache (user.cc) and an input dir `models/`: the child runs in service/,
-    GET /user.cc -> 404, GET /models/m.txt -> 200 (the input moved in; the argv names it relatively)
+ L9 the job dir holds a stand-in ticket cache (user.cc) beside the transferred `service/models/`: the child runs in
+    service/, GET /user.cc -> 404, GET /models/m.txt -> 200 (the argv names inputs relatively)
 """
 
 import json
@@ -178,8 +178,8 @@ def l8(p):
 run("L8 secret not served by the child", cfg(ports=[lo, lo + 2], url=url, secret="graphed-secret", lease_s=3, beat_s=1),
     until=l8)
 
-os.makedirs("models", exist_ok=True)
-open("models/m.txt", "w").write("model")
+os.makedirs("service/models", exist_ok=True)  # as transferred: one `service/` dir holding exactly the inputs
+open("service/models/m.txt", "w").write("model")
 open("user.cc", "w").write("TGT")
 open("graphed-secret", "w").write(SECRET)
 r, url, rec = receiver("recv-secret")
@@ -198,8 +198,8 @@ def l9(p):
     r.terminate()
 
 
-run("L9 child cwd holds only the inputs", cfg(ports=[lo, lo + 2], url=url, secret="graphed-secret", lease_s=3, beat_s=1,
-                                              inputs=["models"]), until=l9)
+run("L9 child cwd holds only the inputs", cfg(ports=[lo, lo + 2], url=url, secret="graphed-secret", lease_s=3, beat_s=1),
+    until=l9)
 
 os.makedirs("env/bin", exist_ok=True)
 if not os.path.lexists("env/bin/python"):

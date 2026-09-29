@@ -2,15 +2,13 @@
 
 Run: docker exec -u submituser m68b-probe-pool python3 /probes/probe_dag_service.py > probe_dag_service.txt
 
-Each DAG is submitted through the bindings (htcondor2.Submit.from_dag(run.dag, {"usedagdir": True, "force": True}),
+Each DAG, in its own fresh directory, is submitted through the bindings (htcondor2.Submit.from_dag(run.dag, {"usedagdir": True}),
 schedd.submit, no spool) from the home dir (not the DAG dir), the DAG dir being one both nodes read directly. The SERVICE node runs announce_proto.py in watch mode (key = the node name);
 each driver start (dag_driver_node.py) is a new receiver on a new port with a new secret, written into
 the DAG dir secret-first then driver.url, each by atomic rename.
  R  driver exits 1, then 0: one SERVICE cluster serves both driver starts (it re-announces to the second
     url with the second secret), DAGMan exits 0, the SERVICE job is removed at DAG end.
  X  driver exits 3: no retry, DAGMan exits nonzero, the SERVICE job is removed (a rescue DAG is left).
- U  a new DAG into X's dir (its run.dag.* and rescue files present), driver exits 0: accepted, the nodes run from
-    the start (force renames the rescue DAG), DAGMan exits 0.
 Also printed: the from_dag description (the generic DAG submit fixture) and the removed SERVICE ad.
 """
 
@@ -64,7 +62,7 @@ def run(tag, codes, reuse=None):
     dagfile = os.path.join(d, "run.dag")
     open(dagfile, "w").write("JOB driver driver.sub\nSERVICE web web.sub\nRETRY driver 2 UNLESS-EXIT 3\n")
     os.chdir(os.path.expanduser("~"))  # the submitter's cwd is not the DAG dir
-    desc = htc.Submit.from_dag(dagfile, {"usedagdir": True, "force": True})
+    desc = htc.Submit.from_dag(dagfile, {"usedagdir": True})
     if tag == "R":
         print("from_dag description:")
         for k in sorted(desc.keys()):
@@ -92,5 +90,4 @@ def run(tag, codes, reuse=None):
 print("condor", htc.version())
 run("R", [1, 0])
 run("X", [3])
-run("U", [0], reuse="X")
-print("[U] files after:", sorted(f for f in os.listdir(os.path.expanduser("~/m68b-dag-X")) if f.startswith("run.dag")))
+

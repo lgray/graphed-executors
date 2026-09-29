@@ -7,25 +7,25 @@ L2 never ready, 3 ports, timeout_s 2
 L3 port taken after the scan (http:/ check)
    -> exit 0 after 16.6s
    port 23200 taken after the scan (child exited 1), next
-   ready pid=15433 body='k localhost:23201 localhost'
+   ready pid=2220 body='k localhost:23201 localhost'
    announced to http://localhost:23000
    orphaned (None, last 200 10.0s ago): stopping the service
    announced ports: ['23201'] (range starts 23200)
 L4 no 200 ever (closed url), lease_s 3
-   child pid while waiting: ['15436']
+   child pid while waiting: ['2233']
    child pid after exit: []
    -> exit 0 after 4.1s
-   ready pid=15436 body='k localhost:23400 localhost'
+   ready pid=2233 body='k localhost:23000 localhost'
    orphaned (None, last 200 3.0s ago): stopping the service
 L5 403 (another server's secret)
    -> exit 0 after 0.6s
-   port 23400 taken, next
-   ready pid=15442 body='k localhost:23401 localhost'
+   port 23000 taken, next
+   ready pid=2241 body='k localhost:23001 localhost'
    orphaned (403, last 200 0.0s ago): stopping the service
 L6 beats, then the server stops, lease_s 3, beat_s 1
    -> exit 0 after 7.6s
-   ready pid=15446 body='k localhost:23400 localhost'
-   announced to http://localhost:23600
+   ready pid=2247 body='k localhost:23000 localhost'
+   announced to http://localhost:23400
    orphaned (None, last 200 3.0s ago): stopping the service
    announces received before the stop: 5
 L7 503 once then exit 7, 5 ports, 10 runs: child starts per run [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] ; (exit, names 7): [(3, True)]
@@ -34,20 +34,20 @@ L8 secret not served by the child
    graphed-secret still in the cwd: False
    announces taking 200 so far: 7
    -> exit 0 after 9.6s
-   ready pid=15470 body='k localhost:25800 localhost'
+   ready pid=2285 body='k localhost:25800 localhost'
    announced to http://localhost:25600
    orphaned (None, last 200 3.0s ago): stopping the service
 L9 child cwd holds only the inputs
    GET /user.cc -> 404
    GET /models/m.txt -> 200 b'model'
    -> exit 0 after 6.6s
-   ready pid=15475 body='k localhost:26200 localhost'
+   ready pid=2302 body='k localhost:26200 localhost'
    announced to http://localhost:26000
    orphaned (None, last 200 3.0s ago): stopping the service
 L10 relative {python}
-   child argv[0]: /tmp/m68b-rules-euxkiyzz/env/bin/python
+   child argv[0]: /tmp/m68b-rules-sxwrew88/env/bin/python
    -> exit 0 after 6.6s
-   ready pid=15484 body='k localhost:26600 localhost'
+   ready pid=2312 body='k localhost:26600 localhost'
    announced to http://localhost:26400
    orphaned (None, last 200 3.0s ago): stopping the service
    control: relative ./env/bin/python with cwd=service/ -> FileNotFoundError
