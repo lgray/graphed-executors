@@ -90,6 +90,32 @@ def post(url, secret_hex, body):
         return None
 
 
+class _Stop(BaseException):
+    """Raised by the SIGTERM handler into the main thread; the main thread then does the one reap."""
+
+
+CHILD = [None]  # the child being started or served, for the one reap
+
+
+def reap(child):
+    """The one bounded reap every exit path uses: terminate, wait at most 5 s, kill."""
+    if child is None or child.poll() is not None:
+        return
+    child.terminate()
+    try:
+        child.wait(5)
+    except subprocess.TimeoutExpired:
+        child.kill()
+        child.wait()
+
+
+def on_sigterm(*_):
+    # never wait here: the interrupted main thread may hold Popen's waitpid lock. Ignore further SIGTERMs and
+    # unwind the main thread, which reaps.
+    signal.signal(signal.SIGTERM, signal.SIG_IGN)
+    raise _Stop
+
+
 def start(cfg, ident):
     """(child, port) ready, or (None, reason)."""
     lo, hi = cfg["ports"]
@@ -110,6 +136,7 @@ def start(cfg, ident):
             child = subprocess.Popen(argv, env={**os.environ, **cfg.get("env", {})}, cwd=RUN_DIR)
         except OSError as exc:
             return None, "cannot start %s: %r" % (argv[0], exc)
+        CHILD[0] = child
         while True:
             if child.poll() is not None:
                 if free(cand):
@@ -120,14 +147,25 @@ def start(cfg, ident):
             if reason is None and child.poll() is None:
                 return child, cand
             if time.monotonic() >= deadline:
-                child.kill()
-                child.wait()
+                reap(child)
                 return None, "not ready within timeout_s=%s: %s" % (cfg["timeout_s"], reason)
             time.sleep(0.5)
     return None, reason
 
 
 def main():
+    signal.signal(signal.SIGTERM, on_sigterm)
+    try:
+        return serve()
+    except _Stop:
+        # a SIGTERM (condor's removal, sent to the whole family) at any point, a reap in progress included: the
+        # one bounded reap, then leave through sys.exit so coverage saves its data
+        reap(CHILD[0])
+        log("SIGTERM: reaped")
+        sys.exit(143)
+
+
+def serve():
     cfg = json.load(open(sys.argv[1]))
     ident = host_identity()
     secret_mem = None
@@ -148,17 +186,6 @@ def main():
     body = ("%s %s:%d %s" % (cfg["key"], ident, port, ident)).encode()
     log("ready pid=%d body=%r" % (child.pid, body.decode()))
 
-    def stop(*_):
-        # condor signals the whole family at once; bound the reap so the job leaves promptly
-        child.terminate()
-        try:
-            child.wait(5)
-        except subprocess.TimeoutExpired:
-            child.kill()
-            child.wait()
-        sys.exit(143)
-
-    signal.signal(signal.SIGTERM, stop)
     last, last_ok, announced = None, time.monotonic(), False
     while child.poll() is None:
         if cfg.get("watch"):
@@ -181,8 +208,7 @@ def main():
             announced, last_ok = True, time.monotonic()
         elif status == 403 or time.monotonic() - last_ok > cfg["lease_s"]:
             log("orphaned (%s, last 200 %.1fs ago): stopping the service" % (status, time.monotonic() - last_ok))
-            child.terminate()
-            child.wait()
+            reap(child)
             return 0
         time.sleep(cfg["beat_s"] if announced else 1.0)
     log("child exited %s" % child.returncode)

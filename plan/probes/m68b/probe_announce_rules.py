@@ -18,11 +18,16 @@ Run: python3 probe_announce_rules.py > probe_announce_rules.txt   (POSIX)
  L11 an executable input service/serve.sh (execs python3 -m http.server "$1"), argv ("./serve.sh", "{port}"):
     announces (a literal argv[0] resolves against service/)
  L12 argv[0] "./missing": exit 3 at once naming ./missing, no traceback
+ L13 a SIGTERM-ignoring child, url on a closed port, lease_s 3: the orphan path's one bounded reap kills it; exit 0
+    within lease_s + 5 s, child pid gone
+ L14 the same, SIGTERM to announce.py ~1 s after its "orphaned" line (inside the reap): exits within 5 s
+ L15 the child's environment is the recipe's env over the job's (a job variable and a recipe variable both seen)
  L9 the job dir holds a stand-in ticket cache (user.cc) beside the transferred `service/models/`: the child runs in
     service/, GET /user.cc -> 404, GET /models/m.txt -> 200 (the argv names inputs relatively)
 """
 
 import json
+import signal
 import os
 import socket
 import subprocess
@@ -240,3 +245,65 @@ print("   announces:", len(open(rec).read().splitlines()))
 open("graphed-secret", "w").write(SECRET)
 out = run("L12 missing argv[0]", cfg(argv=["./missing", "{port}"], ports=[lo, lo + 2], url=url, secret="graphed-secret"))
 print("   traceback in output:", "Traceback" in out)
+
+IGN = os.path.join(work, "ignorer.py")
+open(IGN, "w").write(
+    "import signal, sys, runpy\n"
+    "signal.signal(signal.SIGTERM, signal.SIG_IGN)\n"
+    "sys.argv = ['http.server', sys.argv[1]]\n"
+    "runpy.run_module('http.server', run_name='__main__')\n")
+_s = socket.socket(); _s.bind(("", 0)); closed = _s.getsockname()[1]; _s.close()
+
+
+def alive(pid):
+    try:
+        os.kill(pid, 0)
+    except OSError:
+        return False
+    st = open("/proc/%d/stat" % pid).read().split()[2] if os.path.exists("/proc/%d/stat" % pid) else "?"
+    return st != "Z"
+
+
+for tag in ("L13", "L14"):
+    lo = free_base(3)
+    open("graphed-secret", "w").write(SECRET)
+    json.dump(cfg(argv=["{python}", IGN, "{port}"], ports=[lo, lo + 2], url="http://127.0.0.1:%d" % closed,
+                  secret="graphed-secret", lease_s=3, beat_s=1), open("svc.json", "w"))
+    t0 = time.monotonic()
+    p = subprocess.Popen([PY, PROTO, "svc.json"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+    child = None
+    for line in p.stdout:
+        if "ready pid=" in line:
+            child = int(line.split("ready pid=")[1].split()[0])
+        if "orphaned" in line:
+            t_orph = time.monotonic()
+            if tag == "L14":
+                time.sleep(1)
+                t_sig = time.monotonic()
+                p.send_signal(signal.SIGTERM)
+            break
+    rest = p.stdout.read()
+    p.wait(60)
+    t1 = time.monotonic()
+    if tag == "L13":
+        print("L13 orphan reap of a SIGTERM-ignoring child: exit %s, %.1fs after start (orphaned at %.1fs), child alive %s"
+              % (p.returncode, t1 - t0, t_orph - t0, alive(child)))
+    else:
+        print("L14 SIGTERM during the orphan reap: exit %s %.1fs after the SIGTERM, child alive %s; %s"
+              % (p.returncode, t1 - t_sig, alive(child), [l.split('] ', 1)[1] for l in rest.splitlines() if 'announce' in l]))
+
+import signal as _signal
+open("graphed-secret", "w").write(SECRET)
+r, url, rec = receiver("recv-secret")
+lo = free_base(3)
+ENVDUMP = os.path.join(work, "envdump.py")
+open(ENVDUMP, "w").write(
+    "import os, sys, runpy\n"
+    "open(os.path.join(%r, 'env.txt'), 'w').write('%%s %%s' %% (os.environ.get('JOBVAR'), os.environ.get('RECVAR')))\n"
+    "sys.argv = ['http.server', sys.argv[1]]\n"
+    "runpy.run_module('http.server', run_name='__main__')\n" % work)
+os.environ["JOBVAR"] = "from-job"
+run("L15 env merge", cfg(argv=["{python}", ENVDUMP, "{port}"], ports=[lo, lo + 2], url=url, secret="graphed-secret",
+                         lease_s=3, beat_s=1, env={"RECVAR": "from-recipe"}),
+    until=lambda p: (time.sleep(4), r.terminate()))
+print("   child saw JOBVAR RECVAR:", open(os.path.join(work, "env.txt")).read())

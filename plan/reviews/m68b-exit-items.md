@@ -385,3 +385,8 @@ These are wording, citation and test-precision items from review r19-B1 (`plan-s
 - **Evidence r19-B1:**
   - `probes/m68b/probe_r19_b1_orphan_reap.{py,txt}` (M37-B1): the prototype's orphan reap never returns for a SIGTERM-ignoring child, and a SIGTERM during that reap never lets it exit.
   - `probes/m68b/probe_r19_b1_history_times.{py,txt}` (htcondor/mini 25.13.2, container `r19b1-mini`, removed).
+
+## decisions (round 14)
+- `announce.py` has one bounded reap (terminate, ≤ 5 s, kill) for every exit path; the SIGTERM handler sets SIGTERM to ignored and raises a private `BaseException` into the main thread, whose top level does the reap. Reason: M37 — the orphan path had no bound and nothing outside the job ends it; a handler that waits can deadlock on `Popen`'s waitpid lock held by the interrupted wait (probe_r19_b1_orphan_reap; probe_announce_rules L13, L14).
+- The child's env is the recipe's `env` over the job's. Reason: condor's `CUDA_VISIBLE_DEVICES` and an image's `PATH` must reach it (L15).
+- B2 wording only: the placeholder lives in `launch._stage` (driver-only argument); the DAG-dir announce secret is written 0600; the `job_root` check is stated as lexical with its consequence; `files()` runs after `_stage`; the killed-driver live leg is the DAG path.
