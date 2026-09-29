@@ -1,0 +1,11 @@
+# htcondor/mini:25.13.2-el9 (container r23r-mini, removed), /opt/venv/bin/python 3.12.14, mypy 2.3.1; the ci.yml test job runs prek (mypy --strict over src+tests) on windows-latest too
+P win32: 8 Unix-only uses [('WNOHANG', 'hard_reap:123'), ('SIGKILL', 'hard_reap:126'), ('SIG_BLOCK', 'start:156'), ('pthread_sigmask', 'start:156'), ('SIG_UNBLOCK', 'start:160'), ('pthread_sigmask', 'start:160'), ('SIG_UNBLOCK', 'start:165'), ('pthread_sigmask', 'start:165')]
+P linux: 0 Unix-only uses []
+F bare.py       linux  Success: no issues found in 1 source file
+F bare.py       win32  Module has no attribute "SIGKILL"; maybe "SIGILL"?  [attr-defined]; Module has no attribute "WNOHANG"  [attr-defined]
+F ignore.py     linux  Unused "type: ignore" comment  [unused-ignore]
+F ignore.py     win32  Success: no issues found in 1 source file
+F guard.py      linux  Success: no issues found in 1 source file
+F guard.py      win32  Success: no issues found in 1 source file
+T test_skip.py  linux  Success: no issues found in 1 source file
+T test_skip.py  win32  Module has no attribute "WNOHANG"  [attr-defined]

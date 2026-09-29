@@ -1,0 +1,11 @@
+# htcondor/mini:25.13.2-el9 (container r23r-mini, removed), as submituser, /opt/venv/bin/python 3.12.14 + htcondor 25.13.2 + graphed 0.0.6 overlaid with d0ad16b python/graphed (no Rust change between them); PYTHONPATH=/code/src = scratch worktree of executors 0e48380 + the round-17 start line
+# launch.py from /code/src/graphed_executors/htcondor_backend/launch.py
+S log_dir '/home/submituser/r23r/A/logs' (profile spool=True)
+S       completed ad {'Iwd': '/var/lib/condor/spool/2/0/cluster2.proc0.subproc0', 'JobStatus': 4, 'ServerTime': 1790716648, 'SUBMIT_Iwd': '/home/submituser/r23r/A/logs/service-S', 'HoldReasonCode': <Value.Undefined: 2>} counts_as_alive False | after close: left queue True | service-S/service.out 'announce-exited-3' service.err 'why'
+control completed ad {'Iwd': '/var/lib/condor/spool/3/0/cluster3.proc0.subproc0', 'JobStatus': 4, 'ServerTime': 1790716653, 'SUBMIT_Iwd': '/home/submituser/r23r/A/logs/service-control', 'HoldReasonCode': <Value.Undefined: 2>} counts_as_alive False | after close: left queue True | service-control/service.out None service.err None
+N x='logs': run['log_dir'] '/home/submituser/r23r/A/logs/pilots' | after start from C '/home/submituser/r23r/A/logs/pilots' | unchanged True
+N x='a/../logs2': run['log_dir'] '/home/submituser/r23r/A/logs2/pilots' | after start from C '/home/submituser/r23r/A/logs2/pilots' | unchanged True
+N x='./logs3/': run['log_dir'] '/home/submituser/r23r/A/logs3/pilots' | after start from C '/home/submituser/r23r/A/logs3/pilots' | unchanged True
+# I (same container, inline htcondor2 script from cwd ~/r23r-iwd): what condor records for a relative initialdir 'rel' (the unspooled one submitted held, the spooled one never spooled)
+I relative initialdir, spool False -> {'Iwd': '/home/submituser/r23r-iwd/rel', 'SUBMIT_Iwd': None, 'JobStatus': 5, 'HoldReasonCode': 15}
+I relative initialdir, spool True -> {'Iwd': '/var/lib/condor/spool/10/0/cluster10.proc0.subproc0', 'SUBMIT_Iwd': '/home/submituser/r23r-iwd/rel', 'JobStatus': 5, 'HoldReasonCode': 16}

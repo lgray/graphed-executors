@@ -459,3 +459,25 @@ From `plan-services-m68b-b2-base-0e48380.md` (B2 holds; no design change). Const
 - **E2.** m68a's frozen `test_services_packaging.py::test_no_service_is_named_in_the_engine` forbids case-insensitive `triton|histserv` in `htcondor_backend/**` outside `sites.py`: B1's and B2's code, comments and docstrings must not introduce either word.
 - **E3.** m68a text that B1+B2 make false, rewritten in commit 3 (docs) and commit 2 (docstring): `htcondor.rst:328–329` ("cluster hosting … this release does not have yet … refused naming `host_service`") and the Services section's closing driverless paragraph; `design.rst:884–885` ("a later release fills"); `backend.py`'s module docstring ("`host_service` is not here: cluster hosting is a later seam"). "Cluster-hosted services" fits as a subsection of `htcondor.rst`'s "Services" (L308).
 - **Coordinate.** The exit table is `docs/htcondor.rst` 279–298 at 0e48380 (the plan cites 279–296).
+
+## r23-B1 exit items
+These are test-precision items and implementer constraints from review r23-B1 (`plan-services-m68b-r23-b1.md`, a delta round with no design findings).
+
+- **B1 row: no leg covers a raising `schedd.submit` or a raising spool.** D10 requires that `host_service` "releases what it started and then raises", and the B1 text names `schedd.submit` raising as a failure path. The B1 rows have no such leg: 0 matches for spool-failure patterns. The control, the missing-input leg, matches 1.
+  - A spooled job whose spool never ran stays held with code 16 (L-07; re-seen in `probe_r23r_b1_remove_reuse.txt` I).
+  - `_submit` only registers the removal. The caller's `with ExitStack() as stack: …; self._stack = stack.pop_all()` is what closes it on a raising spool. That is probe K's own shape and `CondorPilots.start`'s. So "decisions (round 17)"'s "`_submit` … closes it on a failed spool" describes the caller, not `_submit`.
+  - Constraint: `ServiceJob.submit()` acquires in that shape.
+  - Leg: lift m68a's `test_a_failed_spool_leaves_no_cluster_and_no_port` for `host_service`, using `RecordingSchedd(spool_raises=…)` on a spooled copy. Assert that `host_service` raises, the log has an `act(Remove)` on the cluster, and a `forget_announce` spy saw the key. Add the same leg with `schedd.submit` raising, where the `forget_announce` spy sees the key and there is no `act`.
+- **`announce.py` and Windows mypy.** The `test` job runs prek, and so `mypy --strict` over `src` and `tests`, on `windows-latest` as well, and mypy's platform is the runner's.
+  - The prototype's 8 Unix-only uses fail there: `os.WNOHANG` and `signal.SIGKILL` in `hard_reap`, and `signal.pthread_sigmask` with `SIG_BLOCK`/`SIG_UNBLOCK` in `start`.
+  - A `# type: ignore[attr-defined]` instead fails Linux, because `--strict` reports the unused ignore.
+  - A `sys.platform` guard passes both. It is the repo's idiom (`submit/services.py` `_free_port`, `local/executors.py`).
+  - Constraint: put the guards where the every-OS in-process legs still run on Windows. In `hard_reap` the guard goes after the `pid is None` return (`if pid is None or sys.platform == "win32": return`), and in `start` around the sigmask calls. Never refuse at module or `main()` level.
+  - Tests: a `skipif(sys.platform == "win32")` test body is still type-checked on Windows. The POSIX-only legs therefore spell Unix-only names behind the same guard, or as literals, as m68a's harness does with `9 if sys.platform != "win32" else 15`.
+  - Evidence: `probe_r23r_b1_win32_mypy.txt` P, F and T.
+- **Evidence r23-B1:**
+  - `probes/m68b/probe_r23r_b1_remove_reuse.{py,txt}`: the S/control/N/I cases;
+  - `probe_r23r_b1_start_order.{py,txt}`: the O1–O4 cases;
+  - `probe_r23r_b1_win32_mypy.{py,txt}`.
+
+  All ran in htcondor/mini:25.13.2-el9 (container `r23r-mini`, removed) against a scratch worktree of executors 0e48380 with the round-17 line applied (removed).

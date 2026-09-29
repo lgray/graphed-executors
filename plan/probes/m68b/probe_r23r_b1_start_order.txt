@@ -1,0 +1,5 @@
+# htcondor/mini:25.13.2-el9 (container r23r-mini, removed), as submituser, /opt/venv/bin/python 3.12.14; PYTHONPATH=/code/src = scratch worktree of executors 0e48380 + the round-17 start line
+O1 reached bindings | log_dir '/home/submituser/r23r-order/root/submituser/cwd/logs' == abspath at start True | secret True
+O2 refused: site 'generic' can only read submit files under /home/submituser/r23r-order/root/submituser: log_dir=logs lies outside it | log_dir 'logs' | created under cwd []
+O3 refused: site 'generic' runs pilots in a container: pass image=<path or URL> | log_dir None | new dirs under R []
+O4 reached bindings | log_dir '/home/submituser/r23r-order/root/submituser/graphed-pilots-n9rnz96r' absolute True under R True | secret True
