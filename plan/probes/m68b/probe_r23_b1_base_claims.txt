@@ -1,0 +1,21 @@
+# macOS arm64, uv venv python 3.12.10 + graphed d0ad16b, PYTHONPATH=<scratch worktree of executors 0e48380>/src
+# executors from <0e48380>/src/graphed_executors/htcondor_backend/launch.py
+K after _submit: [('submit', 1, True), ('spool',)]; stack.close() adds [('query', 'ClusterId == 7'), ('retrieve', 'ClusterId == 7 && JobStatus == 4'), ('act', 'Remove', 'ClusterId == 7')] in 0.00s
+K a raising spool (spool failed): [('submit', 1, True), ('spool',), ('query', 'ClusterId == 7'), ('act', 'Remove', 'ClusterId == 7')]
+D CondorPilots.stop calls: ['_drain', '_stack.close()', '_secret.unlink'] | CLOSE_WAIT_S = 20.0
+H http_server(**{}): argv ('{python}', '-m', 'http.server', '{port}') inputs ()
+H http_server(**{'root': 'site'}): argv ('{python}', '-m', 'http.server', '{port}', '--directory', 'site') inputs ('site',)
+H http_server(**{'root': 'data/site'}): argv ('{python}', '-m', 'http.server', '{port}', '--directory', 'data/site') inputs ('data/site',)
+A counts_as_alive held 16: True | held 13: False
+C generic service_ports=None service_hosts: ('cluster',) | lxplus MY.SendCredential: True
+E backend without host_service:  is unavailable: managed: the recipe cannot run beside the driver (service_hosts=('cluster',)) and NoHost has no host_service to run it on the cluster
+R RunHandle._poll on a job gone from the queue: [('query', 'ClusterId == 7'), ('history', 'ClusterId == 7', 1)]
+# probe_code_premises.py T and P lines on the same tree
+T unsigned plain-text /announce -> (403, [])
+T signed plain-text /announce -> (400, ["_pickle.UnpicklingError: invalid load key, 'k'."])
+T signed pickle to /announce -> (200, b'')
+T signed pickle ('p', 0, True, b'') to /whatever (falls to /result) -> (200, b'')
+P pilot reads the secret as: ['driver = _Driver(url, bytes.fromhex(Path(secret_path).read_text().strip()))']
+P launch.write_secret writes: ['path.write_text(secret.hex())']
+P CLOSE_WAIT_S = 20.0 (CondorPilots.stop waits up to this for alive() == 0 before Remove)
+P python 3.12.10 os posix

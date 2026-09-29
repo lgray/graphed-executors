@@ -1,0 +1,36 @@
+# htcondor/mini:25.13.2-el9 (container r23p-mini, removed), as submituser, /opt/venv/bin/python 3.12.14 + htcondor 25.13.2 + graphed d0ad16b; trees = scratch worktrees of executors 0e48380
+# tree base: launch.py from /r23/code-base/src/graphed_executors/htcondor_backend/launch.py
+R log_dir 'logs' | mkdir made | initialdir under A/logs False | samefile(<initialdir>/env.tgz, A/logs/env.tgz) FileNotFoundError | job {'JobStatus': 5, 'HoldReasonCode': 13} | service.out None
+R stop() from B: A/logs/graphed-secret exists True | B/logs/graphed-secret exists False
+P env.tgz written under ['C'] | from D log_dir 'logs' names it ['FileNotFoundError']
+Q from B log_dir 'logs' names A/logs/env.tgz False
+# tree start: launch.py from /r23/code-start/src/graphed_executors/htcondor_backend/launch.py
+R log_dir '/home/submituser/r23-start/A/logs' | mkdir made | initialdir under A/logs True | samefile(<initialdir>/env.tgz, A/logs/env.tgz) True | job {'JobStatus': 4, 'ExitCode': 0} | service.out ['env-of-A']
+R stop() from B: A/logs/graphed-secret exists False | B/logs/graphed-secret exists True
+P env.tgz written under ['C'] | from D log_dir '/home/submituser/r23-start/C/logs' names it [True]
+Q from B log_dir '/home/submituser/r23-start/A/logs' names A/logs/env.tgz True
+# tree init: launch.py from /r23/code-init/src/graphed_executors/htcondor_backend/launch.py
+R log_dir '/home/submituser/r23-init/A/logs' | mkdir made | initialdir under A/logs True | samefile(<initialdir>/env.tgz, A/logs/env.tgz) True | job {'JobStatus': 4, 'ExitCode': 0} | service.out ['env-of-A']
+R stop() from B: A/logs/graphed-secret exists False | B/logs/graphed-secret exists True
+P env.tgz written under ['A'] | from D log_dir '/home/submituser/r23-init/A/logs' names it [True]
+Q from B log_dir 'logs' names A/logs/env.tgz False
+# the same trees' suites, pytest tests/frozen/{m66,m67,m68a} tests/extra/{m66,m67,m68a}
+#  base  container (Linux, live pool; each tree installed into /opt/venv first): 312 passed, 3 skipped in 178.64s (0:02:58)
+#  start  container (Linux, live pool; each tree installed into /opt/venv first): 312 passed, 3 skipped in 174.02s (0:02:54)
+#  init  container (Linux, live pool; each tree installed into /opt/venv first): 312 passed, 3 skipped in 193.92s (0:03:13)
+#  base  macOS arm64 (uv venv 3.12.10, -n 4): 306 passed, 6 skipped in 36.28s
+#  start  macOS arm64 (uv venv 3.12.10, -n 4): 1 failed, 305 passed, 6 skipped in 36.33s
+#  init  macOS arm64 (uv venv 3.12.10, -n 4): 1 failed, 305 passed, 6 skipped in 36.55s
+#  start, init: the one macOS failure is tests/extra/m66/test_m66_server.py::test_a_pilot_whose_driver_is_gone_exits_at_once[mid-task] (9.92 s vs < 9.0 s under -n 4 while the container suites ran; no CondorPilots use); run alone on each tree: 8 passed
+#  container skips: test_scope_dask_memory (no distributed), test_services_live's two Triton legs (no GRAPHED_TRITON_GRPC)
+# the reviewer's probe_r22r_b1_cwd_between_runs.py (spelling os.path.abspath(log_dir) after the chdir), same container, per tree:
+## probe_r22r_b1_cwd_between_runs.py on tree base
+start() from /home/submituser/r22r-a: log_dir 'logs', env.tgz written True
+plan/B-empty mkdir(exist_ok=False): FileNotFoundError(2, 'No such file or directory')
+plan/B-empty dir /home/submituser/r22r-b/logs/service-plan-empty | link -> /home/submituser/r22r-b/logs/env.tgz | isfile False | job {'JobStatus': 5, 'ExitCode': None, 'HoldReasonCode': 13} | service.out None
+plan/B-other dir /home/submituser/r22r-b/logs/service-plan-other | link -> /home/submituser/r22r-b/logs/env.tgz | isfile True | job {'JobStatus': 4, 'ExitCode': 0, 'HoldReasonCode': None} | service.out ['env-of-another-runner']
+control      dir /home/submituser/r22r-a/logs/service-control | link -> /home/submituser/r22r-a/logs/env.tgz | isfile True | job {'JobStatus': 4, 'ExitCode': 0, 'HoldReasonCode': None} | service.out ['env-of-A']
+## probe_r22r_b1_cwd_between_runs.py on tree start
+start() from /home/submituser/r22r-a: log_dir '/home/submituser/r22r-a/logs', env.tgz written True
+plan/B-empty dir /home/submituser/r22r-a/logs/service-plan-empty | link -> /home/submituser/r22r-a/logs/env.tgz | isfile True | job {'JobStatus': 4, 'ExitCode': 0, 'HoldReasonCode': None} | service.out ['env-of-A']
+#  (start: the probe then stops at its own rmtree(B/logs), which assumes plan/B-empty created B/logs; case R above covers B holding another logs/env.tgz)

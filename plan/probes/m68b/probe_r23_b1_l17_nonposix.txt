@@ -1,0 +1,4 @@
+# macOS arm64, uv run --no-project --python 3.9 (removing the Unix-only names as on Windows; no Windows host here)
+reaped  : exit 143 []
+control : AttributeError: module 'os' has no attribute 'WNOHANG' [<Signals.SIGTERM: 15>]
+python 3.9.6 darwin
