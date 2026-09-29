@@ -1,0 +1,17 @@
+# r17-B2 probe (htcondor/mini 25.13.2, container r17b2-dag, NUM_CPUS=8): a DAG driver node that writes a placeholder
+# result.pkl/driver.log, then dies by SIGKILL (k) or by a failed exec (x, rc 127), under RETRY driver 2 UNLESS-EXIT 3,
+# submitted as B2 does it (UseDagDir + AddToEnv _CONDOR_DAGMAN_USE_STRICT=0) with a running SERVICE node.
+# script: probe_r17_b2_sigretry.py. Result: never held; three driver clusters each; the last try's ad decides.
+sigkill DAGMan [{'ExitCode': 1, 'JobStatus': 4}] after 57s
+sigkill   node {'ClusterId': 3, 'JobStatus': 3, 'ExitSignal': 15, 'DAGNodeName': 'svc0', 'ExitBySignal': True}
+sigkill   node {'ClusterId': 9, 'JobStatus': 4, 'ExitSignal': 9, 'DAGNodeName': 'driver', 'ExitBySignal': True}
+sigkill   node {'ClusterId': 7, 'JobStatus': 4, 'ExitSignal': 9, 'DAGNodeName': 'driver', 'ExitBySignal': True}
+sigkill   node {'ClusterId': 5, 'JobStatus': 4, 'ExitSignal': 9, 'DAGNodeName': 'driver', 'ExitBySignal': True}
+sigkill   result.pkl: placeholder
+sigkill   dagman.out retry lines: ['09/29/26 18:11:19 DAGMAN_RETRY_SUBMIT_FIRST setting: True', '09/29/26 18:11:19 DAGMAN_RETRY_NODE_FIRST setting: False', '09/29/26 18:11:35 Retrying node driver (retry #1 of 2)...', '09/29/26 18:11:55 Retrying node driver (retry #2 of 2)...', '09/29/26 18:12:15           Retry: 2']
+execfail DAGMan [{'ExitCode': 1, 'JobStatus': 4}] after 0s
+execfail   node {'ExitCode': 127, 'ClusterId': 10, 'JobStatus': 4, 'DAGNodeName': 'driver', 'ExitBySignal': False}
+execfail   node {'ExitCode': 127, 'ClusterId': 8, 'JobStatus': 4, 'DAGNodeName': 'driver', 'ExitBySignal': False}
+execfail   node {'ExitCode': 127, 'ClusterId': 6, 'JobStatus': 4, 'DAGNodeName': 'driver', 'ExitBySignal': False}
+execfail   result.pkl: placeholder
+execfail   dagman.out retry lines: ['09/29/26 18:11:19 DAGMAN_RETRY_SUBMIT_FIRST setting: True', '09/29/26 18:11:19 DAGMAN_RETRY_NODE_FIRST setting: False', '09/29/26 18:11:40 Retrying node driver (retry #1 of 2)...', '09/29/26 18:11:55 Retrying node driver (retry #2 of 2)...', '09/29/26 18:12:15           Retry: 2']

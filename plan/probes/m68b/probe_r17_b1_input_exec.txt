@@ -1,0 +1,9 @@
+# r17-B1 probe (htcondor/mini 25.13.2, container r17b1-mini): an executable input reached through the submit-side
+# mirror (service/serve.sh a symlink to an 0755 file; service/models a real tree of file symlinks plus an empty dir),
+# transfer_input_files = <dir>/service; the job does `cd service && ./serve.sh`. Script: probe_r17_b1_input_exec.py
+spool False: service/serve.sh -rwxr-xr-x (regular file), service/models/{empty,m} dirs; "SERVE ran in .../scratch/service" rc=0
+spool True:  same listing; "SERVE ran in .../scratch/service" rc=0
+# local (no condor): B1's argv[0] rule applied in the job dir to argv[0] "./serve.sh" (an input, named relative to service/)
+plan rule -> <job>/serve.sh exists: False
+Popen raised: FileNotFoundError(2, 'No such file or directory')
+control (left relative, Popen cwd=service/) -> served-from <job>/service

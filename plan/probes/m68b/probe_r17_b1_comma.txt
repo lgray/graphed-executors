@@ -1,0 +1,5 @@
+# r17-B1 probe (htcondor/mini 25.13.2, container r17b1-mini): commas under the service/ mirror
+# script: probe_r17_b1_comma.py (run as submituser)
+A comma-named inputs inside service/, list names <dir>/service ran: ['service', 'service/d,ir', 'service/d,ir/f,1', 'service/w,t']
+B log_dir with a comma, absolute <dir>/service HELD Transfer input files failure at access point 085537bde620 while sending files to execution point slot1_1@085537bde620. Details: 2 total failures: first failure: reading from file /home/submituser/log:
+C log_dir with a comma, relative 'service' (resolved against initialdir) ran: ['service', 'service/d,ir', 'service/d,ir/f,1', 'service/w,t']

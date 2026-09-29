@@ -1,0 +1,17 @@
+# r17-B2: PyPI wheel htcondor==25.14.1 (CI's resolution of htcondor>=25.13), CONDOR_CONFIG=/dev/null, a stub
+# condor_dagman on PATH; Submit.from_dag(<abs run.dag>, {"UseDagDir": True, "AddToEnv": "_CONDOR_DAGMAN_USE_STRICT=0"}).
+# <P> = the scratch dir. Identical to probe_dag_service.txt's 25.13.2 description after substituting the DAG dir,
+# CsdVersion and the condor_dagman path (probe_r11_fromdag_versions.txt checked only {usedagdir, force}).
+universe = scheduler
+executable = <P>/stub/condor_dagman
+getenv = CONDOR_CONFIG,_CONDOR_*,PATH,PYTHONPATH,PERL*,PEGASUS_*,TZ,HOME,USER,LANG,LC_ALL,ASAN_OPTIONS,LSAN_OPTIONS,BEARER_TOKEN,BEARER_TOKEN_FILE
+output = <P>/dagw/run.dag.lib.out
+error = <P>/dagw/run.dag.lib.err
+log = <P>/dagw/run.dag.dagman.log
+remove_kill_sig = SIGUSR1
+My.OtherJobRemoveRequirements = "DAGManJobId =?= $(cluster)"
+My.IsDaemonCore = True
+on_exit_remove = (ExitSignal =?= 11 || (ExitCode =!= UNDEFINED && ExitCode >=0 && ExitCode <= 2))
+arguments = "-f -l . -Lockfile <P>/dagw/run.dag.lock -Dag <P>/dagw/run.dag -CsdVersion $CondorVersion:' '25.14.1' '2026-09-24' 'BuildID:' 'UW_Python_Wheel_Build' '$ -dagman <P>/stub/condor_dagman -UseDagDir -AutoRescue 1 -insert_env _CONDOR_DAGMAN_USE_STRICT=0"
+environment = "_CONDOR_DAGMAN_LOG=<P>/dagw/run.dag.dagman.out _CONDOR_DAGMAN_USE_STRICT=0 _CONDOR_MAX_DAGMAN_LOG=0"
+queue
