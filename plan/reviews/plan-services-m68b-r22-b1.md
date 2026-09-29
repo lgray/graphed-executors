@@ -6,7 +6,7 @@
 - **Snapshot:** `reviews/plan-services-m68b-r22-b1-snapshot.md` (plan at 36040d7), diffed against the r21-b1 snapshot.
 - **Read:** the delta (shared-subsection Q-04 citation; B1 `ServiceJob` paths, `service.json` secret, the L17 reap rule; the B1 `test_cluster_service_job.py` and live rows; "Fails on (B1)") and what it references: the rest of the `ServiceJob` and `announce.py` bullets, the B1 harness, B2's DAG bullet where it calls `files()`.
 - **Probes:** `git diff b0e2ea7 36040d7 -- plan/probes` (`announce_proto.py`, `probe_announce_rules.{py,txt}`), the new `probe_r22_b1_{python_witness,held_port,relative_paths}`, and "## decisions (round 16)".
-- **Code:** executors c2298d7 (`htcondor_backend/{launch,backend,driverless}.py`, `.github/workflows/ci.yml`, `tests/frozen/m66`, `m67`).
+- **Code:** executors c2298d7 for files m68a did not change (`.github/workflows/ci.yml`). For the m68a-changed files, executors 0e48380 (m68a merged): `htcondor_backend/{launch,backend,driverless}.py` and `tests/frozen/{m66,m67,m68a}`.
 - **Answers:** r21-B1's M38-B1 and M39-B1 and its five exit items.
 
 One design finding, M40-B1. Two exit items are appended under "## r22-B1 exit items" in `m68b-exit-items.md`.
@@ -16,14 +16,14 @@ One design finding, M40-B1. Two exit items are appended under "## r22-B1 exit it
 ### M40-B1: the M39 repair resolves the relative `log_dir` against the cwd at `host_service` time, not the cwd `_stage` wrote `env.tgz` into
 - **Where:** B1 `ServiceJob` bullet: "`submit()` does that in a new `service-<key>/` under `os.path.abspath(launcher.log_dir)`" and "the pilots' `env.tgz` under `os.path.abspath(launcher.log_dir)`". The B1 row's new leg: "under `monkeypatch.chdir(tmp_path)` with a relative `log_dir` … `os.path.isfile` holds for `<initialdir>/env.tgz`".
 - **Why it changes code:**
-  - `HTCondorBackend.__init__` calls `launcher.start` (c2298d7 `backend.py`). That call `_stage`s `env.tgz` into `log_dir` as given, relative to the cwd at runner construction.
+  - `HTCondorBackend.__init__` calls `launcher.start` (0e48380 `backend.py:96`). `CondorPilots` keeps `log_dir` as given (`launch.py:144`), and `start` `_stage`s `env.tgz` into it (`launch.py:218–221`), relative to the cwd at runner construction.
   - `host_service` runs later, once per run. The live row itself runs two sequential runs on one runner.
   - So a runner built in cwd A and then used after a `chdir` to B (a notebook `%cd` between cells) gets `os.path.abspath("logs")` = `B/logs`. There are two outcomes:
     - **B has no `logs/`:** `service-<key>/` with `exist_ok=False` raises `FileNotFoundError`. With parents made, the link dangles and the job is held with code 13.
     - **B has another runner's `logs/env.tgz`:** the link resolves to that file, and the service silently runs with the other environment.
   - The new leg cannot see this. It changes cwd once, before staging, so the plan's spelling and the correct one agree, and `isfile` also passes the wrong-environment case.
   - This is M39's shape a second time. The M39 repair moved the failure instead of closing it. The operation that produces the shape: `CondorPilots` stores `log_dir` as given, so each later reader resolves it against its own call-time cwd. Round 16 already dropped another instance of it (`CondorPilots.stop` unlinking the secret after a cwd change).
-- **Measurement:** `probes/m68b/probe_r22r_b1_cwd_between_runs.{py,txt}` (htcondor/mini 25.13.2, container `r22r-mini`, removed). It runs the real `CondorPilots.start` from A with `log_dir="logs"`, then changes cwd to B:
+- **Measurement:** `probes/m68b/probe_r22r_b1_cwd_between_runs.{py,txt}` (htcondor/mini 25.13.2, run on executors c2298d7 in container `r22r-mini` and on 0e48380 + graphed d0ad16b in `r22r-mini2`, both removed; identical outcomes). It runs the real `CondorPilots.start` from A with `log_dir="logs"`, then changes cwd to B:
 
   | Case | What happened |
   |---|---|
@@ -32,7 +32,7 @@ One design finding, M40-B1. Two exit items are appended under "## r22-B1 exit it
   | control (absolute path taken when `start()` returned) | job `ExitCode` 0, `service.out` `env-of-A` |
 
 - **Closed when:** the directory `_stage` wrote into is the one every later reader names. The cut at the cause is one line in `CondorPilots.start`: store `self.log_dir` absolute before `_stage` and the secret use it. m68b already edits `launch.py` for B2.
-  - No m66 or m67 frozen test pins a relative `log_dir` or `initialdir`. m66's all use `tmp_path`; driverless already assigns an absolute one.
+  - No frozen test at 0e48380 (m66, m67 or m68a) passes a relative-string `log_dir` or pins `initialdir`/`.log_dir` equality. The pattern grep found 0 of each, against 18 `log_dir=` and 9 `initialdir` mentions as the control. Driverless already assigns an absolute `log_dir`.
   - B1's `os.path.abspath(launcher.log_dir)` spellings then reduce to `launcher.log_dir`.
   - The round-16 drop of `CondorPilots.stop`'s secret closes with the same line.
   - If the plan keeps m66 untouched instead, it has to state why the cut at the cause is unavailable.
@@ -51,14 +51,15 @@ One design finding, M40-B1. Two exit items are appended under "## r22-B1 exit it
   - mutant B (bare name → `sys.executable`) fails leg 1;
   - mutant C (left as given) fails leg 2.
 
-  The skip ("`P` absolute and ≠ harness `sys.executable`") does not fire on the CI runners. Every main-matrix and `test-htcondor` job uses `actions/setup-python`'s interpreter (`ci.yml`), while `P` is `/bin/python3` on Linux and the Xcode path on macOS. Windows skips all subprocess legs.
+  The skip ("`P` absolute and ≠ harness `sys.executable`") does not fire on the CI runners. At 0e48380 (`ci.yml`), macOS runs from a uv-managed venv at `$RUNNER_TEMP/venv`, the non-framework case the probe measured. The Linux main-matrix and `test-htcondor` jobs use `actions/setup-python`'s interpreter. `P` is `/bin/python3` on Linux and the Xcode path on macOS. Windows skips all subprocess legs.
 - **The M39 members as the r21 finding stated them are closed.** In the relative-path probe, the `rel` and `input-rel` spellings fail the new `isfile` leg and the absolute spelling passes it. M40 is what remains.
 - **Held-port leg.** `free()` reports p as taken on macOS for a wildcard listener in every form a test author might write: plain `bind(("", p))`, with `SO_REUSEADDR`, `socket.create_server(("", p))`, and dual-stack IPv6. A `127.0.0.1` listener is the control and reads as free (scratch `/private/tmp/r22r-b1/listener_kinds.py`, Python 3.12.10 and 3.9.6).
 - **L17 and the secret file.** The prototype skips `hard_reap` when `returncode` is set, and reads `./graphed-secret` in attached mode, as the plan's text says. Re-running `probe_announce_rules.py` on macOS `/usr/bin/python3` 3.9.6 reproduces L1–L17, including L17 (reaped child: no `os.kill`; unreaped control: one SIGTERM). Output: scratch `/private/tmp/r22r-b1/rules_mac396.txt`.
-- **Claims about c2298d7.** These hold:
+- **Claims about the code.** These hold on 0e48380 as on c2298d7:
   - `CondorPilots.__init__` keeps `Path(log_dir)`;
-  - driverless sets `launcher.log_dir` to an absolute `out`;
-  - `run["log_dir"]` is absolute (m67 frozen `test_driverless_payload.py` asserts it).
+  - driverless sets `launcher.log_dir` to an absolute `out` (`driverless.py:198–204`);
+  - `run["log_dir"]` is absolute (m67 frozen `test_driverless_payload.py` asserts it);
+  - at 0e48380, `launcher._submit(htc, schedd, desc, n, stack)` registers the cluster's removal when `schedd.submit` returns. This matches B1's "through `launcher._submit`" and "its removal registered when `schedd.submit` returns". The plan pins no arity and cites no `launch.py` line.
 - **B2 check (shared code).** The delta changes `ServiceJob.files()`'s link targets and the watch-mode secret wording. B2's text and rows still hold:
   - B2's launcher `log_dir` is already absolute, so the change is a no-op there, and its row's `isfile(<run dir>/service-svc0/env.tgz)` stands.
   - Watch mode reads `<watch>/graphed-secret` as before.

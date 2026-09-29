@@ -4,3 +4,9 @@ plan/B-empty mkdir(exist_ok=False): FileNotFoundError(2, 'No such file or direct
 plan/B-empty dir /home/submituser/r22r-b/logs/service-plan-empty | link -> /home/submituser/r22r-b/logs/env.tgz | isfile False | job {'JobStatus': 5, 'ExitCode': None, 'HoldReasonCode': 13} | service.out None
 plan/B-other dir /home/submituser/r22r-b/logs/service-plan-other | link -> /home/submituser/r22r-b/logs/env.tgz | isfile True | job {'JobStatus': 4, 'ExitCode': 0, 'HoldReasonCode': None} | service.out ['env-of-another-runner']
 control      dir /home/submituser/r22r-a/logs/service-control | link -> /home/submituser/r22r-a/logs/env.tgz | isfile True | job {'JobStatus': 4, 'ExitCode': 0, 'HoldReasonCode': None} | service.out ['env-of-A']
+# htcondor/mini:25.13.2-el9 (container r22r-mini2, removed), as submituser, /opt/venv/bin/python 3.12 + executors 0e48380 (m68a merged) + graphed d0ad16b
+start() from /home/submituser/r22r-a: log_dir 'logs', env.tgz written True
+plan/B-empty mkdir(exist_ok=False): FileNotFoundError(2, 'No such file or directory')
+plan/B-empty dir /home/submituser/r22r-b/logs/service-plan-empty | link -> /home/submituser/r22r-b/logs/env.tgz | isfile False | job {'JobStatus': 5, 'ExitCode': None, 'HoldReasonCode': 13} | service.out None
+plan/B-other dir /home/submituser/r22r-b/logs/service-plan-other | link -> /home/submituser/r22r-b/logs/env.tgz | isfile True | job {'JobStatus': 4, 'ExitCode': 0, 'HoldReasonCode': None} | service.out ['env-of-another-runner']
+control      dir /home/submituser/r22r-a/logs/service-control | link -> /home/submituser/r22r-a/logs/env.tgz | isfile True | job {'JobStatus': 4, 'ExitCode': 0, 'HoldReasonCode': None} | service.out ['env-of-A']

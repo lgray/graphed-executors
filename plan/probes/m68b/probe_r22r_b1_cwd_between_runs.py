@@ -1,7 +1,8 @@
 """m68b r22-B1 review probe: a relative ``log_dir`` resolved at a later cwd than the one ``CondorPilots.start`` used.
 
-``HTCondorBackend.__init__`` calls ``launcher.start`` (c2298d7 backend.py), which ``_stage``s ``env.tgz`` into
-``log_dir`` as given (relative, launch.py ``__init__``); ``host_service`` runs later, once per run. The plan spells the
+``HTCondorBackend.__init__`` calls ``launcher.start`` (backend.py), which ``_stage``s ``env.tgz`` into ``log_dir`` as
+given (relative, launch.py ``CondorPilots.__init__``), on c2298d7 and on 0e48380 alike; ``host_service`` runs later,
+once per run. The plan spells the
 ``service-<key>/`` dir and the ``env.tgz`` link target from ``os.path.abspath(launcher.log_dir)`` at ServiceJob time.
 This probe runs the real ``CondorPilots.start`` from cwd A, removes its pilot cluster, then changes cwd and spells
 the service dir the plan's way, and submits a job whose ``service.sh`` unpacks ``env.tgz`` and prints the env's marker:
@@ -10,8 +11,9 @@ the service dir the plan's way, and submits a job whose ``service.sh`` unpacks `
   plan/B-other  cwd B holding another runner's logs/env.tgz: the link resolves, to that other env
   control       the same after cwd B, spelled from os.path.abspath(log_dir) captured when start() returned (cwd A)
 
-Run: htcondor/mini:25.13.2-el9 (container r22r-mini, removed), as submituser, /opt/venv (htcondor 25.13.2 +
-executors c2298d7 from code-m68b):  /opt/venv/bin/python probe_r22r_b1_cwd_between_runs.py
+Run: htcondor/mini:25.13.2-el9, as submituser, /opt/venv/bin/python probe_r22r_b1_cwd_between_runs.py, with /opt/venv
+(python 3.12, htcondor 25.13.2) holding executors c2298d7 (container r22r-mini) and then executors 0e48380 + graphed
+d0ad16b (container r22r-mini2); both removed, both outputs in the .txt.
 """
 import dataclasses
 import io
