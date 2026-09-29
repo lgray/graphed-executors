@@ -171,5 +171,5 @@ to `initialdir`), not to names inside `service/` (`probes/m68b/probe_r17_b1_comm
 
 | ID | Behaviour | Observed | Probe |
 |---|---|---|---|
-| S-19 | a submit-side directory whose files are symlinks (dirs real), listed once, lands with its link names, contents followed, file modes kept, spooled and not; an input named like a job file or `.machine.ad` stays inside it | match (S-07 extended) | `probes/m68b/probe_input_dir.txt` (mirror-plain, mirror-spool), `probe_r17_b1_input_exec.txt` |
+| S-19 | a submit-side directory whose files are symlinks (dirs real), listed once, lands with its link names, contents followed, file modes kept, spooled and not; an input named like a job file or `.machine.ad` stays inside it | match (S-07 extended) | `probes/m68b/probe_input_dir.txt` (mirror-plain, mirror-spool), `probe_r17_b1_input_exec.txt`, `probe_r18_b1_envlink.txt` (a relative top-level file-symlink entry, spooled and not) |
 | D-08a | `RETRY driver 2 UNLESS-EXIT 3` with a driver killed by SIGKILL, or failing to exec (rc 127), while a placeholder `result.pkl` exists: retried three times, never held, DAGMan exits 1 | match | `probes/m68b/probe_r17_b2_sigretry.txt` |
