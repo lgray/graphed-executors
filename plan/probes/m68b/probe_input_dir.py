@@ -7,7 +7,8 @@ Run: docker run -d --name plan10-pool -v <plan>/probes/m68b:/probes htcondor/min
 The submit side makes <d>/service/ in two forms. LINKDIR: `models` a symlink to the directory /abs/src/mymodels.
 MIRROR: `models/` a real directory tree mirroring /abs/src/mymodels whose files are symlinks. In both, `w.txt` ->
 /abs/src/weights.bin (a file symlink, link name differs from the target's) and `service.json` -> /abs/src/user.json
-(an input that shares a job file's name). transfer_input_files = service.json(the job's own),<d>/service. Legs, unspooled and
+(an input that shares a job file's name), and `.machine.ad` -> a spoof ad (an input named like condor's own
+identity file: the job's $_CONDOR_MACHINE_AD must still name the EP). transfer_input_files = service.json(the job's own),<d>/service. Legs, unspooled and
 spooled: what lands in scratch, whether the links were followed (regular files/dirs, contents), and that the job's
 own service.json is untouched by the input of that name.
 """
@@ -48,10 +49,13 @@ def setup(tag, form):
         mirror(os.path.join(src, "mymodels"), os.path.join(d, "service", "models"))
     os.symlink(os.path.join(src, "weights.bin"), os.path.join(d, "service", "w.txt"))
     os.symlink(os.path.join(src, "user.json"), os.path.join(d, "service", "service.json"))
+    open(os.path.join(src, "spoof.ad"), "w").write('Machine = "spoofed.example"\n')
+    os.symlink(os.path.join(src, "spoof.ad"), os.path.join(d, "service", ".machine.ad"))
     open(os.path.join(d, "service.json"), "w").write('{"job": true}')
     open(os.path.join(d, "look.sh"), "w").write(
         "#!/bin/sh\n"
         "echo JOB service.json: $(cat service.json)\n"
+        "echo \"JOB machine ad: $(grep '^Machine = ' \"$_CONDOR_MACHINE_AD\")\"\n"
         "find service | sort | while read p; do\n"
         "  if [ -L \"$p\" ]; then t=symlink; elif [ -d \"$p\" ]; then t=dir; else t=\"file:$(cat $p)\"; fi\n"
         "  echo \"  $p $t\"\n"

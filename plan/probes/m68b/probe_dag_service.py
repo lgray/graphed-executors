@@ -2,7 +2,7 @@
 
 Run: docker exec -u submituser m68b-probe-pool python3 /probes/probe_dag_service.py > probe_dag_service.txt
 
-Each DAG, in its own fresh directory, is submitted through the bindings (htcondor2.Submit.from_dag(run.dag, {"usedagdir": True}),
+Each DAG, in its own fresh directory, is submitted through the bindings (htcondor2.Submit.from_dag(run.dag, {"UseDagDir": True, "AddToEnv": "_CONDOR_DAGMAN_USE_STRICT=0"}),
 schedd.submit, no spool) from the home dir (not the DAG dir), the DAG dir being one both nodes read directly. The SERVICE node runs announce_proto.py in watch mode (key = the node name);
 each driver start (dag_driver_node.py) is a new receiver on a new port with a new secret, written into
 the DAG dir secret-first then driver.url, each by atomic rename.
@@ -62,7 +62,7 @@ def run(tag, codes, reuse=None):
     dagfile = os.path.join(d, "run.dag")
     open(dagfile, "w").write("JOB driver driver.sub\nSERVICE web web.sub\nRETRY driver 2 UNLESS-EXIT 3\n")
     os.chdir(os.path.expanduser("~"))  # the submitter's cwd is not the DAG dir
-    desc = htc.Submit.from_dag(dagfile, {"usedagdir": True})
+    desc = htc.Submit.from_dag(dagfile, {"UseDagDir": True, "AddToEnv": "_CONDOR_DAGMAN_USE_STRICT=0"})
     if tag == "R":
         print("from_dag description:")
         for k in sorted(desc.keys()):

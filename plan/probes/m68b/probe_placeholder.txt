@@ -1,0 +1,3 @@
+A killed: script rc -9, driver.log exists True, result.pkl -> (False, RuntimeError: the driver exited before writing a result; see driver.log)
+B wrote: script rc 0, driver.log exists True, result.pkl -> (True, int: 42)
+blob bytes 107, script line length 428

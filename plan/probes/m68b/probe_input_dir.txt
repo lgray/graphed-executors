@@ -1,10 +1,12 @@
 condor $CondorVersion: 25.13.2 2026-08-19 BuildID: 943576 PackageID: 25.13.2-1 GitSHA: 589a5b38 $
-[linkdir] held: Transfer input files failure at access point ed63d735ba1b while sending files to execution point slot1_1@ed63d735ba1b. Details: 1 total failures: first failure: reading from file /home/submituser/p10-linkdir/job/service/models: (errno 21) Is a directory- Transfer of symlinks to directories is not supported.
+[linkdir] held: Transfer input files failure at access point 51357313fd7b while sending files to execution point slot1_1@51357313fd7b. Details: 1 total failures: first failure: reading from file /home/submituser/p10-linkdir/job/service/models: (errno 21) Is a directory- Transfer of symlinks to directories is not supported.
 [linkdir] ExitCode None
 (no output)
 [mirror-plain] ExitCode 0
 JOB service.json: {"job": true}
+JOB machine ad: Machine = "51357313fd7b"
   service dir
+  service/.machine.ad file:Machine = "spoofed.example"
   service/models dir
   service/models/m dir
   service/models/m/1 dir
@@ -13,7 +15,9 @@ JOB service.json: {"job": true}
   service/w.txt file:W
 [mirror-spool] ExitCode 0
 JOB service.json: {"job": true}
+JOB machine ad: Machine = "51357313fd7b"
   service dir
+  service/.machine.ad file:Machine = "spoofed.example"
   service/models dir
   service/models/m dir
   service/models/m/1 dir

@@ -21,6 +21,7 @@ import hashlib
 import hmac
 import json
 import os
+import shutil
 import signal
 import socket
 import subprocess
@@ -98,7 +99,10 @@ def start(cfg, ident):
         if not free(cand):
             log("port %d taken, next" % cand)
             continue
-        python = os.path.abspath(cfg["python"]) if os.sep in cfg["python"] else cfg["python"]
+        # never sys.executable (empty for a bare `python3` in a job without PATH); a path with a separator is made
+        # absolute (the child's cwd is service/), a bare name is resolved on PATH or os.defpath, else left bare
+        python = (os.path.abspath(cfg["python"]) if os.sep in cfg["python"]
+                  else shutil.which(cfg["python"], path=os.environ.get("PATH", os.defpath)) or cfg["python"])
         argv = [a.format(port=cand, host=ident, python=python) for a in cfg["argv"]]
         child = subprocess.Popen(argv, env={**os.environ, **cfg.get("env", {})}, cwd=RUN_DIR)
         while True:
@@ -128,6 +132,9 @@ def main():
         os.unlink(cfg["secret"])
     # the child runs in RUN_DIR, which arrived as ONE transferred directory holding exactly the recipe's inputs;
     # nothing else in scratch (a ticket cache, the job ad, our files) is in the cwd it may serve
+    if os.path.ismount(RUN_DIR):
+        log("not ready: %s is a mount point" % RUN_DIR)
+        return 3
     os.makedirs(RUN_DIR, exist_ok=True)  # a recipe without inputs transfers no directory
     child, port = start(cfg, ident)
     if child is None:
@@ -137,8 +144,13 @@ def main():
     log("ready pid=%d body=%r" % (child.pid, body.decode()))
 
     def stop(*_):
+        # condor signals the whole family at once; bound the reap so the job leaves promptly
         child.terminate()
-        child.wait()
+        try:
+            child.wait(5)
+        except subprocess.TimeoutExpired:
+            child.kill()
+            child.wait()
         sys.exit(143)
 
     signal.signal(signal.SIGTERM, stop)

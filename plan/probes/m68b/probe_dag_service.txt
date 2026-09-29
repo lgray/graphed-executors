@@ -2,8 +2,8 @@ condor $CondorVersion: 25.13.2 2026-08-19 BuildID: 943576 PackageID: 25.13.2-1 G
 from_dag description:
    My.IsDaemonCore = True
    My.OtherJobRemoveRequirements = "DAGManJobId =?= $(cluster)"
-   arguments = "-f -l . -Lockfile /home/submituser/m68b-dag-R/run.dag.lock -Dag /home/submituser/m68b-dag-R/run.dag -CsdVersion $CondorVersion:' '25.13.2' '2026-08-19' 'BuildID:' '943576' 'PackageID:' '25.13.2-1' 'GitSHA:' '589a5b38' '$ -dagman /usr/bin/condor_dagman -UseDagDir -AutoRescue 1"
-   environment = "_CONDOR_DAGMAN_LOG=/home/submituser/m68b-dag-R/run.dag.dagman.out _CONDOR_MAX_DAGMAN_LOG=0"
+   arguments = "-f -l . -Lockfile /home/submituser/m68b-dag-R/run.dag.lock -Dag /home/submituser/m68b-dag-R/run.dag -CsdVersion $CondorVersion:' '25.13.2' '2026-08-19' 'BuildID:' '943576' 'PackageID:' '25.13.2-1' 'GitSHA:' '589a5b38' '$ -dagman /usr/bin/condor_dagman -UseDagDir -AutoRescue 1 -insert_env _CONDOR_DAGMAN_USE_STRICT=0"
+   environment = "_CONDOR_DAGMAN_LOG=/home/submituser/m68b-dag-R/run.dag.dagman.out _CONDOR_DAGMAN_USE_STRICT=0 _CONDOR_MAX_DAGMAN_LOG=0"
    error = /home/submituser/m68b-dag-R/run.dag.lib.err
    executable = /usr/bin/condor_dagman
    getenv = CONDOR_CONFIG,_CONDOR_*,PATH,PYTHONPATH,PERL*,PEGASUS_*,TZ,HOME,USER,LANG,LC_ALL,ASAN_OPTIONS,LSAN_OPTIONS,BEARER_TOKEN,BEARER_TOKEN_FILE
@@ -12,19 +12,19 @@ from_dag description:
    output = /home/submituser/m68b-dag-R/run.dag.lib.out
    remove_kill_sig = SIGUSR1
    universe = scheduler
-[R] DAGMan cluster 6, JobUniverse 7
-[R]   node web cluster 7 JobStatus 3 ExitCode 143 RemoveReason 'removed because <OtherJobRemoveRequirements = DAGManJobId =?= 6> fired when job (6.0) was removed'
-[R]   node driver cluster 8 JobStatus 4 ExitCode 1 RemoveReason None
-[R]   node driver cluster 9 JobStatus 4 ExitCode 0 RemoveReason None
+[R] DAGMan cluster 7, JobUniverse 7
+[R]   node web cluster 8 JobStatus 3 ExitCode 143 RemoveReason 'removed because <OtherJobRemoveRequirements = DAGManJobId =?= 7> fired when job (7.0) was removed'
+[R]   node driver cluster 9 JobStatus 4 ExitCode 1 RemoveReason None
+[R]   node driver cluster 10 JobStatus 4 ExitCode 0 RemoveReason None
 [R] DAGMan history: JobStatus 4 ExitCode 0 JobUniverse 7
 [R] SERVICE clusters: 1; driver clusters: 2
-[R] driver start 0: url http://ed63d735ba1b:10000, announce ['web', 'ed63d735ba1b:10001', 'ed63d735ba1b'], GET 200
-[R] driver start 1: url http://ed63d735ba1b:10000, announce ['web', 'ed63d735ba1b:10001', 'ed63d735ba1b'], GET 200
+[R] driver start 0: url http://51357313fd7b:10000, announce ['web', '51357313fd7b:10001', '51357313fd7b'], GET 200
+[R] driver start 1: url http://51357313fd7b:10000, announce ['web', '51357313fd7b:10001', '51357313fd7b'], GET 200
 [R] announces received: [10000, 10000]
-[X] DAGMan cluster 10, JobUniverse 7
-[X]   node web cluster 11 JobStatus 3 ExitCode 143 RemoveReason 'removed because <OtherJobRemoveRequirements = DAGManJobId =?= 10> fired when job (10.0) was removed'
-[X]   node driver cluster 12 JobStatus 4 ExitCode 3 RemoveReason None
+[X] DAGMan cluster 11, JobUniverse 7
+[X]   node web cluster 12 JobStatus 3 ExitCode 143 RemoveReason 'removed because <OtherJobRemoveRequirements = DAGManJobId =?= 11> fired when job (11.0) was removed'
+[X]   node driver cluster 13 JobStatus 4 ExitCode 3 RemoveReason None
 [X] DAGMan history: JobStatus 4 ExitCode 1 JobUniverse 7
 [X] SERVICE clusters: 1; driver clusters: 1
-[X] driver start 0: url http://ed63d735ba1b:10000, announce ['web', 'ed63d735ba1b:10001', 'ed63d735ba1b'], GET 200
-[X] announces received: [10000]
+[X] driver start 0: url http://51357313fd7b:10001, announce ['web', '51357313fd7b:10000', '51357313fd7b'], GET 200
+[X] announces received: [10001]
