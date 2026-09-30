@@ -1,0 +1,6 @@
+A fills only: 2 distinct fill nodes marked, 1 compiled outputs for 2 marked
+A counter first: 2 distinct fill nodes marked, 2 compiled outputs for 3 marked
+A counter last: 2 distinct fill nodes marked, 2 compiled outputs for 3 marked
+B counter first: fill positions [1, 1] counter [0]; n=4; values equal=True variances equal=True
+B counter last: fill positions [0, 0] counter [1]; n=4; values equal=True variances equal=True
+C gh.plan: GraphedError: the optimizer merged fills that record as distinct nodes (2 marked, 1 compiled),

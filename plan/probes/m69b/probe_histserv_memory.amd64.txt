@@ -1,3 +1,32 @@
+=== python:3.11-slim linux/amd64
+x86_64
+histserv 0.2.1 grpcio 1.84.0 python 3.11.16 linux
+A warm idle server: rss=93044736 (88.7 MiB)
+B per histogram beyond its dense bytes (Double, K=2000, one fill each): 3018
+B per histogram beyond its dense bytes (Weight, K=2000, one fill each): 3870
+D per recorded unique_id (40000 fills of one histogram): 147.6
+C/F one worker: two FillMany of one histogram, then a snapshot (kept, then deleted)
+  fills chunks=1: peak above warm 472.7 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 5.39 with 1 fill(s) in flight
+  snapshot chunks=1: peak above warm 536.8 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 6.39 with 1 fill(s) in flight
+  snapshot+delete chunks=1: peak above warm 536.9 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 6.39 with 1 fill(s) in flight
+  fills chunks=4: peak above warm 429.0 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 5.45 with 1 fill(s) in flight
+  snapshot chunks=4: peak above warm 515.3 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 6.80 with 1 fill(s) in flight
+  snapshot+delete chunks=4: peak above warm 559.5 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 7.49 with 1 fill(s) in flight
+  fills chunks=8: peak above warm 413.7 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 5.34 with 1 fill(s) in flight
+  snapshot chunks=8: peak above warm 499.6 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 6.68 with 1 fill(s) in flight
+  snapshot+delete chunks=8: peak above warm 511.8 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 6.87 with 1 fill(s) in flight
+E n workers: n FillMany of one 32 MiB histogram in flight at once (worst of 3)
+  1 in flight: peak above warm 244.6 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 5.64 with 1 fill(s) in flight
+  2 in flight: peak above warm 327.1 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 8.22 with 2 fill(s) in flight
+  4 in flight: peak above warm 492.4 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 13.39 with 4 fill(s) in flight
+  8 in flight: peak above warm 633.0 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 17.78 with 8 fill(s) in flight
+H ceiling: dense_view 536869888 B (message 536869962 B): INVALID_ARGUMENT invalid fill request: ValueError('dense view byte size mismatch: expected 64, go
+H ceiling: dense_view 536870912 B (message 536870986 B): RESOURCE_EXHAUSTED CLIENT: Sent message larger than max (536870986 vs. 536870912)
+I prune after 2 s: untouched histogram exists=False, one filled every 0.5 s exists=True
+I `python -m histserv --help`: --prune-after-seconds Drop histograms that have not been accessed for at least this many seconds. (default: 86400)
+J announce.py (db8fb0a) imported, idle: rss=30584832 (29.2 MiB)
+MODEL B=118 MiB O=3900 B I=150 B a=5.0 b=3.0  (B = A + J; a, b cover every C/E/F row above by construction)
+=== python:3.12-slim linux/amd64
 x86_64
 histserv 0.2.1 grpcio 1.84.0 python 3.12.14 linux
 A warm idle server: rss=93478912 (89.1 MiB)
@@ -25,3 +54,59 @@ I prune after 2 s: untouched histogram exists=False, one filled every 0.5 s exis
 I `python -m histserv --help`: --prune-after-seconds Drop histograms that have not been accessed for at least this many seconds. (default: 86400)
 J announce.py (db8fb0a) imported, idle: rss=36454400 (34.8 MiB)
 MODEL B=124 MiB O=3700 B I=150 B a=5.5 b=2.5  (B = A + J; a, b cover every C/E/F row above by construction)
+=== python:3.13-slim linux/amd64
+x86_64
+histserv 0.2.1 grpcio 1.84.0 python 3.13.15 linux
+A warm idle server: rss=93773824 (89.4 MiB)
+B per histogram beyond its dense bytes (Double, K=2000, one fill each): 3345
+B per histogram beyond its dense bytes (Weight, K=2000, one fill each): 3935
+D per recorded unique_id (40000 fills of one histogram): 154.3
+C/F one worker: two FillMany of one histogram, then a snapshot (kept, then deleted)
+  fills chunks=1: peak above warm 470.3 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 5.35 with 1 fill(s) in flight
+  snapshot chunks=1: peak above warm 534.6 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 6.35 with 1 fill(s) in flight
+  snapshot+delete chunks=1: peak above warm 534.7 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 6.35 with 1 fill(s) in flight
+  fills chunks=4: peak above warm 440.6 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 5.63 with 1 fill(s) in flight
+  snapshot chunks=4: peak above warm 542.9 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 7.23 with 1 fill(s) in flight
+  snapshot+delete chunks=4: peak above warm 555.0 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 7.42 with 1 fill(s) in flight
+  fills chunks=8: peak above warm 421.9 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 5.47 with 1 fill(s) in flight
+  snapshot chunks=8: peak above warm 507.8 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 6.81 with 1 fill(s) in flight
+  snapshot+delete chunks=8: peak above warm 520.0 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 7.00 with 1 fill(s) in flight
+E n workers: n FillMany of one 32 MiB histogram in flight at once (worst of 3)
+  1 in flight: peak above warm 238.3 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 5.45 with 1 fill(s) in flight
+  2 in flight: peak above warm 321.0 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 8.03 with 2 fill(s) in flight
+  4 in flight: peak above warm 465.5 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 12.55 with 4 fill(s) in flight
+  8 in flight: peak above warm 621.7 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 17.43 with 8 fill(s) in flight
+H ceiling: dense_view 536869888 B (message 536869962 B): INVALID_ARGUMENT invalid fill request: ValueError('dense view byte size mismatch: expected 64, go
+H ceiling: dense_view 536870912 B (message 536870986 B): RESOURCE_EXHAUSTED CLIENT: Sent message larger than max (536870986 vs. 536870912)
+I prune after 2 s: untouched histogram exists=False, one filled every 0.5 s exists=True
+I `python -m histserv --help`: --prune-after-seconds Drop histograms that have not been accessed for at least this many seconds. (default: 86400)
+J announce.py (db8fb0a) imported, idle: rss=36536320 (34.8 MiB)
+MODEL B=125 MiB O=4000 B I=160 B a=5.0 b=3.0  (B = A + J; a, b cover every C/E/F row above by construction)
+=== python:3.14-slim linux/amd64
+x86_64
+histserv 0.2.1 grpcio 1.84.0 python 3.14.7 linux
+A warm idle server: rss=96706560 (92.2 MiB)
+B per histogram beyond its dense bytes (Double, K=2000, one fill each): 3083
+B per histogram beyond its dense bytes (Weight, K=2000, one fill each): 3804
+D per recorded unique_id (40000 fills of one histogram): 154.5
+C/F one worker: two FillMany of one histogram, then a snapshot (kept, then deleted)
+  fills chunks=1: peak above warm 496.1 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 5.75 with 1 fill(s) in flight
+  snapshot chunks=1: peak above warm 560.2 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 6.75 with 1 fill(s) in flight
+  snapshot+delete chunks=1: peak above warm 560.2 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 6.75 with 1 fill(s) in flight
+  fills chunks=4: peak above warm 436.3 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 5.57 with 1 fill(s) in flight
+  snapshot chunks=4: peak above warm 538.6 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 7.17 with 1 fill(s) in flight
+  snapshot+delete chunks=4: peak above warm 550.8 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 7.36 with 1 fill(s) in flight
+  fills chunks=8: peak above warm 419.6 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 5.43 with 1 fill(s) in flight
+  snapshot chunks=8: peak above warm 504.7 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 6.76 with 1 fill(s) in flight
+  snapshot+delete chunks=8: peak above warm 517.0 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 6.95 with 1 fill(s) in flight
+E n workers: n FillMany of one 32 MiB histogram in flight at once (worst of 3)
+  1 in flight: peak above warm 245.5 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 5.67 with 1 fill(s) in flight
+  2 in flight: peak above warm 309.4 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 7.67 with 2 fill(s) in flight
+  4 in flight: peak above warm 501.5 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 13.67 with 4 fill(s) in flight
+  8 in flight: peak above warm 566.6 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 15.71 with 8 fill(s) in flight
+H ceiling: dense_view 536869888 B (message 536869962 B): INVALID_ARGUMENT invalid fill request: ValueError('dense view byte size mismatch: expected 64, go
+H ceiling: dense_view 536870912 B (message 536870986 B): RESOURCE_EXHAUSTED CLIENT: Sent message larger than max (536870986 vs. 536870912)
+I prune after 2 s: untouched histogram exists=False, one filled every 0.5 s exists=True
+I `python -m histserv --help`: --prune-after-seconds Drop histograms that have not been accessed for at least this many seconds. (default: 86400)
+J announce.py (db8fb0a) imported, idle: rss=38027264 (36.3 MiB)
+MODEL B=129 MiB O=3900 B I=160 B a=5.0 b=3.0  (B = A + J; a, b cover every C/E/F row above by construction)
