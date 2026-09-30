@@ -906,20 +906,23 @@ partition, and `require_bound` binds an unbound plan a second time with the plac
 `graphed_histogram.histserv` beside `gh.boost`: four parts, four owners. **Recording** stays `gh.boost`'s. The
 **context** sizes, packs and declares one `ServiceSpec` per server on the session at plan time. The **executor**
 places, binds and closes the servers (D2) and never learns what a histogram is. The **served process** creates,
-fills and resolves the server-side histograms. graphed (d0ad16b) does not change; executors (main db8fb0a) gains one placement kwarg (§5.2).
+fills and resolves the server-side histograms. The backend needs no graphed change (§5.0's `opt_level` PR stands apart); executors (main db8fb0a) gains one
+placement kwarg (§5.2).
 The statement will live in `design.rst` "Filling on histserv servers" and `histserv.py`'s module docstring.
 
 ### 5.0 graphed PR: `aggregate_plan(opt_level=)`, against graphed `main` d0ad16b
 `aggregate_plan(…, opt_level: int = 1)`: `1` is today's optimized compile, in which the optimizer merges fills
 equal along the weights axis; `0` ships the 1:1 cone of the plan's outputs, `writes=` arrays and metadata arrays,
 the graph graphed already calls `opt_level=0` (`debug/lowering.py`); another value is refused naming both. The cone
-is M4's DCE without the rewrites: a new `GraphStore.cone(outputs=)` binding runs Rust
-`optimizer::dead_code_elimination` (reachability, compacted in ascending record id, inputs remapped) and rebuilds the
+is M4's DCE without the rewrites: a new `GraphStore.cone(outputs=)` binding refuses an out-of-range id with `BadNodeId` (as
+`serialize(outputs=)` does), then runs Rust `optimizer::dead_code_elimination` (reachability, compacted in ascending record id, inputs remapped) and rebuilds the
 kept nodes into a fresh store the way `GraphStore::from_reduced` does, with `node_map` = record id → (shipped id,
 None); a private `execute._compile_cone(session, *arrays)` makes the `CompiledGraph` from it as `compile_ir`'s
-optimized branch does from the reduced store (frames re-keyed by `_frames_by_key`), and `aggregate_plan`'s opt-0
-branch calls it. `compile_ir(optimize=False)` keeps its frozen whole-store contract (m22). `_PartitionReduce`
-carries `opt_level` and its `StageError` reports it (a literal `1` in `aggregate.py` today).
+optimized branch does from the reduced store (frames re-keyed by `_frames_by_key`). `_PartitionReduce` carries
+`opt_level`, its `StageError` reports it (a literal `1` in `aggregate.py` today), and every site that produces or
+re-derives a plan's IR compiles at that level, `_compile_cone` at `0`: `aggregate_plan`'s compile and `debug.replay`'s
+recompile check (`replaying.py` `replay`, today always optimized: `probes/m69b/probe_opt0_replay_rv4.txt`).
+`Replay.__init__`'s whole-arena filter and `compile_ir(optimize=False)`'s frozen whole-store contract (m22) stay.
 `probes/m69b/probe_opt0_cone_store.txt` (the cone emulated in Python, patched into `aggregate_plan`): with unmarked
 nodes over another column or raising on the data, the plan runs and ships exactly the cone, which equals replay's
 `lower(opt_level=0)` cone and Rust DCE's `reachable_nodes`, while the whole store holds more; merged fills
@@ -930,10 +933,10 @@ paragraph, changelog. Frozen `tests/frozen/frontend/m69b/test_aggregate_opt_leve
 traceability, tagged `freeze-m69b`:
 | Property | Witness |
 |---|---|
-| the fixture session also records, unmarked, a node over a column no output reads and a node that raises on the data; two marked outputs the optimizer merges (`w` and `w * 1.0`): at `opt_level=0` the plan runs, the reduce receives one value per marked output, the totals equal the default's (which receives one fewer), and the shipped IR's node count equals the outputs' `lower(opt_level=0)` cone, with `compile_ir(session, *outputs, optimize=False)` holding more nodes as the control; `writes=` with a metadata array at `0` writes the default's parts; the default's IR bytes equal a plan built without the kwarg; at `0` the IR and the pickled plan are byte-identical across two child interpreters with `PYTHONHASHSEED` 1 and 2 (fixed source path; each child run with `check=True` and printing one digest line); a failing op's `StageError.opt_level` is `0` at `0` and `1` by default; `opt_level=2` and `-1` refused naming `0` and `1` | reduce arity; node counts; bytes; `StageError` |
+| the fixture session also records, unmarked, a node over a column no output reads and a node that raises on the data; two marked outputs the optimizer merges (`w` and `w * 1.0`): at `opt_level=0` the plan runs, the reduce receives one value per marked output, the totals equal the default's (which receives one fewer), and the shipped IR's node count equals the outputs' `lower(opt_level=0)` cone, with `compile_ir(session, *outputs, optimize=False)` holding more nodes as the control; `writes=` with a metadata array at `0` writes the default's parts; the default's IR bytes equal a plan built without the kwarg; at `0` the IR and the pickled plan are byte-identical across two child interpreters with `PYTHONHASHSEED` 1 and 2 (fixed source path; each child run with `check=True` and printing one digest line); a `store=` plan at `0`, run, then `graphed.debug.replay(plan, 0, *outputs).diff().equal` holds; an op that fails on the data, recorded after the unmarked nodes, raises a `StageError` whose `opt_level` is `0` at `0` and `1` by default and whose `user_frame` names that op's line at both; `GraphStore.cone(outputs=[n])` past the store raises `BadNodeId`; `opt_level=2` and `-1` refused naming `0` and `1` | reduce arity; node counts; bytes; `StageError`; replay diff |
 
 Commits (freeze `test(m69b): frozen aggregate_plan opt_level` ~170 first): 1. `feat(aggregate): opt_level=0 ships the
-outputs' 1:1 cone` (Rust `GraphStore.cone` ~30 with a cargo test ~25, Python ~35, extra tests ~100, docs ~30). No
+outputs' 1:1 cone` (Rust `GraphStore.cone` ~35 with a cargo test ~25, Python ~40, extra tests ~100, docs ~30). No
 m69b file calls it; the PR merges on its own, independent of the m68c unit.
 
 ### 5.1 graphed-histogram PR (`histserv.py` new, `boost.py`), against `main` 4c4b79f, graphed from d0ad16b
@@ -1149,7 +1152,7 @@ Executors: m69a on `main` (~1.1k examples, ~2k fixture/test lines, two fixture b
 `main` (`lane/htcondor` #34 merged as `eefc0f3`, m67 as `b966a28`): m68a (~1.2k src+ci+docs, ~1.3k tests) → m68b
 (~1.5k src+ci+docs, ~1.3k tests) → m70 (~500 src, ~800 tests); m69b (~20 src, ~300 examples, ~1.3k tests, ~250 ci+docs) on `main` db8fb0a, independent of m70.
 graphed: the m68 PR (~360 src, ~850 tests, docs), the resolve walk (§3.2, ~150) and m69b's `opt_level` PR (§5.0,
-~65 src, ~300 tests, ~30 docs). graphed-histogram: one PR (m69b, ~660 src, ~2.5k tests, ~350 ci+docs, its first
+~75 src, ~300 tests, ~30 docs). graphed-histogram: one PR (m69b, ~660 src, ~2.5k tests, ~350 ci+docs, its first
 commit the m48/m49 refreeze). At m66's
 measured estimate-to-shipped ratio (journal) every commit above stays under 2k. Order: m69a and m67 start now; graphed
 m68 PR and the resolve walk before executors m68a (installed by ref, floored at the release that holds both); m68b after m68a, m70 after m68b; graphed's `opt_level` PR
