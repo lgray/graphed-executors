@@ -37,6 +37,72 @@ the counters with ``coffea.processor.accumulate``, as coffea's ``Runner`` does. 
 be submitted separately, and a dict union of their values is the same result.
 
 
+Running it
+----------
+
+The example lives in this repository's ``examples/hgg``, not in the installed package, so run it from
+a clone. Besides graphed-executors it needs coffea with graphed mode, which lives in a fork until it
+is released, the ``uproot`` commit that fork needs, and HiggsDNA installed without its dependencies
+(they pull in torch, xgboost and onnx, which this processor does not use):
+
+.. code-block:: bash
+
+   pip install graphed-executors vector correctionlib pyarrow \
+     "coffea @ git+https://github.com/graphed-org/coffea-graphed-mvp@b2612ab03932ba61f183eb5f582870109020446b" \
+     "uproot @ git+https://github.com/scikit-hep/uproot5@ca3a8a28c0846ea4c6f42452f69e3cce2939bf62"
+   pip install --no-deps \
+     "higgs-dna @ git+https://gitlab.cern.ch/cms-analysis/general/HiggsDNA.git@d17930519cafd8eec06e74e4e9fb7add3cf62b5a"
+
+The processor reads the 2024 golden JSON and jet-ID set from inside the installed ``higgs_dna``, where
+HiggsDNA's own ``higgs_dna/scripts/pull_files.py`` puts them: ``--target GoldenJSON`` downloads the
+golden JSON, and ``--target JetMET`` copies the jet corrections from ``/cvmfs``.
+
+``examples/hgg/run_local.py`` runs one dataset's files on this machine and prints the counters. On a
+200-event 2024 GluGluH→γγ NanoAODv15 file, split in two, on two threads:
+
+.. code-block:: bash
+
+   python examples/hgg/run_local.py nano.root --dataset MC --year 2024 --parts 2 --workers 2 --out out
+
+::
+
+   {
+    "MC": {
+     "nTot": 200,
+     "nPos": 170,
+     "nNeg": 30,
+     "nEff": 140,
+     "genWeightSum": 29368.841796875
+    }
+   }
+
+and writes ``out/MC/nominal/nano_Events_0-100.parquet`` and ``nano_Events_100-200.parquet``. The same
+plan runs on HTCondor pilots, here started on your laptop as in :doc:`htcondor`, from a directory
+holding ``analysis.py`` and the file:
+
+.. code-block:: python
+
+   import analysis
+   from graphed_executors.htcondor_backend import HTCondorBackend, HTCondorRunner, LocalPilots
+
+   fileset = {"MC": {"nano.root": {"object_path": "Events", "steps": [[0, 100], [100, 200]]}}}
+   plan = analysis.plan(fileset, year="2024", out="out")
+
+   backend = HTCondorBackend(LocalPilots(), n_pilots=2, host="127.0.0.1")
+   with HTCondorRunner(backend) as runner:
+       print(runner.run(plan).value)
+
+::
+
+   pilot myhost:88812:fdd5afac serving http://127.0.0.1:10000
+   pilot myhost:88813:1d8a2a56 serving http://127.0.0.1:10000
+   {'MC': {'nTot': 200, 'nPos': 170, 'nNeg': 30, 'nEff': 140, 'genWeightSum': 29368.841796875}}
+
+The counters are the ones the thread run printed, and the same two parts are written. On a pool,
+``analysis.py`` goes in ``user_modules`` and the packages above in the environment the pilots get;
+the file names become ``root://`` URLs the execute nodes can open.
+
+
 What changed, and why
 ---------------------
 
@@ -91,9 +157,9 @@ translation has to spell that step another way. These are all eleven such places
 How the translation is checked
 ------------------------------
 
-The frozen suite ``tests/frozen/m69a`` uses the original script as the oracle. It imports the
-file, kept byte-identical and pinned by SHA-256, and calls its ``process()`` on NanoEvents built
-the way the script's ``__main__`` builds them, one chunk per range. It then compares each part the
+The repository's tests use the original script as the reference. They import the file, kept
+byte-identical and identified by its SHA-256, and call its ``process()`` on NanoEvents built the way
+the script's ``__main__`` builds them, one chunk per range. They then compare each part the
 translation writes against the original's part for the same range. ``compare_part`` covers:
 
 * the counters, by ``==`` and by each value's Python type;
@@ -103,24 +169,22 @@ translation writes against the original's part for the same range. ``compare_par
   unsigned view so NaN positions count;
 * the key-value metadata.
 
-Every mutation test of the comparator asserts that its own leg fired, not just that some
-difference was found.
+Each of those checks is itself tested to catch a difference planted for it.
 
-The inputs are two 200-event NanoAOD v15 fixtures, one MC and one data, each built by a script
-checked in beside it. The MC fixture is the first 200 events of a 2024 GluGluH→γγ NanoAODv15 file.
-The data fixture has certified and uncertified lumi sections, and its builder puts the diphoton
+The inputs are two 200-event NanoAOD v15 files, one MC and one data, each built by a script
+checked in beside it. The MC file is the first 200 events of a 2024 GluGluH→γγ NanoAODv15 file.
+The data file has certified and uncertified lumi sections, and its builder puts the diphoton
 signal only in events 0–59, so its (100, 200) chunk selects nothing: that part has zero rows and
-the original's schema. The suite runs one plan over both fixtures on ``SequentialRunner`` and on
+the original's schema. One plan over both runs on ``SequentialRunner`` and on
 ``SubmitRunner(ThreadBackend(2))``: its value must equal ``coffea.processor.accumulate`` of the
-original's counters, and each part must match the original's part for its range. It also records every events object coffea hands out while
-the plan is built and run, and requires each to be graphed NanoEvents.
+original's counters, and each part must match the original's part for its range. The tests also
+record every events object coffea hands out while the plan is built and run, and require each to be
+graphed NanoEvents.
 
 ``examples/hgg/validate_real.py --parts 2`` runs the same comparison on real 2024 NanoAOD over
 xrootd: the first file of ``GluGluHto2G_M-125_amcatnlo_2024`` and the first of ``DataC_2024``. It
 prints each file's entry count, every part's ``compare_part`` result, and each dataset's
 accumulated counters beside the plan's. It exits 1 on any difference.
 
-The CI job ``test-hgg`` (ubuntu, Python 3.12) installs the coffea fork, ``uproot`` from the commit
-the fork needs, and ``higgs_dna`` with ``--no-deps``. It then runs
-``GRAPHED_HGG_REQUIRED=1 pytest tests/frozen/m69a``. The main matrix has no coffea, so the files
-skip there.
+Continuous integration runs these tests with the packages above installed on every change; where
+coffea is not installed they are skipped.
