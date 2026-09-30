@@ -181,7 +181,9 @@ schedd_locate: [pool, name] | null, user_modules: []}`), builds `LocalPilots(n)`
   [,env.tgz][,user_modules…]`, `transfer_output_files="result.pkl,driver.log"`, `max_retries=2`, `retry_until=3`,
   `JobBatchName=graphed-driverless-<nonce>`, then the profile keys, then `extra_submit`. `pilots="condor"`:
   `run.json.schedd_locate` = (`htc.param["COLLECTOR_HOST"]`, the chosen schedd) and `run.json.log_dir` an absolute
-  path the schedd reads (lxplus: under `/afs`, else refused).
+  path the schedd reads (lxplus: under `/afs`, else refused). `run.json.extra_submit` carries the same keys to the
+  in-job driver's `CondorPilots`, so every job the run submits (driver, SERVICE nodes, pilots) takes them last, as
+  attached pilots do (owner, 2026-09-30).
 - `RunHandle(site, schedd, cluster, log_dir, submitted_at)`: `status() -> "queued"|"running"|"held"|"done"|
   "removed"|"failed"` from one projected query (`JobStatus`, `HoldReasonCode`, `ExitCode`); `wait(timeout=None,
   poll_s=15)`; `result()` (retrieve when spooled, unpickle, re-raise a pickled exception intact); `remove()`;
