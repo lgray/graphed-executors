@@ -1,0 +1,14 @@
+replay:
+  opt 1: diff.equal=True (recorded); replayed 12.0
+  opt 0: ValueError: these outputs do not recompile to the plan's IR: pass the outputs given to aggregate_plan, in order
+  opt 0, replay checks at the plan's level: diff.equal=True (recorded); replayed 12.0
+frame (the failing op is recorded at line 68):
+  opt 1: out record id 25, shipped nodes 4; StageError at line 68 op='index'
+  opt 0: out record id 25, shipped nodes 5; StageError at line 68 op='index'
+partial (unmarked `x - sum(x)`):
+  whole store: GraphedError: 'ak.sum' reduces the partitioned axis and feeds another node: a partitioned run evaluates 
+  cone: builds; value 12.0
+writes (a metadata reduction; 20 unmarked nodes):
+  opt 1: shipped nodes 5; value 12.0; part [1.5, 2.0, 2.5] [('sumw', '3.0'), ('tag', 't')]
+  opt 0: shipped nodes 6; value 12.0; part [1.5, 2.0, 2.5] [('sumw', '3.0'), ('tag', 't')]
+  parts equal: True

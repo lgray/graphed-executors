@@ -90,3 +90,19 @@ None of them makes a round unclean.
    - `tests/frozen/frontend/m69b/README.md` (traceability) and a freeze tag;
    - the cross-seed clause asserts each child printed a digest, as frozen m49 `test_varied_plan_determinism.py` does
      through `check=True` and a line count.
+
+## r4
+From `reviews/plan-services-m69b-r4.md` (delta, 27adfb9). These are constraints for the implementer and test author.
+None of them makes a round unclean.
+
+1. **Assert the frame in the frozen row's `StageError` clause.** The row checks only `StageError.opt_level`.
+   - Record the failing op after unmarked nodes, so shipped ids differ from record ids. Then assert that `user_frame`
+     names the failing op's line at `0`.
+   - A frame table keyed by record id instead of shipped id would name an unmarked node's line.
+     `probes/m69b/probe_opt0_replay_rv4.txt` "frame" shows line 68 at both levels, where a record-id keying gives line
+     67.
+2. **`GraphStore.cone(outputs=)` validates its ids** before calling `dead_code_elimination`, which indexes
+   `nodes[o]` and panics on an out-of-range id. Refuse with `BadNodeId`, as `serialize(outputs=)` and
+   `reduce_with_outputs` do.
+3. **§5's opening says "graphed (d0ad16b) does not change".** That is false beside §5.0's graphed PR. Scope the
+   sentence to the histserv backend.
