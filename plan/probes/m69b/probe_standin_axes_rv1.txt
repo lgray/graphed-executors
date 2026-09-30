@@ -1,0 +1,4 @@
+slot=('strcat_reg', None) axes=['StrCategory', 'Regular', 'StrCategory'] flow_total_local=WeightedSum(value=6692.77, variance=10157.9) equal_to_local=True
+slot=('intcat_bool', 'nominal') axes=['IntCategory', 'Boolean'] flow_total_local=2230.924528781926 equal_to_local=True
+slot=('intcat_bool', 'sf_up') axes=['IntCategory', 'Boolean'] flow_total_local=2788.655660977407 equal_to_local=True
+slot=('intcat_bool', 'sf_down') axes=['IntCategory', 'Boolean'] flow_total_local=1673.1933965864441 equal_to_local=True

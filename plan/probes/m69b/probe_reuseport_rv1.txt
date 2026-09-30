@@ -1,0 +1,4 @@
+linux: first alive=True second alive=True (returncode None)
+histogram_count seen by 8 fresh channels after one init each: [1, 2, 3, 4, 5]
+darwin: first alive=True second alive=True (returncode None)
+histogram_count seen by 8 fresh channels after one init each: [1, 2, 3, 4, 5, 6, 7, 8]

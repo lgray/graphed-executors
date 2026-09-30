@@ -1,0 +1,2 @@
+declare_service twice (equal specs): accepted; declared ['histserv-0']
+collate of two plans each on its own context's histserv-0: ['histserv-0']

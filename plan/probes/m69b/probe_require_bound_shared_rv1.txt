@@ -1,0 +1,4 @@
+1 server(s): require_bound raised UnboundService: service 'histserv-0' has no endpoint: bind with graphed.services.bind_services(plan, {'histserv-0': 'scheme://host:port'}), or run the plan through an executor that resolves Plan.services
+1 server(s), bound to distinct endpoints: require_bound returned
+2 server(s): require_bound raised ValueError: two histserv servers bound to one endpoint: {'histserv-0': 'tcp://unbound:0', 'histserv-1': 'tcp://unbound:0'}
+2 server(s), bound to distinct endpoints: require_bound returned
