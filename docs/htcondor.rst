@@ -61,6 +61,9 @@ Each pilot announces itself, then the result prints::
     pilot myhost:47040:b82d4e07 serving http://127.0.0.1:10000
     [700] 7 6
 
+Local pilots start in your directory with your ``PYTHONPATH``, so they import ``my_tasks`` as your
+script does. Pilots on a pool do not; you pass them the file (below).
+
 Your own analysis goes through the same two lines. Here a histogram fill from
 `graphed-histogram <https://github.com/graphed-org/graphed-histogram>`__ (``pip install
 graphed-histogram pyarrow``) runs on the pilots:
@@ -231,7 +234,7 @@ the one port CERN opens from workers to a submit host (for a dask scheduler), so
 login node**. A second ``htcondor_runner`` on the same node fails at once with ``OSError: no free
 port for the task server: site=lxplus ports=8786-8786``; log in to another node. On a September
 2026 run the first pilot was live 105 s after submission. The lxplus schedd refuses a spooled job that
-brings nothing back, which the site handles with ``transfer_output_files=""``.
+brings nothing back, so graphed-executors always gives pilots an empty ``transfer_output_files``.
 
 Pilots run in the ``longlunch`` queue (two hours); pass
 ``extra_submit={"+JobFlavour": '"workday"'}`` for a longer run, or
@@ -268,9 +271,19 @@ For a site of your own, describe it once as a ``SiteProfile`` and pass that as `
         sandbox_root=None,      # or a directory the schedd can read, which log_dir must sit under
         schedd_query=None,      # or (param naming the collectors, constraint) to pick a schedd
         driver_ports=(10000, 10100),  # what the execute nodes can reach on the submit host
+        worker_ports=(10000, 10100),  # what one execute node can reach on another: services as jobs
+        service_ports=(10000, 10100),  # what the execute nodes can reach for a service beside you
     )
+    print(mysite.service_hosts)
 
-Submit values may use ``{image}``, ``{uid}``, ``{user}`` and ``{home}``.
+::
+
+    ('driver', 'cluster')
+
+Submit values may use ``{image}``, ``{uid}``, ``{user}`` and ``{home}``. Leave out a port range your
+pool does not open: without ``worker_ports`` the runner cannot start a service as a job, and without
+``service_ports`` it cannot start one beside you. ``htcondor_runner`` takes a ``SiteProfile``;
+``submit_driverless`` takes only a site name, ``"lpc"``, ``"lxplus"`` or ``"generic"``.
 
 
 Running without a login session
@@ -518,7 +531,9 @@ runner. This runs on your laptop, with ``http_server`` standing in for a real se
     8.0
     8.0
 
-The server started once; each run then reports it as an endpoint you gave. (``services=("files",)``
+The server started once; each run then reports it as an endpoint you gave. The log calls each place a
+*leg*. ``http.server`` also writes its own access log to stderr, one ``"GET / HTTP/1.1" 200`` line
+per check. (``services=("files",)``
 makes the plan carry a service that no node calls, which is enough to show its lifetime.) On a pool,
 wait for the pilots first, since the set checks each service from one:
 
@@ -625,7 +640,8 @@ The arguments you will change
    * - ``n_pilots``
      - How many pilot jobs to submit. One pilot runs one task at a time.
    * - ``site``
-     - ``"lpc"``, ``"lxplus"``, ``"generic"`` (the default), or a ``SiteProfile``.
+     - ``"lpc"``, ``"lxplus"``, ``"generic"`` (the default), or, for ``htcondor_runner``, a
+       ``SiteProfile``.
    * - ``image``
      - The container image; ``lpc`` and ``lxplus`` need one.
    * - ``user_modules``

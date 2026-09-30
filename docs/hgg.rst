@@ -41,28 +41,42 @@ Running it
 ----------
 
 The example lives in this repository's ``examples/hgg``, not in the installed package, so run it from
-a clone. Besides graphed-executors it needs coffea with graphed mode, which lives in a fork until it
+a clone, and install the clone. It also needs coffea with graphed mode, which lives in a fork until it
 is released, the ``uproot`` commit that fork needs, and HiggsDNA installed without its dependencies
 (they pull in torch, xgboost and onnx, which this processor does not use):
 
 .. code-block:: bash
 
-   pip install graphed-executors vector correctionlib pyarrow \
+   git clone https://github.com/graphed-org/graphed-executors
+   cd graphed-executors
+   pip install . vector correctionlib pyarrow \
      "coffea @ git+https://github.com/graphed-org/coffea-graphed-mvp@b2612ab03932ba61f183eb5f582870109020446b" \
      "uproot @ git+https://github.com/scikit-hep/uproot5@ca3a8a28c0846ea4c6f42452f69e3cce2939bf62"
    pip install --no-deps \
      "higgs-dna @ git+https://gitlab.cern.ch/cms-analysis/general/HiggsDNA.git@d17930519cafd8eec06e74e4e9fb7add3cf62b5a"
 
 The processor reads the 2024 golden JSON and jet-ID set from inside the installed ``higgs_dna``, where
-HiggsDNA's own ``higgs_dna/scripts/pull_files.py`` puts them: ``--target GoldenJSON`` downloads the
-golden JSON, and ``--target JetMET`` copies the jet corrections from ``/cvmfs``.
-
-``examples/hgg/run_local.py`` runs one dataset's files on this machine and prints the counters. On a
-200-event 2024 GluGluH→γγ NanoAODv15 file, split in two, on two threads:
+HiggsDNA's own ``pull_files.py`` puts them. Its ``--target GoldenJSON`` downloads the golden JSONs.
+Its ``--target JetMET`` copies the jet corrections from ``/cvmfs``, which a laptop does not have, so
+copy the jet-ID set kept beside the example instead (the same bytes as
+``/cvmfs/cms-griddata.cern.ch/cat/metadata/JME/Run3-24CDEReprocessingFGHIPrompt-Summer24-NanoAODv15/2026-06-05/jetid.json.gz``):
 
 .. code-block:: bash
 
-   python examples/hgg/run_local.py nano.root --dataset MC --year 2024 --parts 2 --workers 2 --out out
+   python -m higgs_dna.scripts.pull_files --target GoldenJSON
+   python -c "import higgs_dna, pathlib, shutil; d = pathlib.Path(higgs_dna.__file__).parent / 'systematics/JSONs/POG/JME/2024_Summer24'; d.mkdir(parents=True, exist_ok=True); shutil.copy('examples/hgg/jetid.json.gz', d)"
+
+``examples/hgg/run_local.py`` runs one dataset's files on this machine and prints the counters.
+``examples/hgg/nano.root`` is the first 200 events of a 2024 GluGluH→γγ NanoAODv15 file
+(``/store/mc/RunIII2024Summer24NanoAODv15/GluGluH-Hto2G_Par-M-125_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/NANOAODSIM/150X_mcRun3_2024_realistic_v2-v2/120000/acebfb52-a25b-48bc-b9f6-80fe54a98d56.root``).
+Split in two, on two threads:
+
+.. code-block:: bash
+
+   python examples/hgg/run_local.py examples/hgg/nano.root --dataset MC --year 2024 --parts 2 --workers 2 --out out
+
+It warns three times (numpy's ``RuntimeWarning``: overflow in ``sinh``, overflow in ``cosh``, invalid
+value in ``subtract``), then prints the counters:
 
 ::
 
@@ -77,8 +91,8 @@ golden JSON, and ``--target JetMET`` copies the jet corrections from ``/cvmfs``.
    }
 
 and writes ``out/MC/nominal/nano_Events_0-100.parquet`` and ``nano_Events_100-200.parquet``. The same
-plan runs on HTCondor pilots, here started on your laptop as in :doc:`htcondor`, from a directory
-holding ``analysis.py`` and the file:
+plan runs on HTCondor pilots, here started on your laptop as in :doc:`htcondor`, from
+``examples/hgg``, which holds ``analysis.py`` and the file:
 
 .. code-block:: python
 
@@ -169,8 +183,6 @@ translation writes against the original's part for the same range. ``compare_par
   unsigned view so NaN positions count;
 * the key-value metadata.
 
-Each of those checks is itself tested to catch a difference planted for it.
-
 The inputs are two 200-event NanoAOD v15 files, one MC and one data, each built by a script
 checked in beside it. The MC file is the first 200 events of a 2024 GluGluH→γγ NanoAODv15 file.
 The data file has certified and uncertified lumi sections, and its builder puts the diphoton
@@ -185,6 +197,3 @@ graphed NanoEvents.
 xrootd: the first file of ``GluGluHto2G_M-125_amcatnlo_2024`` and the first of ``DataC_2024``. It
 prints each file's entry count, every part's ``compare_part`` result, and each dataset's
 accumulated counters beside the plan's. It exits 1 on any difference.
-
-Continuous integration runs these tests with the packages above installed on every change; where
-coffea is not installed they are skipped.

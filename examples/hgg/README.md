@@ -17,9 +17,11 @@ and data together, and its value is the original's counters summed per dataset
 
 You need the coffea fork with graphed mode (`graphed-org/coffea-graphed-mvp`), `correctionlib`,
 `pyarrow`, and `higgs_dna` installed with `--no-deps`. The processor reads HiggsDNA's data files
-where the original reads them, inside the installed `higgs_dna` package. HiggsDNA's
-`pull_files.py --target GoldenJSON` and `--target JetMET` put them there, or the m69a test harness
-copies the 2024 golden JSON and jet-ID set in.
+where the original reads them, inside the installed `higgs_dna` package: HiggsDNA's
+`pull_files.py --target GoldenJSON` puts the golden JSON there, and `--target JetMET` the jet-ID set
+from `/cvmfs`. Without `/cvmfs`, copy `jetid.json.gz` from this directory to
+`higgs_dna/systematics/JSONs/POG/JME/2024_Summer24/`. `nano.root` is the first 200 events of a 2024
+GluGluH→γγ NanoAODv15 file; [docs/hgg.rst](../../docs/hgg.rst) runs it step by step.
 
 ```bash
 python examples/hgg/run_local.py FILE.root [FILE.root ...] --dataset MC --year 2024 --parts 4 --workers 4 --out output_inclusive
@@ -49,11 +51,11 @@ depend on the chunking.
 
 ## How it is checked
 
-The frozen suite `tests/frozen/m69a` imports the original script, byte-identical, and runs it as
-the oracle on the same ranges. It then compares every graphed part with the original's part: the
+The tests import the original script, byte-identical, and run it as the reference on the same
+ranges. It then compares every graphed part with the original's part: the
 arrow schema, each column's validity bitmap and valid values bit for bit, and the key-value
 metadata; the plan's value must equal the original's counters accumulated, with their Python
-types. The inputs are two 200-event NanoAOD v15 fixtures: the first 200 events of a 2024
+types. The inputs are two 200-event NanoAOD v15 files: the first 200 events of a 2024
 GluGluH→γγ MC file, and a data file with certified and uncertified lumi sections.
 
 `validate_real.py --parts 2` does the same on the first file of `GluGluHto2G_M-125_amcatnlo_2024`

@@ -184,23 +184,12 @@ Two things bite people on HTEX:
 
 ### On an HTCondor pool
 
-Needs `graphed-executors[htcondor]` (the HTCondor bindings ship Linux wheels only). The runner
-submits its own pilot jobs, which call back to your session and pull tasks; there is no scheduler
-to start. The pilots import your plan's functions by name, so pass the file they live in — the
-`my_tasks.py` above:
-
-```python
-# A recipe: this needs an HTCondor pool.
-from graphed_executors.htcondor_backend import htcondor_runner
-
-with htcondor_runner(site="generic", n_pilots=10, user_modules=["my_tasks.py"]) as runner:
-    print(runner.run(plan).value)            # [700]
-```
-
-`site="lpc"` and `site="lxplus"` carry those sites' submit settings. The same pilots also run as
-local processes (`LocalPilots`), so you can rehearse the run on your laptop first.
-`submit_driverless(plan, site=..., ...)` puts the driver itself in a job, so the run needs no
-login session. See [Running on an HTCondor pool](docs/htcondor.rst) for all three.
+Needs `graphed-executors[htcondor]` (the HTCondor bindings ship Linux wheels only).
+`htcondor_runner` submits its own pilot jobs, which call back to your session and pull tasks; there
+is no scheduler to start. The pilots import your plan's functions by name, so pass the file they
+live in as `user_modules=[...]`. [Running on an HTCondor pool](docs/htcondor.rst) rehearses a run
+with pilots on your laptop, then takes it to the LPC, lxplus or your own pool, and to runs that
+outlive your login.
 
 ## Useful knobs
 
