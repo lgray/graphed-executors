@@ -1,0 +1,4 @@
+placement test alone:               {'a': 'histserv-0', 'b': 'histserv-0', 'c': 'histserv-1'}
+placement test after an equal one:  {'a': 'histserv-1', 'b': 'histserv-0', 'c': 'histserv-0'}  (same as alone: False)
+monotonicity sweep workers=1: built
+monotonicity sweep workers=2: ValueError: context name 'histserv' is used with (100, 1), not (100, 2)

@@ -1,0 +1,3 @@
+A positions after building the counter-first plan: fills [1, 1] counter 0; after building a counter-last plan with the same pieces: fills [0, 0] counter 1
+A the counter-first plan run afterwards: AttributeError: no field named 'copy'
+B varied fills: 3 marked, 2 compiled; _variation_labels returned tuple of 10 keys

@@ -1,0 +1,3 @@
+tasks per dataset: 2; leaf types ['Histogram']
+collected == one: True
+control (one bin changed) == one: False

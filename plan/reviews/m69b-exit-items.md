@@ -37,3 +37,22 @@ author. None of them makes a round unclean.
   The plan reaches cluster placement only through a site-profile copy (`service_ports=None`), and that is `run_lpc.py`'s
   `--placement`, not the Context. If the owner wants it on the Context, it needs a D2 change. List it among §9's owner
   items.
+
+## r2
+From `reviews/plan-services-m69b-r2.md` (delta, dc66fe0). These are constraints for the implementer and test author.
+None of them makes a round unclean.
+
+- **The O sub-row of `test_histserv_memory_model.py` is looser than §9 and "Fails on" claim.**
+  - Measured by `probes/m69b/probe_overhead_row_rv2.txt` (amd64, 3.11–3.14): 2000 one-bin slots, one fill each,
+    `O = 4000`, `I = 160`. The row passes with a 10.7–16.8 % margin (Weight) and 19.0–28.4 % (Double).
+  - It still passes for any `O` of at least 3283–3545 B (Weight) or 2807–3200 B (Double). The pre-R1-7 value of
+    3700 passes on every Python.
+  - So the row guards against a missing or mis-scaled `O` term, not the ≤ 12 % shortfall R1-7 was about. Ruling 7
+    settles that shortfall by the max-over-`MODEL` rule instead.
+  - Fill the slots with Weight storage, the storage that sets `O`.
+  - §9's "checks `O`" and "Fails on: … an under-estimated model constant" should say "a missing or mis-scaled term".
+- **The m69a fixup leaves `test_each_dataset_run_on_its_own_collects_into_the_same_product` unmodified.**
+  `probes/m69b/probe_m69a_each_rv2.txt` shows that the collated and per-dataset values stay equal with local
+  histograms in them. Say so in §5.2's refreeze paragraph, so the test author does not touch it.
+- **The m69a `README.md` traceability row** for `test_one_plan_writes_every_part_and_returns_the_totals` should name
+  the `"diagnostics"` key the refrozen assertions exclude and check.
