@@ -1,0 +1,12 @@
+A/B opt_level=1: 2 compiled outputs for 3 marked, fill positions [1, 1], equal to two direct fills: True
+A/B opt_level=0: 3 compiled outputs for 3 marked, fill positions [1, 2], equal to two direct fills: True
+C gh.plan at opt_level=1: GraphedError: the optimizer merged fills that record as distinct nodes (2 
+C gh.plan at opt_level=0: equal to two direct fills: True
+D opt_level=1: ir sha256 daaede42bfff88ab (a second build in this interpreter equal: True)
+D opt_level=0: ir sha256 66b8def34b8d21ac (a second build in this interpreter equal: True)
+A/B opt_level=1: 2 compiled outputs for 3 marked, fill positions [1, 1], equal to two direct fills: True
+A/B opt_level=0: 3 compiled outputs for 3 marked, fill positions [1, 2], equal to two direct fills: True
+C gh.plan at opt_level=1: GraphedError: the optimizer merged fills that record as distinct nodes (2 
+C gh.plan at opt_level=0: equal to two direct fills: True
+D opt_level=1: ir sha256 daaede42bfff88ab (a second build in this interpreter equal: True)
+D opt_level=0: ir sha256 66b8def34b8d21ac (a second build in this interpreter equal: True)

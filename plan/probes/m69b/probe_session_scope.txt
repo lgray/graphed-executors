@@ -1,0 +1,3 @@
+distinct sessions: True
+per-plan services: {'MC': ['histserv-0'], 'Data': ['histserv-0']}
+collated services: ['histserv-0']
