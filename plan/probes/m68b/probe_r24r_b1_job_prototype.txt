@@ -1,0 +1,9 @@
+# htcondor/mini:25.13.2-el9 (container r24r-mini, removed), /usr/bin/python3 3.9.25 as submituser, announce_proto.py at db19852; script probe_r24r_b1_job_prototype.py
+condor CondorVersion: 25.13.2 2026-08-19 BuildID: 943576 PackageID: 25.13.2-1 GitSHA: 589a5b38
+J1 announced ['k-j1', '2824c5187e86:10000', '2824c5187e86'] | GET / 200, /service.json 404, /graphed-secret 404, /announce.py 404
+J1 receiver stopped: job left the queue after 5.2s; history {'JobStatus': 4, 'ExitCode': 0}
+J1 service.out: ['child mask SigBlk=0000000000000000 sigterm_blocked=False secret_beside=False cwd=service', "[announce 22:44:19] ready pid=551 body='k-j1 2824c5187e86:10000 2824c5187e86'", '[announce 22:44:24] orphaned (None, last 200 5.0s ago): stopping the service']
+J1 child pid after: []
+J2 (serve child) removed: left the queue after 0.3s (job_max_vacate_time 30); child pids before ['594'] after []; history {'JobStatus': 3, 'EnteredCurrentStatus': 1790721870, 'JobCurrentStartDate': 1790721870, 'JobBatchName': 'graphed-service-k-j2'}
+J3 (ign child) removed: left the queue after 5.1s (job_max_vacate_time 30); child pids before ['617'] after []; history {'JobStatus': 3, 'EnteredCurrentStatus': 1790721891, 'JobCurrentStartDate': 1790721880, 'JobBatchName': 'graphed-service-k-j3'}
+J4 403 receiver: job left the queue 5.7s after it ran; history {'JobStatus': 4, 'ExitCode': 0}; service.out orphan line: ['[announce 22:45:00] orphaned (403, last 200 0.0s ago): stopping the service']

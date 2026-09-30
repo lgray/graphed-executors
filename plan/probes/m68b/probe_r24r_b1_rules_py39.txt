@@ -1,0 +1,74 @@
+# probe_announce_rules.py re-run for r24-B1: htcondor/mini:25.13.2-el9 (container r24r-mini, removed), /usr/bin/python3 3.9.25 as submituser, announce_proto.py at db19852
+L1 exits at once, 20 ports
+   -> exit 3 after 0.5s
+   not ready: child exited 7 on port 23000
+L2 never ready, 3 ports, timeout_s 2
+   -> exit 3 after 2.1s
+   not ready: not ready within timeout_s=2: ConnectionRefusedError(111, 'Connection refused')
+L3 port taken after the scan (http:/ check)
+   -> exit 0 after 30.1s
+   port 23200 taken after the scan (child exited 1), next
+   ready pid=189 body='k 2824c5187e86:23201 2824c5187e86'
+   announced to http://2824c5187e86:23000
+   orphaned (None, last 200 10.0s ago): stopping the service
+   announced ports: ['23201'] (range starts 23200)
+L4 no 200 ever (closed url), lease_s 3
+   child pid while waiting: ['200']
+   child pid after exit: []
+   -> exit 0 after 4.1s
+   ready pid=200 body='k 2824c5187e86:23200 2824c5187e86'
+   orphaned (None, last 200 3.0s ago): stopping the service
+L5 403 (another server's secret)
+   -> exit 0 after 0.5s
+   port 23200 taken, next
+   ready pid=208 body='k 2824c5187e86:23201 2824c5187e86'
+   orphaned (403, last 200 0.0s ago): stopping the service
+L6 beats, then the server stops, lease_s 3, beat_s 1
+   -> exit 0 after 7.6s
+   ready pid=212 body='k 2824c5187e86:23200 2824c5187e86'
+   announced to http://2824c5187e86:23400
+   orphaned (None, last 200 3.0s ago): stopping the service
+   announces received before the stop: 5
+L7 503 once then exit 7, 5 ports, 10 runs: child starts per run [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] ; (exit, names 7): [(3, True)]
+L8 secret not served by the child
+   GET /graphed-secret -> 404
+   graphed-secret still in the cwd: False
+   announces taking 200 so far: 7
+   -> exit 0 after 9.6s
+   ready pid=244 body='k 2824c5187e86:25600 2824c5187e86'
+   announced to http://2824c5187e86:25400
+   orphaned (None, last 200 3.0s ago): stopping the service
+L9 child cwd holds only the inputs
+   GET /user.cc -> 404
+   GET /models/m.txt -> 200 b'model'
+   -> exit 0 after 6.6s
+   ready pid=253 body='k 2824c5187e86:26000 2824c5187e86'
+   announced to http://2824c5187e86:25800
+   orphaned (None, last 200 3.0s ago): stopping the service
+L10 relative {python}
+   child argv[0]: /tmp/m68b-rules-4q9g7ca7/env/bin/python
+   -> exit 0 after 6.6s
+   ready pid=261 body='k 2824c5187e86:26200 2824c5187e86'
+   announced to http://2824c5187e86:23000
+   orphaned (None, last 200 3.1s ago): stopping the service
+   control: relative ./env/bin/python with cwd=service/ -> FileNotFoundError
+L11 executable input as argv[0]
+   -> exit 0 after 7.6s
+   ready pid=272 body='k 2824c5187e86:26400 2824c5187e86'
+   announced to http://2824c5187e86:26200
+   orphaned (None, last 200 3.0s ago): stopping the service
+   announces: 5
+L12 missing argv[0]
+   -> exit 3 after 0.0s
+   not ready: cannot start ./missing: FileNotFoundError(2, 'No such file or directory')
+   traceback in output: False
+L13 orphan reap of a SIGTERM-ignoring child: exit 0, 8.6s after start (orphaned at 3.6s), child alive False
+L14 SIGTERM during the orphan reap: exit 143 5.1s after the SIGTERM, child alive False; ['SIGTERM: reaped']
+L15 env merge
+   -> exit 0 after 6.6s
+   ready pid=294 body='k 2824c5187e86:26400 2824c5187e86'
+   announced to http://2824c5187e86:23400
+   orphaned (None, last 200 3.0s ago): stopping the service
+   child saw JOBVAR RECVAR: from-job from-recipe
+L16 handler raised _Stop, SIGTERM afterwards SIG_IGN True, Popen calls []
+L17 reaped child: exit 143, os.kill calls []; control (unreaped child): exit 143, os.kill calls 1 (SIGTERM True)

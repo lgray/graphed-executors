@@ -487,3 +487,24 @@ These are test-precision items and implementer constraints from review r23-B1 (`
 - B1 row: added `host_service` legs for a raising spool (an `act(Remove)` on `FAKE_CLUSTER`, key forgotten) and a raising `schedd.submit` (key forgotten, no `act`). Reason: D10's "releases what it started and then raises" had no leg on either path. The names `RecordingSchedd(spool_raises=…)`, `record_bindings`, `FAKE_CLUSTER` and `test_a_failed_spool_leaves_no_cluster_and_no_port` are grepped from `tests/frozen/m68a/` at 0e48380. The spool is made to raise only after the backend is built, since the recorder's `spool_raises` would also fail the pilots' own spool. The queue answers `JobStatus 5`, since `_remove` acts only on a non-empty query.
 - `announce.py`: the Unix-only names sit behind `sys.platform` guards in `hard_reap` (after the `None` return) and in `start` (the block, plus an `unblock_sigterm()` used as `preexec_fn` and in the `finally`). Reason: Windows `mypy --strict`. On win32 and linux the guarded prototype gives 0 `attr-defined` errors and no platform-only error, where the ae932a8 prototype gives 8 on win32 (probe_r24_b1_win32_mypy). L1–L17 hold on 3.9.25 (container `r24p-mini`, removed) and on macOS 3.9.6 (probe_announce_rules).
 - B2 base-check E1 and the exit-table coordinate: §2 now says m68b adds `announce_only`/`dag_dir` (its `endpoints` is m68a's), B2 drops "or hold §2's empty list", and the table is `docs/htcondor.rst` 279–298. Reason: 0e48380's run dict carries `endpoints` only (`git grep '"endpoints"'` in `driver.py`/`driverless.py`: 0 hits at c2298d7, 3 at 0e48380). E2 and E3 stay implementer constraints in that section.
+
+## r24-B1 exit items
+These are test-precision and figure items from review r24-B1 (`plan-services-m68b-r24-b1.md`, a whole-part read). The design finding is M41-B1 in that review.
+
+- **B1 row, "a child that ignores SIGTERM is killed within 5 s of `announce.py`'s SIGTERM".** The pid reap polls `waitpid` for 5 s before it sends SIGKILL, so the kill lands at 5 s + ε: L14 measured 5.0–5.1 s (`probe_announce_rules.txt`, `probe_r24r_b1_rules_py39.txt`). Write "within 5 s + margin", as the neighbouring legs do.
+- **L547, the Windows-mypy constraint on test bodies.** It binds `tests/extra/m68b` only.
+  - `pyproject.toml`'s `[[tool.mypy.overrides]] module = ["tests.frozen.*"]` already disables `attr-defined`, so a frozen POSIX-only body may spell `os.WNOHANG` bare.
+  - Measured with the repo config and mypy 2.3.1 `--platform win32` on a `skipif` body using `os.WNOHANG`: under `tests/frozen/m68b/`, "no issues"; the same file under `tests/extra/m68b/` has 1 error; linux is clean for both. This ran in the scratch 0e48380 worktree, now removed.
+  - The cited `probe_r23r_b1_win32_mypy.txt` T ran a standalone file, outside that override.
+- **B1 row, the missing-input `host_service` leg says "(no pool needed)".** `host_service` exists only on a backend over a started `CondorPilots`, whose `start` calls `_htcondor()`. So the leg runs under `record_bindings`, as the failed-spool leg beside it says.
+- **L454 heading, `announce.py ~130`.** The prototype is 254 lines, and the typed module will be larger. Commit 1's ~790 still stays under 2k.
+- **RESULTS Q-04 and the CI pool:**
+  - Q-04's "a time taken in the job lies between them" holds at whole-second resolution: `int(t) ≤ EnteredCurrentStatus` (M41-B1). Its probe had a 2.4 s gap.
+  - test-htcondor's pool is HTCondor 25.14.1 (`PackageID: 25.14.1-1+ubu24`, CI run 36626770013 at 0e48380). The matrix and the live-row probes ran 25.13.2 daemons.
+- **Evidence r24-B1:**
+  - `probes/m68b/probe_r24r_b1_history_seconds.{py,txt}` (M41);
+  - `probe_r24r_b1_engine_gap.{py,txt}` (M41's premise, local);
+  - `probe_r24r_b1_job_prototype.{py,txt}` (the current prototype as a real ServiceJob: J1–J4);
+  - `probe_r24r_b1_rules_py39.txt` (L1–L17 on 3.9.25).
+
+  The container runs used `r24r-mini` (htcondor/mini:25.13.2-el9), now removed.

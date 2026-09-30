@@ -1,0 +1,12 @@
+# htcondor/mini:25.13.2-el9 (container r24r-mini, removed), /usr/bin/python3 3.9.25 as submituser; script probe_r24r_b1_history_seconds.py
+running: 9 of 9
+g=0.0 frac(t)=0.41 ECS-int(t)=0 JobStatus=3 float:False int:True
+g=0.0 frac(t)=0.79 ECS-int(t)=0 JobStatus=3 float:False int:True
+g=0.0 frac(t)=0.17 ECS-int(t)=0 JobStatus=3 float:False int:True
+g=0.0 frac(t)=0.55 ECS-int(t)=0 JobStatus=3 float:False int:True
+g=0.3 frac(t)=0.93 ECS-int(t)=1 JobStatus=3 float:True int:True
+g=0.3 frac(t)=0.61 ECS-int(t)=0 JobStatus=3 float:False int:True
+g=0.3 frac(t)=0.29 ECS-int(t)=0 JobStatus=3 float:False int:True
+g=1.2 frac(t)=0.97 ECS-int(t)=2 JobStatus=3 float:True int:True
+g=1.2 frac(t)=0.56 ECS-int(t)=1 JobStatus=3 float:True int:True
+trials with g < 1 s failing: float 6, int 0 of 7
