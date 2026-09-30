@@ -508,3 +508,12 @@ These are test-precision and figure items from review r24-B1 (`plan-services-m68
   - `probe_r24r_b1_rules_py39.txt` (L1–L17 on 3.9.25).
 
   The container runs used `r24r-mini` (htcondor/mini:25.13.2-el9), now removed.
+
+## decisions (round 19)
+- owner 2026-09-29: M41 folded; r25 delta confirms the fold; no further whole-part read.
+- M41: the live row's run 2 bound is `JobCurrentStartDate ≤ t` and `int(t) ≤ EnteredCurrentStatus`; run 1's stays. RESULTS Q-04 now states the whole-second form and cites `probe_r24r_b1_history_seconds.txt`. Reason: history stamps truncated seconds (float form failed 6/7 sub-second trials, int form 0/7).
+- "within 5 s" became "within 5 s + margin" at the row leg and at the two design sentences with the same bound (L13 orphan reap, L14 SIGTERM during it). Reason: the reap polls 5 s before SIGKILL; L13/L14 measured 5.0–5.1 s. Searched `plan-services.md`: those three are the only "killed/ends … within 5 s" bounds.
+- The Windows-mypy test-body rule names `tests/extra/m68b`; frozen bodies may spell Unix-only names bare. Reason: `git show 0e48380:pyproject.toml` has `module = ["tests.frozen.*"]` with `attr-defined` in `disable_error_code`.
+- The missing-input `host_service` leg runs under `record_bindings`. Reason: at 0e48380 `CondorPilots.start` calls `_htcondor()` (`launch.py`), and `host_service` needs the built backend.
+- Sizes: `announce.py` ~290 (the 254-line `announce_proto.py`, typed), so B1 commit 1 ~950, under 2k. `handoff-m68b.md` still says ~790 for commit 1; the plan's figure governs.
+- CI pool version: the "HTCondor behaviour relied on" paragraph notes `test-htcondor` runs 25.14.1 (CI run 36626770013 at 0e48380, `$CondorVersion: 25.14.1 … PackageID: 25.14.1-1+ubu24`), the matrix 25.13.2. A fact for the implementer, no decision changes.
