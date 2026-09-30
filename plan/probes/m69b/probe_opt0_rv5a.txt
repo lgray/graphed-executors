@@ -1,0 +1,15 @@
+badnodeid:
+  serialize(outputs=[5]) on an empty store: builtins.ValueError: no node with id 5
+  names containing 'Bad' in graphed, graphed.core, graphed.core.graphed_core: []
+  control, names containing 'Graph' in graphed.core.graphed_core: ['GraphStore']
+replay (fixture: marked w, w * 1.0; unmarked z * 3.0 and x[x > 100][0]; store=):
+  opt 0: IR outputs 2; run (reduce arity, total) (2, 6.0); ValueError: these outputs do not recompile to the plan's IR: pass the outputs given to aggregate_plan, in order
+  opt 0, replay checks at the plan's level: IR outputs 2; run (reduce arity, total) (2, 6.0); diff.equal=True (recorded); recorded (2, 6.0); replayed (2, 6.0)
+  opt 1: IR outputs 1; run (reduce arity, total) (1, 3.0); diff.equal=False (recorded); recorded (1, 3.0); replayed (2, 6.0)
+  opt 0, replay checks at the plan's level, outputs (w, w): IR outputs 1; run (reduce arity, total) (1, 3.0); diff.equal=False (recorded); recorded (1, 3.0); replayed (2, 6.0)
+  opt 1, outputs (w, w): IR outputs 1; run (reduce arity, total) (1, 3.0); diff.equal=False (recorded); recorded (1, 3.0); replayed (2, 6.0)
+the cut (Replay.value per IR output of the plan-level compile):
+  opt 0, outputs (w, w): diff.equal=True (recorded); recorded (1, 3.0); replayed (1, 3.0)
+  opt 1, outputs (w, w): diff.equal=True (recorded); recorded (1, 3.0); replayed (1, 3.0)
+  opt 1, outputs (w, w * 1.0): diff.equal=True (recorded); recorded (1, 3.0); replayed (1, 3.0)
+  opt 0, outputs (w, w * 1.0): diff.equal=True (recorded); recorded (2, 6.0); replayed (2, 6.0)
