@@ -1,0 +1,22 @@
+2026-09-30 10:09:12.147 ERROR:histserv:RPC<FillMany> - request=7.51 KB, duration=193.71 us, response=<error> (hist_id=e2899a7fd4194ce0959053320ee1f210)
+2026-09-30 10:09:12.158 ERROR:histserv:RPC<FillMany> - request=168 B, duration=181.17 us, response=<error> (hist_id=9b6526f0a892412f8cf6508e08927dd7)
+2026-09-30 10:09:12.164 ERROR:histserv:RPC<FillMany> - request=168 B, duration=74.58 us, response=<error> (hist_id=573598d2188d4301b7f2bd96693f482d)
+2026-09-30 10:09:12.169 ERROR:histserv:RPC<FillMany> - request=168 B, duration=75.96 us, response=<error> (hist_id=04163aaac5974204afc599d87ac3600c)
+2026-09-30 10:09:12.209 ERROR:histserv:RPC<FillMany> - request=3.81 KB, duration=96.17 us, response=<error> (hist_id=c79c1bde7809421ab479aa85cc65b570)
+2026-09-30 10:09:12.214 ERROR:histserv:RPC<FillMany> - request=120 B, duration=97.67 us, response=<error> (hist_id=5ccef22f8ec04ff1a976c41d694f30a1)
+2026-09-30 10:09:12.220 ERROR:histserv:RPC<FillMany> - request=120 B, duration=158.29 us, response=<error> (hist_id=6190ed74e5d94ebd9b3efcb04d28c509)
+2026-09-30 10:09:12.225 ERROR:histserv:RPC<FillMany> - request=120 B, duration=79.50 us, response=<error> (hist_id=46c50f0c107245d1af76b80c39003b90)
+2026-09-30 10:09:12.243 ERROR:histserv:RPC<FillMany> - request=1.32 KB, duration=107.96 us, response=<error> (hist_id=96378dceb28b49d4b3ec2febc944fe8b)
+2026-09-30 10:09:12.248 ERROR:histserv:RPC<FillMany> - request=120 B, duration=77.92 us, response=<error> (hist_id=9730f2cc7a1846dcb87fe1278ead7162)
+Weight slot=('a', None) chunk_axis=True chunks=3 init_json_bytes=582 fillmany_bytes=7509 replay=ALREADY_EXISTS equal_to_local=True
+Weight slot=('s', 'nominal') chunk_axis=False chunks=1 init_json_bytes=242 fillmany_bytes=168 replay=ALREADY_EXISTS equal_to_local=True
+Weight slot=('s', 'sf_up') chunk_axis=False chunks=1 init_json_bytes=242 fillmany_bytes=168 replay=ALREADY_EXISTS equal_to_local=True
+Weight slot=('s', 'sf_down') chunk_axis=False chunks=1 init_json_bytes=242 fillmany_bytes=168 replay=ALREADY_EXISTS equal_to_local=True
+Double slot=('a', None) chunk_axis=True chunks=3 init_json_bytes=580 fillmany_bytes=3813 replay=ALREADY_EXISTS equal_to_local=True
+Double slot=('s', 'nominal') chunk_axis=False chunks=1 init_json_bytes=240 fillmany_bytes=120 replay=ALREADY_EXISTS equal_to_local=True
+Double slot=('s', 'sf_up') chunk_axis=False chunks=1 init_json_bytes=240 fillmany_bytes=120 replay=ALREADY_EXISTS equal_to_local=True
+Double slot=('s', 'sf_down') chunk_axis=False chunks=1 init_json_bytes=240 fillmany_bytes=120 replay=ALREADY_EXISTS equal_to_local=True
+Int64 slot=('a', None) chunk_axis=True chunks=1 init_json_bytes=557 fillmany_bytes=1317 replay=ALREADY_EXISTS equal_to_local=True
+Int64 slot='s' chunk_axis=False chunks=1 init_json_bytes=237 fillmany_bytes=120 replay=ALREADY_EXISTS equal_to_local=True
+P4 never-filled slot: snapshot chunks=0
+P5 user StrCategory: local total=2.0 after histserv round trip=1.0

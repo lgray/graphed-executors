@@ -1,0 +1,7 @@
+PROCESS _PartitionReduce REDUCE _GroupReduce TASKS 2
+REDUCE_ARGS ['Histogram', 'Histogram'] calls 2
+VALUE_KEYS ["('m', None)", 'n'] TYPES ['Histogram']
+AXIS_MODE_SLOT_AXES ['Regular', 'StrCategory'] ['nominal', 'sf_down', 'sf_up']
+REQUIRE_BOUND_UNBOUND raises UnboundService bind calls [{}, {'hists': 'tcp://unbound:0'}]
+REQUIRE_BOUND_BOUND bind calls [{'hists': 'tcp://127.0.0.1:1'}, {}]
+RESOLVE_REACHES_REDUCE [('resolve', 'dict')]
