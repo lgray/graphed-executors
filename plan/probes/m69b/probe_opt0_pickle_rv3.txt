@@ -1,0 +1,4 @@
+seed 1 opt_level=1: pickled plan sha256 8f659fcc72a95f8f, ir b0812ccc6fde9aa4
+seed 1 opt_level=0: pickled plan sha256 79288734400b3b4f, ir d8b6c38ab2a75845
+seed 2 opt_level=1: pickled plan sha256 8f659fcc72a95f8f, ir b0812ccc6fde9aa4
+seed 2 opt_level=0: pickled plan sha256 79288734400b3b4f, ir d8b6c38ab2a75845

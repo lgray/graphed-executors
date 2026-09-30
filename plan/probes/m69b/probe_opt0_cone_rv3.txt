@@ -1,0 +1,6 @@
+none  opt_level=1: IR nodes  2; value 12.0
+none  opt_level=0: IR nodes  3; value 12.0
+cols  opt_level=1: IR nodes  2; value 12.0
+cols  opt_level=0: IR nodes 54; StageError: AttributeError: no field named 'w'
+raise opt_level=1: IR nodes  2; value 12.0
+raise opt_level=0: IR nodes  6; StageError: IndexError: cannot slice NumpyArray (of length 0) with 0: index 0 is out of bounds

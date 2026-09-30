@@ -1,0 +1,6 @@
+baseline: 330 passed, 23 warnings in 44.51s
+noop: FAILED tests/frozen/m48/test_optimizer_merge_guard.py::test_a_varied_program_whose_labels_the_optimizer_merges_is_refused
+noop: FAILED tests/frozen/m49/test_merge_shortfall.py::test_the_group_builder_refuses_a_merged_UNVARIED_program
+noop: FAILED tests/frozen/m49/test_merge_shortfall.py::test_the_single_histogram_plan_refuses_a_merged_program
+noop: FAILED tests/frozen/m49/test_merge_shortfall.py::test_neither_refusal_waits_for_the_run
+noop: 4 failed, 326 passed, 23 warnings in 44.82s
