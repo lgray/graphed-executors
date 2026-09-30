@@ -911,22 +911,30 @@ The statement will live in `design.rst` "Filling on histserv servers" and `hists
 
 ### 5.0 graphed PR: `aggregate_plan(opt_level=)`, against graphed `main` d0ad16b
 `aggregate_plan(…, opt_level: int = 1)`: `1` is today's optimized compile, in which the optimizer merges fills
-equal along the weights axis; `0` compiles with `compile_ir(optimize=False)`, the 1:1 lowering graphed already
-calls `opt_level=0` (`debug/lowering.py`, `execute.py`), so every marked output stays its own compiled output;
-another value is refused naming both. `_PartitionReduce` carries `opt_level` and its `StageError` reports it (a
-literal `1` in `aggregate.py` today). `probes/m69b/probe_opt_level0.txt` (the one `compile_ir` call patched): at `0`
-two merging fills and a counter compile to three outputs, the fills read at their positions equal two direct
-fills, 0.0.4's `gh.plan` plans, and the IR is byte-identical across builds and across two interpreters with
-different `PYTHONHASHSEED`. `gh.plan` and `pieces` do not expose it (a composing plan passes it to
-`aggregate_plan`). Docs: `api.rst` `aggregate_plan`, a sentence in `architecture.rst` beside its paragraph,
-changelog. Frozen `tests/frozen/frontend/m69b/test_aggregate_opt_level.py`:
+equal along the weights axis; `0` ships the 1:1 cone of the plan's outputs, `writes=` arrays and metadata arrays,
+the graph graphed already calls `opt_level=0` (`debug/lowering.py`); another value is refused naming both. The cone
+is M4's DCE without the rewrites: a new `GraphStore.cone(outputs=)` binding runs Rust
+`optimizer::dead_code_elimination` (reachability, compacted in ascending record id, inputs remapped) and rebuilds the
+kept nodes into a fresh store the way `GraphStore::from_reduced` does, with `node_map` = record id → (shipped id,
+None); a private `execute._compile_cone(session, *arrays)` makes the `CompiledGraph` from it as `compile_ir`'s
+optimized branch does from the reduced store (frames re-keyed by `_frames_by_key`), and `aggregate_plan`'s opt-0
+branch calls it. `compile_ir(optimize=False)` keeps its frozen whole-store contract (m22). `_PartitionReduce`
+carries `opt_level` and its `StageError` reports it (a literal `1` in `aggregate.py` today).
+`probes/m69b/probe_opt0_cone_store.txt` (the cone emulated in Python, patched into `aggregate_plan`): with unmarked
+nodes over another column or raising on the data, the plan runs and ships exactly the cone, which equals replay's
+`lower(opt_level=0)` cone and Rust DCE's `reachable_nodes`, while the whole store holds more; merged fills
+read at their positions equal two direct fills; the IR is byte-identical across `PYTHONHASHSEED`
+(`probe_opt_level0.txt`: the fills stay separate at `0`). `gh.plan` and `pieces` do not expose it (a composing plan
+passes it to `aggregate_plan`). Docs: `api.rst` `aggregate_plan`, a sentence in `architecture.rst` beside its
+paragraph, changelog. Frozen `tests/frozen/frontend/m69b/test_aggregate_opt_level.py` with its `README.md`
+traceability, tagged `freeze-m69b`:
 | Property | Witness |
 |---|---|
-| two outputs the optimizer merges (`w` and `w * 1.0`): at `opt_level=0` the reduce receives one value per marked output, at the default one fewer, both summing to the right totals; the default's IR bytes equal a plan built without the kwarg; `writes=` at `0` writes the same parts; at `0` the IR and the pickled plan are byte-identical across two interpreters with `PYTHONHASHSEED` 1 and 2 (fixed source path); a failing op's `StageError.opt_level` is `0` at `0` and `1` by default; `opt_level=2` and `-1` refused naming `0` and `1` | reduce arity; bytes; `StageError` |
+| the fixture session also records, unmarked, a node over a column no output reads and a node that raises on the data; two marked outputs the optimizer merges (`w` and `w * 1.0`): at `opt_level=0` the plan runs, the reduce receives one value per marked output, the totals equal the default's (which receives one fewer), and the shipped IR's node count equals the outputs' `lower(opt_level=0)` cone, with `compile_ir(session, *outputs, optimize=False)` holding more nodes as the control; `writes=` with a metadata array at `0` writes the default's parts; the default's IR bytes equal a plan built without the kwarg; at `0` the IR and the pickled plan are byte-identical across two child interpreters with `PYTHONHASHSEED` 1 and 2 (fixed source path; each child run with `check=True` and printing one digest line); a failing op's `StageError.opt_level` is `0` at `0` and `1` by default; `opt_level=2` and `-1` refused naming `0` and `1` | reduce arity; node counts; bytes; `StageError` |
 
-Commits (freeze `test(m69b): frozen aggregate_plan opt_level` ~150 first): 1. `feat(aggregate): opt_level=0 compiles a
-plan 1:1` (~30 src, ~80 extra tests, docs ~30). No m69b file calls it; the PR merges on its own, independent of the
-m68c unit.
+Commits (freeze `test(m69b): frozen aggregate_plan opt_level` ~170 first): 1. `feat(aggregate): opt_level=0 ships the
+outputs' 1:1 cone` (Rust `GraphStore.cone` ~30 with a cargo test ~25, Python ~35, extra tests ~100, docs ~30). No
+m69b file calls it; the PR merges on its own, independent of the m68c unit.
 
 ### 5.1 graphed-histogram PR (`histserv.py` new, `boost.py`), against `main` 4c4b79f, graphed from d0ad16b
 | Mechanism | By hand | Rung |
@@ -944,8 +952,9 @@ m68c unit.
   timeout_s=600.0)` (`memory_mb` below the model's server baseline refused). A `name` holds one packing state for
   the life of the process, the scope in which graphed's `collate` merges equal server specs by name across sessions
   (m69a builds a session per dataset: `probes/m69b/probe_session_scope.txt`): a second context under a used name
-  with equal arguments shares that state and warns naming the name, with other arguments is refused naming both,
-  and fresh packing takes a fresh name; `histserv.Histogram(*axes, storage=None, metadata=None, context)`, a
+  with equal arguments shares that state and warns naming the name, with other arguments is refused naming both and
+  the remedy (a fresh `name=` or a new process); one module lock covers the name registry and each serve's
+  placement; `histserv.Histogram(*axes, storage=None, metadata=None, context)`, a
   `gh.boost.Histogram`; `histserv.backed(h, context) -> h` for any `gh.boost.Histogram` (the hist fork's
   `Hist.__init__` takes no extra kwarg). Backing refuses, naming histserv and the axis or storage, a growth axis (it
   cannot be sized before the run) and a storage other than `Double`/`Int64`/`Weight`; every other axis `gh.boost`
@@ -995,9 +1004,10 @@ m68c unit.
   follow fill arrival: sequential and one-worker runs equal the local fold bit for bit, concurrent runs to rounding,
   integer and exact sums exactly.
 - **`boost.py`.** `pieces(histograms) -> HistogramPieces(fill_nodes, reduce, combine, empty, externals,
-  on_compiled, serve)` belongs to one plan: `on_compiled` records on `pieces.reduce` each marked fill's compiled
-  position (`compiled.correspondence.node_map` into the IR outputs' order) and refuses a second firing naming
-  `pieces`, as `serve` refuses a second plan. The reduce reads every fill at its position, so a fill the optimizer
+  on_compiled, serve)` belongs to one plan: `on_compiled` refuses a second firing naming `pieces` before it records
+  anything (as `serve` refuses a second plan), records on `pieces.reduce` each marked fill's compiled position
+  (`compiled.correspondence.node_map` into the IR outputs' order), and returns `_variation_labels(items, compiled)`
+  as 0.0.4's hook does. The reduce reads every fill at its position, so a fill the optimizer
   merged with another along the weights axis is read once per marked fill, whatever else the plan marks and in
   whatever order (`probes/m69b/probe_merged_leaves.txt` B); it raises naming `on_compiled` if the hook never ran. A
   composing plan marks its own outputs first and `fill_nodes` after, passes `on_compiled=pieces.on_compiled`,
@@ -1020,7 +1030,8 @@ the merged program should give:
   `…_sums_both_fills`: each builder's run of `_merging()` equals `want` (two direct fills) to `rtol=1e-12`, as the
   merge-free control asserts; `test_neither_refusal_waits_for_the_run` becomes
   `test_both_builders_read_a_merged_fill_once_per_marked_fill`: each builder's value is exactly twice `_single()`'s.
-  The module docstring, the positive control and the instrument stay.
+  The positive control and the instruments' assertions stay; the docstring sentences that describe the refusal
+  (m48's module and instrument docstrings, m49's module docstring and its instrument's) are reworded to the read.
 - m48 `README.md` H5 rows and its refusal row, and m49 `README.md`'s `test_merge_shortfall.py` row, name the new
   assertions.
 - One dispute per changed test, `.graphed/m48/disputes/<test_id>.md` and `.graphed/m49/disputes/<test_id>.md` (the
@@ -1033,12 +1044,12 @@ killed at teardown; Linux `peak(pid)` = VmHWM after writing 5 to `/proc/<pid>/cl
 names its context uniquely):
 | File | Property | Witness |
 |---|---|---|
-| `test_histserv_surface.py` (no server) | subclass and `backed()`; IR bytes and `external_key`s equal the unbacked twin's; a growth axis and `Mean`/`WeightedMean`/`Unlimited`/`AtomicInt64` storage refused naming histserv, `StrCategory`, `IntCategory` and `Boolean` axes accepted; `Histogram.plan()` refused; in a subprocess, backing + `gh.plan` leave `histserv`/`grpc` unimported; an unbacked merge-free `gh.plan` gives 0.0.4's value bit for bit with `services == ()`, and the frozen suites before m69b pass unmodified but for the refrozen m48/m49 tests; `import histserv` succeeds wherever the GIL is enabled | `sys.modules`; bytes |
+| `test_histserv_surface.py` (no server) | subclass and `backed()`; IR bytes and `external_key`s equal the unbacked twin's; a growth axis and `Mean`/`WeightedMean`/`Unlimited`/`AtomicInt64` storage refused naming histserv, `StrCategory`, `IntCategory` and `Boolean` axes accepted; `Histogram.plan()` refused; in a subprocess, backing + `gh.plan` leave `histserv`/`grpc` unimported; an unbacked merge-free `gh.plan` equals the per-partition direct `bh` fill folded in partition order bit for bit, with `services == ()`, and the frozen suites before m69b pass unmodified but for the refrozen m48/m49 tests; `import histserv` succeeds wherever the GIL is enabled | `sys.modules`; bytes |
 | `test_histserv_packing.py` (no server) | slots of distinct sizes land on the expected servers in (`stored`, key) order; every prediction ≤ `memory_mb`; server count strictly rises with `workers` and with the task count and falls with `memory_mb`; oversize and ceiling refusals name the sizes; `next_tasks`, repeated partition, double serve refused; one context over two plans fills the first's last server before opening one and `collate` holds each name once; a second `Context` with equal arguments warns naming the name, its plan's slot → server map puts the slot that no longer fits on a server the first plan does not declare, and each shared server's prediction recomputed from both plans' maps is ≤ `memory_mb`; after `Context(name=n, memory_mb=m1)`, `Context(name=n, memory_mb=m2)` refused naming both, in a later test too (the name holds for the process); spec fields and argv; `plan.services` sorted by name; `(plan.services, slot → server)` pickles byte-identically from two interpreters with different `PYTHONHASHSEED` | `plan.services`; `ctx.servers()`; pickles |
 | `test_histserv_fill_path.py` | Weight axis-mode, Double sibling, Int64 and a local slot over ≥ 2 servers, bound by hand, `SequentialRunner`: backed values are receipts naming their assigned server, pickled at one length for 10- and 10⁴-bin twins; each server's `stats()` counts exactly its assigned slots and bytes; `unpack` equals the local twin bit for bit (flow, variances, variation axis) twice, servers still holding them, including `StrCategory`, `IntCategory` and `Boolean` slots (axis mode and siblings) with filled overflow bins; `resolve_services` equals the twin's value and empties every server; two server names bound to one endpoint: runs, each receipt names that endpoint and its own `hist_id`, values equal the twin's; `grpcs`/`https` refused with no connection accepted | `stats()`; views |
 | `test_histserv_retries.py` | one partition run twice → `was_filled_with_unique_id`, one fill's contents; another partition adds; a killed server → `UNAVAILABLE` from the task; receipts of two server histograms refuse to add | server answers |
 | `test_histserv_lazy_init.py` | `require_bound` of an unbound plan on ≥ 2 servers → `UnboundService` whose `names` are every server, and with ≥ 2 names bound to one endpoint returns; `histserv` unimported (control: imported after a bound run); after bind every server counts 0, after the first call its assigned ones, a `replace`d copy adds none; a fresh bind's pickle creates once, an unbound pickle none; `ProcessPoolExecutor(2)` (integer weights) creates once and equals the local run | server counts |
-| `test_pieces_composition.py` | a counter + `p.fill_nodes` + `p.serve`: histograms equal `gh.plan`'s; unserved, the first task raises naming `serve`; a reduce whose hook never ran raises naming `on_compiled`; a second `aggregate_plan` over the same `pieces` raises naming `pieces`, and the first plan run afterwards still equals the direct fill; `gh.plan({"h": backed})` of merged fills, served and run, equals a direct boost fill done twice; two fills the optimizer merges (`weight=[w]`, `weight=[w * 1.0]`), backed and local, with the counter marked first and last: each histogram equals a direct boost fill done twice (values and variances) and the counter is right (instrument: the pair compiles to one output); `collate` of two served plans: each plan's receipts name only its assigned servers, each sub-value equals its plan run alone | endpoints; equality |
+| `test_pieces_composition.py` | a counter + `p.fill_nodes` + `p.serve`: histograms equal `gh.plan`'s; unserved, the first task raises naming `serve`; a reduce whose hook never ran raises naming `on_compiled`; a second `aggregate_plan` over the same `pieces`, marking the counter last where the first marked it first, raises naming `pieces`, and the first plan run afterwards still equals the direct fill; `gh.plan({"h": backed})` of merged fills, served and run, equals a direct boost fill done twice; two fills the optimizer merges (`weight=[w]`, `weight=[w * 1.0]`), backed and local, with the counter marked first and last: each histogram equals a direct boost fill done twice (values and variances) and the counter is right (instrument: the pair compiles to one output); `collate` of two served plans: each plan's receipts name only its assigned servers, each sub-value equals its plan run alone | endpoints; equality |
 | `test_histserv_memory_model.py` (Linux legs) | a 64 MiB `Double` slot at `workers=1` (fills + resolve), a 32 MiB slot with 4 fillers released by one `threading.Barrier`, an 8-label `Weight` slot, and ≥ 2000 one-bin `Weight` slots on one server filled once each (its prediction − `B` ≥ 90 % `O` terms): each VmHWM − warm RSS ≤ prediction − `B`, the warm RSS < `B`, and the three large ones > warm RSS + `(chunks + 1) × dense + M` | VmHWM |
 
 Fails on: a histogram riding the tree, a snapshot per partition, a server histogram created at bind or in a worker,
@@ -1049,7 +1060,7 @@ eager `histserv` import. Commits (the refreeze `test(frozen): merged fills are r
 the freeze `test(m69b): frozen histserv backend` ~1.3k): 1.
 `feat(histserv): context, backed histograms, size model, packing, server specs` (~350 src, ~500 extra tests); 2.
 `feat(histserv): served process, fills, receipts, resolve, unpack` (~310 src, ~600 extra tests); 3.
-`ci+docs(histserv)` (ci, `design.rst` "Filling on histserv servers" with executed examples, `api.rst`,
+`ci+docs(histserv)` (ci, `design.rst` "Filling on histserv servers" with executed examples and the context's process scope, `api.rst`,
 `improvements.rst`, changelog, extra; ~350).
 
 ### 5.2 executors m69b PR (on `main` db8fb0a): placement, diagnostics, LPC run
@@ -1138,7 +1149,7 @@ Executors: m69a on `main` (~1.1k examples, ~2k fixture/test lines, two fixture b
 `main` (`lane/htcondor` #34 merged as `eefc0f3`, m67 as `b966a28`): m68a (~1.2k src+ci+docs, ~1.3k tests) → m68b
 (~1.5k src+ci+docs, ~1.3k tests) → m70 (~500 src, ~800 tests); m69b (~20 src, ~300 examples, ~1.3k tests, ~250 ci+docs) on `main` db8fb0a, independent of m70.
 graphed: the m68 PR (~360 src, ~850 tests, docs), the resolve walk (§3.2, ~150) and m69b's `opt_level` PR (§5.0,
-~30 src, ~230 tests, ~30 docs). graphed-histogram: one PR (m69b, ~660 src, ~2.5k tests, ~350 ci+docs, its first
+~65 src, ~300 tests, ~30 docs). graphed-histogram: one PR (m69b, ~660 src, ~2.5k tests, ~350 ci+docs, its first
 commit the m48/m49 refreeze). At m66's
 measured estimate-to-shipped ratio (journal) every commit above stays under 2k. Order: m69a and m67 start now; graphed
 m68 PR and the resolve walk before executors m68a (installed by ref, floored at the release that holds both); m68b after m68a, m70 after m68b; graphed's `opt_level` PR

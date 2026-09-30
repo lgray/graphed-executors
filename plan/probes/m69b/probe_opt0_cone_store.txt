@@ -1,0 +1,10 @@
+none : shipped 3 nodes (cone 3, replay cone 3, Rust DCE 3; whole store 3); value 12.0
+cols : shipped 3 nodes (cone 3, replay cone 3, Rust DCE 3; whole store 54); value 12.0
+raise: shipped 3 nodes (cone 3, replay cone 3, Rust DCE 3; whole store 6); value 12.0
+fills: shipped 8 nodes (cone 8, replay cone 8, Rust DCE 8; whole store 61); equal to two direct fills: True
+sha256 of the fills case's cone IR: 29e454c44be2b92c
+none : shipped 3 nodes (cone 3, replay cone 3, Rust DCE 3; whole store 3); value 12.0
+cols : shipped 3 nodes (cone 3, replay cone 3, Rust DCE 3; whole store 54); value 12.0
+raise: shipped 3 nodes (cone 3, replay cone 3, Rust DCE 3; whole store 6); value 12.0
+fills: shipped 8 nodes (cone 8, replay cone 8, Rust DCE 8; whole store 61); equal to two direct fills: True
+sha256 of the fills case's cone IR: 29e454c44be2b92c
