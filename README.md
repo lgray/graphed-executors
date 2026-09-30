@@ -182,6 +182,26 @@ Two things bite people on HTEX:
 - **A killed worker takes ~30 s to notice at parsl's default heartbeat.** `heartbeat_period=2`
   brings that to ~1.65 s, so a crash is reported (and the worker respawned) promptly.
 
+### On an HTCondor pool
+
+Needs `graphed-executors[htcondor]` (the HTCondor bindings ship Linux wheels only). The runner
+submits its own pilot jobs, which call back to your session and pull tasks; there is no scheduler
+to start. The pilots import your plan's functions by name, so pass the file they live in — the
+`my_tasks.py` above:
+
+```python
+# A recipe: this needs an HTCondor pool.
+from graphed_executors.htcondor_backend import htcondor_runner
+
+with htcondor_runner(site="generic", n_pilots=10, user_modules=["my_tasks.py"]) as runner:
+    print(runner.run(plan).value)            # [700]
+```
+
+`site="lpc"` and `site="lxplus"` carry those sites' submit settings. The same pilots also run as
+local processes (`LocalPilots`), so you can rehearse the run on your laptop first.
+`submit_driverless(plan, site=..., ...)` puts the driver itself in a job, so the run needs no
+login session. See [Running on an HTCondor pool](docs/htcondor.rst) for all three.
+
 ## Useful knobs
 
 - `persistent=True` keeps the process pool alive across `run()` calls — worth it in notebooks
@@ -196,7 +216,8 @@ Two things bite people on HTEX:
   would have returned. Plans still run one at a time, in the order you submitted them.
 - A plan that calls a server (an inference server, say) declares it, and the cluster runners find
   it for each run: `services={"triton": "grpc://host:8001"}`, the site's, or one they start from
-  the declared recipe and stop afterwards. See [Services](docs/htcondor.rst#services).
+  the declared recipe and stop afterwards. See
+  [When your analysis calls a server](docs/htcondor.rst#when-your-analysis-calls-a-server).
 - Every runner accepts `monitor=` — an observer that receives one event per task submitted,
   started, and finished, without changing the run — and a `graphed.core.RunControl` that pauses,
   resumes or cancels it. A cancelled run returns the merge of the tasks that finished.
@@ -222,6 +243,10 @@ if __name__ == "__main__":                    # a spawn pool re-imports this fil
   happens when a worker dies, and where your combines actually run on each runner.
 - [The dask backend](docs/dask.rst) and [the parsl backend](docs/parsl.rst) in depth,
   including repartitioning and joins on a cluster.
+- [Running on an HTCondor pool](docs/htcondor.rst) — the LPC, lxplus or your own pool, runs that
+  outlive your login, and services such as a Triton server.
+- [An H→γγ analysis on graphed](docs/hgg.rst) — a HiggsDNA processor translated from coffea, and
+  how its output is checked against the original's.
 - [`graphed`](https://github.com/graphed-org/graphed) — build the analysis that produces a plan,
   and export it with `graphed.aggregate_plan`.
 - [`graphed-histogram`](https://github.com/graphed-org/graphed-histogram) — deferred histogram

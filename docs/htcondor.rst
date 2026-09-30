@@ -6,8 +6,16 @@ its own worker jobs there and run your plan on them. You need the HTCondor Pytho
 nothing else: no dask scheduler, no parsl interchange. The worker jobs (pilots) start, call back to
 your session, pull tasks one at a time, and are removed when you close the runner.
 
-This page is the how-to. For *why* the answer doesn't move when the pilot count does, read
-:doc:`design`.
+This page follows one analysis from your laptop to the pool:
+
+1. **Run it through pilots on your laptop**, to check the wiring before you queue anything
+   (`Try it on your laptop first`_).
+2. **Run it on the pool**: `On the LPC`_, `On lxplus`_, or `On any other pool`_.
+3. **Submit it and log out**: the driver becomes a job too (`Running without a login session`_).
+4. **Give it the inference server it calls**, a Triton server say, found or started for each run
+   (`When your analysis calls a server`_).
+
+For *why* the answer doesn't move when the pilot count does, read :doc:`design`.
 
 Try it on your laptop first
 ---------------------------
@@ -52,6 +60,45 @@ Each pilot announces itself, then the result prints::
     pilot myhost:47041:5c0e9a1f serving http://127.0.0.1:10000
     pilot myhost:47040:b82d4e07 serving http://127.0.0.1:10000
     [700] 7 6
+
+Your own analysis goes through the same two lines. Here a histogram fill from
+`graphed-histogram <https://github.com/graphed-org/graphed-histogram>`__ (``pip install
+graphed-histogram pyarrow``) runs on the pilots:
+
+.. code-block:: python
+
+    import awkward as ak
+    import boost_histogram as bh
+    import graphed_histogram as gh
+    from graphed import Session
+    from graphed.awkward import AwkwardBackend, from_parquet
+    from graphed_executors.htcondor_backend import HTCondorBackend, HTCondorRunner, LocalPilots
+
+    events = ak.Array({"Jet": ak.zip({"pt": ak.Array([[40.0, 25.0], [55.0], [30.0, 60.0, 20.0],
+                                                      [80.0], [15.0, 45.0], [70.0, 10.0]])})})
+    ak.to_parquet(events, "events.parquet")    # stand in for your dataset
+
+    s = Session(AwkwardBackend())
+    evt = from_parquet(s, "events", "events.parquet", steps_per_file=2)
+    h = gh.boost.Histogram(bh.axis.Regular(4, 0.0, 100.0), storage=bh.storage.Int64())
+    h.fill(evt.Jet.pt)
+    plan = h.plan(steps_per_file=2)
+
+    backend = HTCondorBackend(LocalPilots(), n_pilots=2, host="127.0.0.1")
+    with HTCondorRunner(backend) as runner:
+        print(runner.run(plan).value.values())
+
+::
+
+    pilot myhost:47352:c1b02626 serving http://127.0.0.1:10000
+    pilot myhost:47351:89073926 serving http://127.0.0.1:10000
+    [3 4 3 1]
+
+This plan needs no ``user_modules``: every function in it comes from graphed and
+graphed-histogram, which the pilots import from their environment. What a pilot needs from you is any function *you* wrote that the plan carries (the
+``count`` above, or the ``reduce`` you give ``graphed.aggregate_plan``), and a file path it can
+open: on a pool, a ``root://`` URL or a path on a filesystem the execute nodes mount, not a file
+on your laptop. The full H→γγ analysis in :doc:`hgg` runs on local pilots the same way.
 
 On a pool, only the runner line changes: ``htcondor_runner(site=..., n_pilots=...)`` below.
 
@@ -182,10 +229,8 @@ on the LPC, and pass ``site="lxplus"``. The ``lxplus`` site binds the task serve
 the login node: batch nodes get ``Connection refused`` on the default range 10000–10100, and 8786 is
 the one port CERN opens from workers to a submit host (for a dask scheduler), so **one driver per
 login node**. A second ``htcondor_runner`` on the same node fails at once with ``OSError: no free
-port for the task server: site=lxplus ports=8786-8786``; log in to another node. The first pilot was
-live 105 s after submission on the run this is measured from
-(``graphed-workdir/lanes/htcondor/probes/site-check-lxplus/transcript-8786.txt``; the refused
-10000 run is ``pilot-logs-run2.txt`` next to it). The lxplus schedd refuses a spooled job that
+port for the task server: site=lxplus ports=8786-8786``; log in to another node. On a September
+2026 run the first pilot was live 105 s after submission. The lxplus schedd refuses a spooled job that
 brings nothing back, which the site handles with ``transfer_output_files=""``.
 
 Pilots run in the ``longlunch`` queue (two hours); pass
@@ -253,6 +298,7 @@ Later, from any session on the same pool:
 
 .. code-block:: python
 
+    # A recipe: this needs the run submitted above.
     from graphed_executors.htcondor_backend import RunHandle
 
     handle = RunHandle.load("run-handle.json")
@@ -293,7 +339,7 @@ exit code decides whether HTCondor runs it again:
    * - 1
      - Anything another attempt may get past: the run's workers were lost (every pilot preempted,
        say), pilots could not start, a service the plan needs could not be reached or started
-       (see `Services`_), or the driver failed before or after the run.
+       (see `When your analysis calls a server`_), or the driver failed before or after the run.
      - Twice
    * - 3
      - The plan's own code raised; it would raise again.
@@ -314,27 +360,93 @@ function defined in ``__main__``) is refused before anything is written or submi
 ``htcondor_runner``.
 
 
-Services
---------
+When your analysis calls a server
+---------------------------------
 
-Some analyses call a server while they run: an inference server a node sends its rows to, say.
-The analysis declares each one as a ``graphed.services.ServiceSpec`` (a name, a ``kind`` and a
-readiness ``check``, with an optional ``Launch`` recipe that starts one), and its nodes name it; the
-plan carries the specs it references as ``plan.services``. Where the service is — its *endpoint*,
-``scheme://host:port`` — is not part of the analysis: the runner finds one for each run.
+Some analyses send their rows to a server while they run: a tagger served by Triton on a GPU, say,
+instead of a model file every worker loads. The analysis records the call and the *name* of the
+server it calls. Where that server is — its endpoint, ``scheme://host:port`` — is not part of the
+analysis: the runner finds one each time you run.
 
-It tries three places, in order:
+This one runs on your laptop. It needs ``graphed-histogram`` and ``pyarrow``; the endpoint check
+further down also needs ``grpcio``, which ``pip install "tritonclient[grpc]"`` brings:
 
-1. **An endpoint you give it**: ``htcondor_runner(..., services={"triton": "grpc://host:8001"})``,
-   ``SubmitRunner(backend, services=...)``, or ``submit_driverless(..., services=...)``. If it fails
-   its check the run is refused, naming it: an endpoint you asked for is never swapped for another.
-2. **The site's**: ``SiteProfile.services`` maps a ``kind`` to the endpoint the site hosts it at.
-   The ``lpc`` row names the Elastic Analysis Facility's inference server
-   (``grpcs://triton.fnal.gov:443``); ``lxplus`` and ``generic`` host none. A site endpoint that
-   fails its check is passed over, and the reason is kept.
-3. **One it starts**, from the spec's recipe: beside the driver when the recipe needs no image and
-   no GPU and the site lets workers reach the driver's host (``service_hosts``), else as a job of its
-   own on the pool (see `Cluster-hosted services`_). It is stopped when the run ends.
+.. code-block:: python
+
+    import json
+
+    import awkward as ak
+    import boost_histogram as bh
+    import graphed_histogram as gh
+    from graphed import Session
+    from graphed.awkward import AwkwardBackend, from_parquet
+    from graphed.preserve import TRITON_PLUGIN, record_external
+    from graphed_executors.submit import SubmitRunner, ThreadBackend, recipes
+
+    ak.to_parquet(ak.Array({"x": [0.5, 1.5, 2.5, 3.5, 0.2, 0.9]}), "events.parquet")
+
+    session = Session(AwkwardBackend())
+    events = from_parquet(session, "events", "events.parquet", steps_per_file=2)
+
+    # The server this analysis calls, and how to start one when nobody gives the run an endpoint.
+    session.declare_service(recipes.triton(
+        "tagger",
+        image="/cvmfs/unpacked.cern.ch/nvcr.io/nvidia/tritonserver:24.11-py3",
+        model_repository="models",
+    ))
+    served = json.dumps({"model": "tagger", "version": "1"}).encode()   # what the server serves
+    score = record_external(session, TRITON_PLUGIN, served, [events.x], params={
+        "service": "tagger", "model": "tagger", "input_name": "x", "output_name": "y",
+    })
+
+    h = gh.boost.Histogram(bh.axis.Regular(10, 0.0, 1.0))
+    h.fill(score)
+    plan = h.plan(steps_per_file=2)
+    print([spec.name for spec in plan.services])
+
+    with SubmitRunner(ThreadBackend(max_workers=2)) as runner:
+        runner.run(plan)
+
+It prints the plan's one service, then stops with (the traceback's last line)::
+
+    ['tagger']
+    graphed_executors.submit.services.ServiceUnavailable: service 'tagger' is unavailable: user: no endpoint given; site: the site has no endpoint for kind 'triton'; managed: the recipe cannot run beside the driver (an image or GPUs) and ThreadBackend has no host_service to run it on the cluster
+
+``declare_service`` names the server and says how to start one: ``recipes.triton`` is that recipe,
+the Triton image, your model repository and one GPU. The Triton node names the server by
+``"service"``, and the plan carries what it needs as ``plan.services``. What the saved analysis keeps
+about the server is graphed's business, covered in `its preservation guide
+<https://graphed.readthedocs.io/en/latest/preserve/design.html#services-in-a-bundle>`__.
+
+The run stopped before any task, and the message is the list of places a runner looks, in order:
+
+1. **user** — an endpoint you give it: ``services={"tagger": "grpc://host:8001"}`` on
+   ``htcondor_runner``, ``submit_driverless``, ``dask_runner``, ``parsl_runner`` or ``SubmitRunner``.
+   If it fails its check the run is refused, naming it: an endpoint you asked for is never swapped
+   for another.
+2. **site** — the site's endpoint for that kind of server (``SiteProfile.services``). The ``lpc`` site
+   names the Elastic Analysis Facility's Triton (``grpcs://triton.fnal.gov:443``), so on the LPC a
+   ``triton`` service needs nothing from you, as long as your model is among the ones it serves.
+   ``lxplus`` and ``generic`` name none. A site endpoint that fails its check is passed over, and the
+   reason is kept.
+3. **managed** — one the run starts from the recipe: beside the driver when the recipe needs no
+   image and no GPU and the site lets workers reach the driver's host, else as a job of its own on
+   the pool (`Cluster-hosted services`_). It is stopped when the run ends. A thread pool on your
+   laptop has nowhere to run a GPU job, hence the message above; on an HTCondor pool with no site
+   server for it, the same plan starts Triton as a GPU job beside the pilots.
+
+Give the same plan an endpoint where nothing is listening, and it is refused by name rather than
+replaced:
+
+.. code-block:: python
+
+    with SubmitRunner(ThreadBackend(max_workers=2),
+                      services={"tagger": "grpc://127.0.0.1:8001"}) as runner:
+        runner.run(plan)
+
+::
+
+    graphed_executors.submit.services.ServiceUnavailable: service 'tagger' is unavailable: user: the given endpoint grpc://127.0.0.1:8001 failed: health Check of '' at grpc://127.0.0.1:8001 failed: StatusCode.UNAVAILABLE failed to connect to all addresses; last error: UNKNOWN: ipv4:127.0.0.1:8001: Failed to connect to remote host: Connection refused
 
 ``graphed_executors.submit.recipes`` has two recipes as plain data: ``triton(name, image,
 model_repository)`` (gRPC only, one port) and ``http_server(name)`` (Python's ``http.server``).
@@ -351,29 +463,78 @@ nodes, so before the plan's first task the runner submits a small probe task tha
 checks from a pilot: one task checks every service the run needs, and the runner waits for its
 answer up to the largest ``timeout_s`` among those services. A service the runner started must also
 answer a pilot on another host than its own, unless that host is the driver's (a run on one
-machine). A service no pilot can reach fails the run with ``ServiceUnreachable`` naming the endpoint, the worker and the reason; ``"no worker
-answered"`` means no pilot ran the probe within that wait, and ``"only same-host
-workers answered"`` that none on another host did.
+machine). A service no pilot can reach fails the run with ``ServiceUnreachable`` naming the
+endpoint, the worker and the reason; ``"no worker answered"`` means no pilot ran the probe within
+that wait, and ``"only same-host workers answered"`` that none on another host did.
+
+**Which one a run used.** Each run logs how it satisfied every service on the
+``graphed_executors.services`` logger: the place (``user``, ``site`` or ``managed``, and for a
+started one whether beside the driver or on the cluster) and the endpoint. The record's ``status``
+attribute carries the same as a ``ServiceStatus``, with times.
 
 **Kept warm across plans.** A started service lives as long as the run that started it. To use one
-server for several plans, start it yourself and pass its endpoints to the runner:
+server for several plans, start it yourself with a ``ServiceSet`` and pass its endpoints to the
+runner. This runs on your laptop, with ``http_server`` standing in for a real server:
 
 .. code-block:: python
 
+    import logging
+    import operator
+
+    import awkward as ak
+    import graphed
+    from graphed import Session
+    from graphed.awkward import AwkwardBackend, from_parquet
+    from graphed_executors.submit import SubmitRunner, ThreadBackend, recipes
     from graphed_executors.submit.services import ServiceSet
 
+    logging.basicConfig(level=logging.INFO, format="%(name)s: %(message)s")
+
+    ak.to_parquet(ak.Array({"x": [0.5, 1.5, 2.5, 3.5]}), "x.parquet")
+    session = Session(AwkwardBackend())
+    events = from_parquet(session, "events", "x.parquet", steps_per_file=2)
+    session.declare_service(recipes.http_server("files"))   # python -m http.server, beside you
+
+
+    def total(values):
+        return float(ak.sum(values[0]))
+
+
+    plan = graphed.aggregate_plan(events.x, reduce=total, combine=operator.add, empty=float,
+                                  steps_per_file=2, services=("files",))
+
+    backend = ThreadBackend(max_workers=2)
+    with ServiceSet(plan.services, backend) as endpoints:   # started once, here
+        with SubmitRunner(backend, services=endpoints) as runner:
+            print(runner.run(plan).value)
+            print(runner.run(plan).value)
+    # stopped here
+
+::
+
+    graphed_executors.services: service 'files': managed leg (driver) at http://127.0.0.1:10000
+    graphed_executors.services: service 'files': user leg at http://127.0.0.1:10000
+    graphed_executors.services: service 'files': user leg at http://127.0.0.1:10000
+    8.0
+    8.0
+
+The server started once; each run then reports it as an endpoint you gave. (``services=("files",)``
+makes the plan carry a service that no node calls, which is enough to show its lifetime.) On a pool,
+wait for the pilots first, since the set checks each service from one:
+
+.. code-block:: python
+
+    # A recipe: this needs an HTCondor pool.
     with htcondor_runner(site="generic", n_pilots=4) as runner:
         runner.wait_for_pilots()
         with ServiceSet(plan.services, runner.backend) as endpoints:
             runner.services = endpoints
             first = runner.run(plan)
-            second = runner.run(other_plan)
+            second = runner.run(plan)
 
-Each run logs how it satisfied every service on the ``graphed_executors.services`` logger (the
-record's ``status`` attribute is a ``ServiceStatus``: leg, endpoint, host, times). A driverless job
-resolves the services in the driver job, by the same three places, with the job's own site row, and
-runs a service that needs an image or a GPU as a node of its DAG (below); a service it cannot reach
-or start exits 1, so HTCondor retries it.
+A driverless job resolves the services in the driver job, by the same three places, with the job's
+own site row, and runs a service that needs an image or a GPU as a node of its DAG (below); a service
+it cannot reach or start exits 1, so HTCondor retries it.
 
 Cluster-hosted services
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -424,35 +585,32 @@ The DAG is not spooled: the schedd and the nodes read the run directory, your ``
 the services' inputs where they lie, so all of them must lie under the site's ``job_root``
 (``SiteProfile.job_root``: ``/afs`` on lxplus, any path on ``generic``). Anything outside is
 refused before anything is submitted. The LPC has no ``job_root``, so a driverless LPC run refuses a
-service that would need a node; the inference server its row names still serves that kind (leg 2).
+service that would need a node; the site's own Triton still answers a ``triton`` service there.
 The check reads the path as written, not where a symlink points: an input under the root that is a
 symlink to a file outside it passes, and if the schedd cannot read that file the node is held. A held
 service node is removed (its ``periodic_remove``); each try of the driver then waits ``timeout_s``
 for its announce, so the run fails after three × ``timeout_s``, as it does for a service node that
 starts but never announces. A held driver node stays ``held`` until you release or remove it.
 
-**On lxplus, with a GPU.** An inference server for your ONNX models in ``models/`` (Triton's layout),
-reached from CPU pilots:
+**On lxplus, with a GPU.** Your analysis declares the Triton recipe as in `When your analysis calls
+a server`_, with your models in Triton's layout in a ``models/`` directory beside you. Its pilots run on
+CPU nodes; the server gets a GPU node of its own:
 
 .. code-block:: python
 
-    # A recipe: this needs lxplus, from a directory under /afs that holds models/.
+    # A recipe: this needs lxplus, run from a directory under /afs that holds models/.
     import os
     from graphed_executors.htcondor_backend import htcondor_runner, submit_driverless
-    from graphed_executors.submit import recipes
 
-    triton = recipes.triton(
-        "triton",
-        image="/cvmfs/unpacked.cern.ch/nvcr.io/nvidia/tritonserver:24.11-py3",
-        model_repository="models",               # a basename: the server runs where its inputs land
-    )
-    # the analysis declares it as a service its nodes call; with the plan built:
+    IMAGE = "/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-almalinux9-noml:2026.9.0-py3.12"
+
+    # plan: your analysis, which declared recipes.triton("tagger", ..., model_repository="models")
     with htcondor_runner(site="lxplus", n_pilots=2, image=IMAGE,
                          extra_submit={"+JobFlavour": '"espresso"'}) as runner:
-        result = runner.run(plan)                # the server runs as a GPU job beside the pilots
+        result = runner.run(plan)                # Triton runs as a GPU job beside the pilots
 
     handle = submit_driverless(plan, site="lxplus", image=IMAGE, n_pilots=2,
-                               request_memory_mb=4000, log_dir=os.getcwd())   # one SERVICE node
+                               request_memory_mb=4000, log_dir=os.getcwd())   # a DAG: driver + svc0
 
 
 The arguments you will change
@@ -503,8 +661,7 @@ made with Python's ``tempfile`` goes to ``TMPDIR``.
 **On the LPC** the scratch directory is ``/srv`` inside the container, on the node's local disk, and
 ``TMPDIR``, ``TMP`` and ``TEMP`` point at it; a submit ``environment`` does not move ``TMPDIR``. ``/tmp``
 and ``/var/tmp`` share one 64 MiB ``tmpfs`` made by the site's container wrapper, so a tool that
-writes to either itself runs out of space at 64 MiB between them (September 2026, ``graphed-workdir/lanes/htcondor/probes/site-lpc/m68b-tmpenv.txt`` and
-``m68b-proxy-scratch.txt``). Point such a tool at the scratch directory with its own variable, and
+writes to either itself runs out of space at 64 MiB between them (measured September 2026). Point such a tool at the scratch directory with its own variable, and
 ask for the space with `request_disk
 <https://htcondor.readthedocs.io/en/latest/man-pages/htcondor-jdl.html#request_disk>`__:
 

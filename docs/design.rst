@@ -886,8 +886,8 @@ task and the value is resolved while the services are still up. A run's services
 its queued tasks live exactly as long as the run: every acquisition registers its release when it
 returns, and each release logs its failure instead of raising, so the error you see is the first one.
 The engine names no service; the recipes are plain data in ``graphed_executors.submit.recipes``.
-Cluster hosting is one duck-typed seam, a backend's ``host_service``/``release_service`` pair. The
-HTCondor backend fills it with a job per service that announces its endpoint, signed with a secret
+A backend can host a service on the cluster when it has a ``host_service``/``release_service`` pair
+of methods; nothing else is asked of it. The HTCondor backend's pair runs a job per service that announces its endpoint, signed with a secret
 made for that one service (never the pilots' secret, which signs pickles), from a directory that holds
 only the recipe's inputs.
 

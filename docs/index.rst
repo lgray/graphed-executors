@@ -123,7 +123,9 @@ Which runner do I want?
    * - No extra dependencies, or a notebook
      - ``ThreadExecutor`` from ``graphed_executors.local``, or
        ``SubmitRunner(ThreadBackend())``
-     - Threads share your address space, so nothing has to be picklable.
+     - Threads share your address space, so on ``ThreadExecutor`` nothing has to be picklable.
+       ``SubmitRunner(ThreadBackend())`` pickles the plan's ``process`` and ``combine`` as a cluster runner does, so
+       they must be module-level there.
    * - A ``dask.distributed`` cluster
      - ``dask_runner(client)`` — see :doc:`dask`
      - Also gets you distributed repartition and join.
@@ -134,6 +136,10 @@ Which runner do I want?
      - ``htcondor_runner(site=..., n_pilots=N)`` — see :doc:`htcondor`
      - Submits its own pilot jobs; no scheduler to start. Task functions go in a module you pass
        in ``user_modules``.
+
+On an HTCondor pool you can also hand the whole run to the pool and log out, and give an analysis
+that calls an inference server the Triton it needs; :doc:`htcondor` walks through both, starting from
+pilots on your laptop.
 
 Going to a cluster is one substitution. Everything above the ``plan = ...`` line stays as it
 is; only the runner changes.
