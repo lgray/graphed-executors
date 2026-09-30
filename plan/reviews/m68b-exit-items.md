@@ -517,3 +517,14 @@ These are test-precision and figure items from review r24-B1 (`plan-services-m68
 - The missing-input `host_service` leg runs under `record_bindings`. Reason: at 0e48380 `CondorPilots.start` calls `_htcondor()` (`launch.py`), and `host_service` needs the built backend.
 - Sizes: `announce.py` ~290 (the 254-line `announce_proto.py`, typed), so B1 commit 1 ~950, under 2k. `handoff-m68b.md` still says ~790 for commit 1; the plan's figure governs.
 - CI pool version: the "HTCondor behaviour relied on" paragraph notes `test-htcondor` runs 25.14.1 (CI run 36626770013 at 0e48380, `$CondorVersion: 25.14.1 … PackageID: 25.14.1-1+ubu24`), the matrix 25.13.2. A fact for the implementer, no decision changes.
+
+## r25-B1 exit items
+These are from review r25-B1 (`plan-services-m68b-r25-b1.md`, a delta over the M41 fold, 538fe62). It is clean.
+
+- **L435–436, "`test-htcondor`'s pool … runs 25.14.1 at 0e48380".** `ci.yml` installs the pool with an unpinned `curl -fsSL https://get.htcondor.org | sudo /bin/bash`. So 25.14.1 is what CI run 36626770013 (job 109605661110) got, not a property of 0e48380. Write it as "installs get.htcondor.org's current release (25.14.1 in CI run 36626770013)".
+- **Evidence r25-B1:** `probes/m68b/probe_r25r_b1_history_mutants.{py,txt}`, the fail direction of the live row's history bounds.
+  - Run 2's int form fails a removal a whole second or more before `t`.
+  - Run 1's bound fails a service kept past `t`.
+  - A same-second start after `t` or removal before `t` passes both forms' start leg and the int form's removal leg. That is history's whole-second resolution.
+
+  The container run used `r25r-mini` (htcondor/mini:25.13.2-el9), now removed.

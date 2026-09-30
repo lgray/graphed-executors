@@ -1,0 +1,6 @@
+# htcondor/mini:25.13.2-el9 (container r25r-mini, removed), /usr/bin/python3 as submituser; script probe_r25r_b1_history_mutants.py
+correct (removed ms after t)             frac(t)=0.01 S-int(t)=-2 E-int(t)=+0 JobStatus=3 | run2 int:True float:False | run1 E<t:True
+mutant: started after t                  frac(t)=0.02 S-int(t)=+0 E-int(t)=+1 JobStatus=3 | run2 int:True float:True | run1 E<t:False
+mutant: removed >=1 s before t           frac(t)=0.68 S-int(t)=-3 E-int(t)=-1 JobStatus=3 | run2 int:False float:False | run1 E<t:True
+mutant: removed before t, same second    frac(t)=0.02 S-int(t)=-2 E-int(t)=+0 JobStatus=3 | run2 int:True float:False | run1 E<t:True
+mutant: leaked (removed 2.5 s after t)   frac(t)=0.74 S-int(t)=-1 E-int(t)=+3 JobStatus=3 | run2 int:True float:True | run1 E<t:False
