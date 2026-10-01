@@ -1112,7 +1112,7 @@ narrowed tuple unchanged (~20 src). A driverless run's services stay beside its 
   term do not; a job behind a blocker matches only the substituted ad; the removed job's history has `NumJobStarts ==
   0` and no `JobCurrentStartDate`; `probe_schedulable.txt` B: such a job otherwise idles forever). `_await_announce` sets no deadline while the job is idle or spooling (C: a
   fitting job behind a blocker idles, then starts once the blocker leaves), logging the key and `JobStatus` at the
-  first such answer and every `IDLE_LOG_S = 30` s; `timeout_s` counts from the latest answer with `JobStatus == 2`;
+  first such answer and every `IDLE_LOG_S = 30` s; `timeout_s` counts from the first answer with `JobStatus == 2`;
   an ended or held job raises as today. DAG SERVICE nodes (§3.3 B2) are unchanged.
 - dask, parsl and local backends have no `host_service` on `main`: only the driver check applies to them.
 
