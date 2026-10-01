@@ -1094,7 +1094,7 @@ narrowed tuple unchanged (~20 src). A driverless run's services stay beside its 
 - Engine (`submit/services.py`, every backend): driver-hosted (D2 leg 3) also needs the set's driver-hosted managed
   services, this one included, to sum to ≤ `backend.driver_memory_mb` (duck-typed; default the host's physical memory,
   `os.sysconf("SC_PAGE_SIZE") × os.sysconf("SC_PHYS_PAGES")` in MiB, `probes/m69b/probe_schedulable.txt` D on Linux
-  and macOS; `None`, and no check, where `os.sysconf` lacks those names, as on Windows). A spec that does not fit goes
+  and macOS; on Windows `ctypes` `GlobalMemoryStatusEx().ullTotalPhys`, measured by the all-OS `test` job). A spec that does not fit goes
   to the cluster where the backend has `host_service`, its status `detail` naming its size, the sum and
   `driver_memory_mb`; else `ServiceUnavailable` whose `legs["managed"]` names them. `HTCondorBackend` in a driver job
   sets `driver_memory_mb` to its slot's `Memory` from `$_CONDOR_MACHINE_AD` (`probe_injob_slot_memory.txt`).
