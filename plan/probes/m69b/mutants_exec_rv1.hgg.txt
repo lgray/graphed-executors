@@ -1,0 +1,20 @@
+KILLED   njets-binning                exit=1 | t test summary info ============================ / FAILED tests/frozen/m69b/test_hgg_diagnostics.py::test_one_context_over_both_datasets_fills_each_diagnostic_as_the_direct_fill / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: ('MC', 'n_jets')
+           /private/tmp/claude-501/-Users-lgray-vibe-coding-graphed-workdir/c445639e-fd6b-4941-b012-0166b71d96e2/scratchpad/mut-hgg/tests/frozen/m69b/test_hgg_diagnostics.py:92: AssertionError: ('MC', 'n_jets')
+KILLED   unweighted                   exit=1 | t test summary info ============================ / FAILED tests/frozen/m69b/test_hgg_diagnostics.py::test_one_context_over_both_datasets_fills_each_diagnostic_as_the_direct_fill / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: ('MC', 'm_gg')
+           /private/tmp/claude-501/-Users-lgray-vibe-coding-graphed-workdir/c445639e-fd6b-4941-b012-0166b71d96e2/scratchpad/mut-hgg/tests/frozen/m69b/test_hgg_diagnostics.py:92: AssertionError: ('MC', 'm_gg')
+KILLED   resolve-skipped              exit=1 | ummary info ============================ / FAILED tests/frozen/m69b/test_hgg_diagnostics.py::test_without_a_context_the_diagnostics_are_local_and_equal_the_one_worker_served_run / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: ('MC', 'm_gg')
+           /private/tmp/claude-501/-Users-lgray-vibe-coding-graphed-workdir/c445639e-fd6b-4941-b012-0166b71d96e2/scratchpad/mut-hgg/tests/frozen/m69b/test_hgg_diagnostics.py:75: AssertionError: ('MC', 'm_gg')
+KILLED   context-not-passed           exit=1 | t test summary info ============================ / FAILED tests/frozen/m69b/test_hgg_diagnostics.py::test_one_context_over_both_datasets_fills_each_diagnostic_as_the_direct_fill / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           FAILED tests/frozen/m69b/test_hgg_diagnostics.py::test_one_context_over_both_datasets_fills_each_diagnostic_as_the_direct_fill
+KILLED   lpc-placement-ignored        exit=1 | ======= short test summary info ============================ / FAILED tests/extra/m69b/test_m69b_run_lpc.py::test_the_attached_run_asks_for_the_lpc_row_narrowed_to_its_placement / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: assert ('lpc' == 'lpc'
+           /private/tmp/claude-501/-Users-lgray-vibe-coding-graphed-workdir/c445639e-fd6b-4941-b012-0166b71d96e2/scratchpad/mut-hgg/tests/extra/m69b/test_m69b_run_lpc.py:69: AssertionError: assert ('lpc' == 'lpc'
+KILLED   lpc-slot-without-servers     exit=1 | ==== short test summary info ============================ / FAILED tests/extra/m69b/test_m69b_run_lpc.py::test_the_driverless_run_asks_for_the_driver_its_pilots_and_every_server / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: assert 4048 == ((2048 + (2 * 1000)) + 512)
+           /private/tmp/claude-501/-Users-lgray-vibe-coding-graphed-workdir/c445639e-fd6b-4941-b012-0166b71d96e2/scratchpad/mut-hgg/tests/extra/m69b/test_m69b_run_lpc.py:90: AssertionError: assert 4048 == ((2048 + (2 * 1000)) + 512)
+KILLED   report-drops-histograms      exit=1 | ======= short test summary info ============================ / FAILED tests/extra/m69b/test_m69b_hgg.py::test_run_local_prints_the_counters_and_saves_the_diagnostics_as_uhi_json / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   KeyError: 'MC'
+           FAILED tests/extra/m69b/test_m69b_hgg.py::test_run_local_prints_the_counters_and_saves_the_diagnostics_as_uhi_json

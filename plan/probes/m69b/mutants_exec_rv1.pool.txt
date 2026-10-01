@@ -1,0 +1,11 @@
+SURVIVED as-whole-noop                exit=0 | .                                                                        [100%]
+KILLED   match-always                 exit=1 | =========== short test summary info ============================ / FAILED tests/frozen/m69b/test_histserv_cluster.py::test_a_server_no_slot_can_hold_is_removed_unrun_and_refused / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: HARD TIMEOUT: call did not finish within 600.0s
+           /work/tests/frozen/m69b/m69b_harness.py:129: AssertionError: HARD TIMEOUT: call did not finish within 600.0s
+KILLED   match-request-only           exit=1 | ========= short test summary info ============================ / FAILED tests/frozen/m69b/test_histserv_cluster.py::test_a_requirement_no_slot_meets_is_removed_unrun_and_refused / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: HARD TIMEOUT: call did not finish within 600.0s
+           /work/tests/frozen/m69b/m69b_harness.py:129: AssertionError: HARD TIMEOUT: call did not finish within 600.0s
+SURVIVED no-ads-guard-gone            exit=0 | ................................                                         [100%]
+KILLED   deadline-from-submit-live    exit=1 |  test summary info ============================ / FAILED tests/frozen/m69b/test_histserv_cluster.py::test_a_server_behind_a_busy_pool_waits_and_its_timeout_counts_from_its_start / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: the run ended while its server could not start
+                +    where done = <Future at 0xffff6af8ef90 state=finished raised TimeoutError>.done

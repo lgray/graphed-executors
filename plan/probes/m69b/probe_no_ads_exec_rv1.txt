@@ -1,0 +1,1 @@
+match_refusal([]) raises ValueError max() iterable argument is empty

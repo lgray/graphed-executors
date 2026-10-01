@@ -1,0 +1,16 @@
+TotalSlotMemory=15973 TotalSlotCpus=10; 2 pilots x 7474 MiB; server 2048 MiB
+t= 15.0s done=False queue=[(43, 'graphed-pilots-c558d943', 2), (43, 'graphed-pilots-c558d943', 2), (44, 'graphed-service-a7328292', 1)]
+t= 30.0s done=False queue=[(43, 'graphed-pilots-c558d943', 2), (43, 'graphed-pilots-c558d943', 2), (44, 'graphed-service-a7328292', 1)]
+t= 45.0s done=False queue=[(43, 'graphed-pilots-c558d943', 2), (43, 'graphed-pilots-c558d943', 2), (44, 'graphed-service-a7328292', 1)]
+t= 60.0s done=False queue=[(43, 'graphed-pilots-c558d943', 2), (43, 'graphed-pilots-c558d943', 2), (44, 'graphed-service-a7328292', 1)]
+t= 75.0s done=False queue=[(43, 'graphed-pilots-c558d943', 2), (43, 'graphed-pilots-c558d943', 2), (44, 'graphed-service-a7328292', 1)]
+t= 90.1s done=False queue=[(43, 'graphed-pilots-c558d943', 2), (43, 'graphed-pilots-c558d943', 2), (44, 'graphed-service-a7328292', 1)]
+after 90s (timeout_s=20.0): done=False; wait-log lines=3
+  log: service 'rv-starve-kamhkoom-0' (a7328292-8bcd5fdebb07be43) waits for a slot: JobStatus=1
+  log: service 'rv-starve-kamhkoom-0' (a7328292-8bcd5fdebb07be43) waits for a slot: JobStatus=1
+probe-exit=124
+# reviewer's note: no "closed; ..." line follows: runner.close() (SubmitRunner.close "finishes every submitted
+# plan" first) did not return, and `timeout 600` ended the process (exit 124). The queue after it, read with
+# condor_q -allusers -af ClusterId JobBatchName JobStatus:
+#   43 graphed-pilots-c558d943 2 / 43 graphed-pilots-c558d943 2 / 44 graphed-service-a7328292-8bcd5fdebb07be43 1
+# (the reviewer then emptied the queue with condor_rm -all).

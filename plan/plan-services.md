@@ -1104,7 +1104,7 @@ narrowed tuple unchanged (~20 src). A driverless run's services stay beside its 
   it submits and waits. Else, after the `ServiceJob` is submitted (its removal already registered), it reads the
   queued job's whole ad (one schedd query, no projection; `htcondor2.Submit` builds none before submit) and
   `classad2` `symmetricMatch`es it against a copy of each Machine ad whose partitionable `TotalSlotMemory`/
-  `TotalSlotCpus`/`TotalSlotGPUs` replace `Memory`/`Cpus`/`GPUs`, so the job's whole `Requirements` (the request,
+  `TotalSlotCpus`/`TotalSlotGPUs`/`TotalSlotDisk` replace `Memory`/`Cpus`/`GPUs`/`Disk`, so the job's whole `Requirements` (the request,
   the site's submit keys, `MY.SingularityImage`, `extra_submit`) is asked whether it could ever run, not whether it
   runs now. No match → the job is removed before it ran and `ServiceUnavailable` names `RequestMemory`,
   `RequestCpus`, `RequestGPUs` and the largest slot memory seen (`probe_symmetric_match.txt`: a fitting request

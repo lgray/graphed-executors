@@ -1,0 +1,61 @@
+== frozen byte-equality (git diff --stat <rev> d3f2820 -- <path>; a blank count = equal)
+freeze-m69b -- tests/frozen/m69b: []
+freeze-m69a-fixup -- tests/frozen/m69a: []
+upstream/main -- tests/frozen/m68c: []
+freeze-m68b-fixup3 -- its 3 refrozen files: []
+freeze-m68b-fixup2 (= main) -- the other m68b files: []
+impl b512adc -- tests/frozen: []
+impl 4759ba8 -- tests/frozen: []
+impl 429706e -- tests/frozen: []
+impl d3f2820 -- tests/frozen: []
+control, freeze-m69b^..freeze-m69b -- tests/frozen: [ 2 files changed, 16 insertions(+), 8 deletions(-)]
+macOS per-file lowest: src/graphed_executors/local/shuffle.py                                  93.02
+== macOS (py3.12, .venv-m69b, graphed 7e048bf, histogram 3830aca): pytest tests/frozen tests/extra --cov=graphed_executors --cov-branch
+exit=0
+1136 .   29 s (. = passed, s = skipped)
+15 files checked, threshold 90.0%
+file                                                                        %
+Total:   44 lines
+Missing: 0 lines
+Coverage: 100%
+
+== Linux pool (m68b-minicondor:local, aarch64 py3.12, graphed 7e048bf, histogram 3830aca[histserv]): CI test-htcondor line
+503 passed, 7 skipped in 667.74s (0:11:07)
+tests/frozen/m68c/test_m68c_submit_dask.py:11: could not import 'distributed': No module named 'distributed'
+tests/frozen/m68c/test_m68c_submit_parsl.py:14: could not import 'parsl': No module named 'parsl'
+SKIPPED [2] tests/frozen/m69a/hgg_harness.py:24: could not import 'coffea': No module named 'coffea'
+tests/frozen/m68a/test_scope_dask_memory.py:81: could not import 'distributed': No module named 'distributed'
+tests/frozen/m68a/test_services_live.py:146: no Triton container (set GRAPHED_TRITON_GRPC=host:port; the test-
+tests/frozen/m68a/test_services_live.py:164: no Triton container (set GRAPHED_TRITON_GRPC=host:port; the test-
+src/graphed_executors/htcondor_backend/__init__.py                     100.00
+src/graphed_executors/htcondor_backend/announce.py                      98.82
+src/graphed_executors/htcondor_backend/backend.py                       98.31
+src/graphed_executors/htcondor_backend/driver.py                       100.00
+src/graphed_executors/htcondor_backend/driverless.py                   100.00
+src/graphed_executors/htcondor_backend/launch.py                       100.00
+src/graphed_executors/htcondor_backend/pilot.py                         98.81
+src/graphed_executors/htcondor_backend/server.py                        98.80
+src/graphed_executors/htcondor_backend/services.py                     100.00
+src/graphed_executors/htcondor_backend/sites.py                        100.00
+src/graphed_executors/submit/services.py                                99.79
+11 files checked, threshold 90.0%
+gate-exit=0
+Total:   98 lines
+Missing: 0 lines
+Coverage: 100%
+
+== test-hgg equivalent (.venv-m69b-hgg, GRAPHED_HGG_REQUIRED=1)
+59 passed, 30 warnings in 183.29s (0:03:03)
+
+== lint/types/docs
+== ruff check
+All checks passed!
+exit=0
+== ruff format
+108 files already formatted
+exit=0
+== mypy
+Success: no issues found in 321 source files
+== mypy win32
+Success: no issues found in 321 source files
+sphinx-exit=0

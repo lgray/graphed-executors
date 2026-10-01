@@ -1,0 +1,5 @@
+TotalSlotDisk=36033116 KiB; blocker request_disk=35508828; waiting RequestDisk=1048576
+slot after _as_whole: Memory [15973] Cpus [10] Disk [523868]
+match as shipped (Memory/Cpus/GPUs at totals): False
+control, Disk also at TotalSlotDisk: True
+probe-exit=0

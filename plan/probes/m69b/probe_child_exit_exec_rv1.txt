@@ -1,0 +1,2 @@
+bare     n=20 median=0.053s max=0.066s
+coverage n=20 median=0.227s max=0.276s

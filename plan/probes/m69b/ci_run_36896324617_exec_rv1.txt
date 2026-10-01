@@ -1,0 +1,23 @@
+CI run 36896324617 (head d3f2820): failing jobs
+test-dask py3.12
+test-dask py3.14
+ci required
+== ci-dask312
+384 passed in 207.64s (0:03:27)
+Failure. Coverage is below 98%.
+src/graphed_executors/submit/services.py (65.9%): Missing lines 176,178-179,191-195,466-469,483-484,499
+Total:   44 lines
+Missing: 15 lines
+== ci-dask314
+384 passed in 188.34s (0:03:08)
+Failure. Coverage is below 98%.
+src/graphed_executors/submit/services.py (65.9%): Missing lines 176,178-179,191-195,466-469,483-484,499
+Total:   44 lines
+Missing: 15 lines
+== test windows-latest py3.12 (the real GlobalMemoryStatusEx path)
+histserv-0.2.1
+1110 passed, 142 skipped, 51 warnings in 1199.41s (0:19:59)
+src\graphed_executors\submit\services.py        380      1     92      1    99%   340
+src\graphed_executors\submit\services.py                                99.58
+== premise of the remedy: lines the dask job misses, run by tests/extra/m69b/test_m69b_schedulable.py alone under .coveragerc-dask
+still missing: [467] (the managed-leg refusal, which frozen test_histserv_managed.py's ThreadBackend driver_memory_mb=64 row reaches); executed: 14 of 15

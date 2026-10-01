@@ -1,0 +1,3 @@
+sizeof 64 (want 64); offsets match Win32: True 
+control (c_ulong DWORDs on LP64):
+sizeof 72 (want 64); offsets match Win32: False {'dwLength': 0, 'dwMemoryLoad': 8, 'ullTotalPhys': 16, 'ullAvailPhys': 24, 'ullTotalPageFile': 32, 'ullAvailPageFile': 40, 'ullTotalVirtual': 48, 'ullAvailVirtual': 56, 'ullAvailExtendedVirtual': 64}
