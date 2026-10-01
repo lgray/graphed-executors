@@ -1,0 +1,17 @@
+1 non-dynamic Machine ads; largest slot memory 15973 MiB; GPUs [0]
+fit 1024 MiB: Requirements = (TARGET.Arch == "aarch64") && (TARGET.OpSys == "LINUX") && (versionGE(split(TARGET.CondorVersion)[1],"25.12.0") || (TARGET.Disk >= RequestDisk)) && (TARGET.Memory >= RequestMemory) && ((TARGET.FileSystemDomain == MY.FileSystemDomain) || (TARGET.HasFileTransfer))
+    raw ads match [True]; substituted ads match [True]
+oversize 15974 MiB: Requirements = (TARGET.Arch == "aarch64") && (TARGET.OpSys == "LINUX") && (versionGE(split(TARGET.CondorVersion)[1],"25.12.0") || (TARGET.Disk >= RequestDisk)) && (TARGET.Memory >= RequestMemory) && ((TARGET.FileSystemDomain == MY.FileSystemDomain) || (TARGET.HasFileTransfer))
+    raw ads match [False]; substituted ads match [False]
+request_gpus=1: Requirements = (TARGET.Arch == "aarch64") && (TARGET.OpSys == "LINUX") && (versionGE(split(TARGET.CondorVersion)[1],"25.12.0") || (TARGET.Disk >= RequestDisk)) && (TARGET.Memory >= RequestMemory) && (TARGET.GPUs >= RequestGPUs) && ((TARGET.FileSystemDomain == MY.FileSystemDomain) || (TARGET.HasFileTransfer))
+    raw ads match [False]; substituted ads match [False]
+extra requirements OpSysMajorVer == 99: Requirements = ((TARGET.OpSysMajorVer == 99)) && (TARGET.Arch == "aarch64") && (TARGET.OpSys == "LINUX") && (versionGE(split(TARGET.CondorVersion)[1],"25.12.0") || (TARGET.Disk >= RequestDisk)) && (TARGET.Memory >= RequestMemory) && ((TARGET.FileSystemDomain == MY.FileSystemDomain) || (TARGET.HasFileTransfer))
+    raw ads match [False]; substituted ads match [False]
+removed oversize job in history: {'JobStatus': 3, 'NumJobStarts': 0} (JobCurrentStartDate present: False)
+busy pool: partitionable Memory now [997] of 15973
+4096 MiB behind the blocker: Requirements = (TARGET.Arch == "aarch64") && (TARGET.OpSys == "LINUX") && (versionGE(split(TARGET.CondorVersion)[1],"25.12.0") || (TARGET.Disk >= RequestDisk)) && (TARGET.Memory >= RequestMemory) && ((TARGET.FileSystemDomain == MY.FileSystemDomain) || (TARGET.HasFileTransfer))
+    raw ads match [False]; substituted ads match [True]
+    behind-the-blocker JobStatus after the check: 1
+sim-GPU pool (m68b/sim_gpu.config): TotalSlotGPUs [1]
+  request_gpus=1: substituted ads match [True]
+  request_gpus=2: substituted ads match [False]

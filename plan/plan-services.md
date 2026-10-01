@@ -122,8 +122,8 @@ carries the service surface and its preservation; §7 orders the PRs.
   calls. Each implementation owns its rendezvous: condor (m68b) its task server's `/announce`; dask (m70)
   scheduler-mediated `distributed.Variable`/`Event`; parsl (m70) the existing `EscalatingHttpTransport` plane (§3.4).
   A TaskVine adapter adds the two methods, nothing else. `host_service` returns with the service up, or releases
-  what it started and then raises; condor's refuses a request no slot of the pool could ever run and otherwise
-  waits for the scheduler, `timeout_s` counting from the job's start (§5.2 "Schedulability"); inside it each acquisition registers its release when that acquisition returns
+  what it started and then raises; condor's removes a service job whose own ad matches no slot of the pool and
+  raises, and otherwise waits for the scheduler, `timeout_s` counting from the job's start (§5.2 "Schedulability"); inside it each acquisition registers its release when that acquisition returns
   (condor: the cluster when `schedd.submit` returns, before spool).
 
 Measured for this plan (`probes/services-code/`): histserv (`probe_histserv_prebinned.txt`; its memory, fill path and plan shape in `probes/m69b/`, §5.1); `_refuse_shortfall`
@@ -614,8 +614,8 @@ entry holds a job for every exit (S-15); a symlink to a directory, or a `,` in a
   `ExitCode`/`HoldReasonCode`, `HoldReason` only when condor set one (graphed's own `act(reason=)` is dropped and
   never read back, L-09) (from `schedd.history(..., match=1)` once it left the queue, as `RunHandle._poll`);
   `spec.timeout_s` passed → removed, `TimeoutError` naming the timeout and `JobStatus` (a GPU request no slot matches
-  stays idle, `probe_service_job.txt` D; from m69b the timeout counts from the job's start and a request no slot can
-  run is refused before submit, §5.2); every failure path, `ServiceJob`'s construction refusal, `schedd.submit` raising and the spool raising included, also calls
+  stays idle, `probe_service_job.txt` D; from m69b the timeout counts from the job's start and a job whose ad matches
+  no slot is removed and refused, §5.2); every failure path, `ServiceJob`'s construction refusal, `schedd.submit` raising and the spool raising included, also calls
   `forget_announce([key])` before it raises. `release_service(key)` = `forget_announce([key])` first (a beat after
   it gets 403 and records nothing), then that key's `ServiceJob.stop()` and a pop of its record.
 
@@ -1089,7 +1089,7 @@ host the profile does not offer is refused naming the offered ones, before the t
 cluster- or driver-hosted servers without copying a profile; `_managed` and the `host_service` attachment read the
 narrowed tuple unchanged (~20 src). A driverless run's services stay beside its driver (§3.1).
 
-**Schedulability** (~85 src): the executor decides when a service starts whether its size can run, from
+**Schedulability** (~90 src): the executor decides when a service starts whether its size can run, from
 `launch.resources` (`memory_mb` absent = 0).
 - Engine (`submit/services.py`, every backend): driver-hosted (D2 leg 3) also needs the set's driver-hosted managed
   services, this one included, to sum to ≤ `backend.driver_memory_mb` (duck-typed; default the host's physical memory,
@@ -1098,12 +1098,18 @@ narrowed tuple unchanged (~20 src). A driverless run's services stay beside its 
   to the cluster where the backend has `host_service`, its status `detail` naming its size, the sum and
   `driver_memory_mb`; else `ServiceUnavailable` whose `legs["managed"]` names them. `HTCondorBackend` in a driver job
   sets `driver_memory_mb` to its slot's `Memory` from `$_CONDOR_MACHINE_AD` (`probe_injob_slot_memory.txt`).
-- Condor `_host_service`, before minting a key: one collector query (`schedd_locate`'s pool, else `htc.Collector()`)
-  for `MyType == "Machine"` ads (the same ads as `AdType.Startd`, `probe_schedulable.txt` A); a slot's capacity is
-  partitionable `TotalSlotMemory`/`TotalSlotCpus`/`TotalSlotGPUs`, static `Memory`/`Cpus`/`GPUs`, an absent GPU
-  attribute 0, dynamic slots skipped. No slot covering the job's `request_memory`, `request_cpus` and `request_gpus`
-  → `ServiceUnavailable` naming the request and the largest slot memory seen, nothing submitted (B: such a job idles
-  forever); no ads at all → it submits. `_await_announce` sets no deadline while the job is idle or spooling (C: a
+- Condor `_host_service`: one collector query (`schedd_locate`'s pool, else `htc.Collector()`) for `MyType ==
+  "Machine"` ads (the same ads as `AdType.Startd`, `probe_schedulable.txt` A), dynamic slots dropped; no ads at all →
+  it submits and waits. Else, after the `ServiceJob` is submitted (its removal already registered), it reads the
+  queued job's whole ad (one schedd query, no projection; `htcondor2.Submit` builds none before submit) and
+  `classad2` `symmetricMatch`es it against a copy of each Machine ad whose partitionable `TotalSlotMemory`/
+  `TotalSlotCpus`/`TotalSlotGPUs` replace `Memory`/`Cpus`/`GPUs`, so the job's whole `Requirements` (the request,
+  the site's submit keys, `MY.SingularityImage`, `extra_submit`) is asked whether it could ever run, not whether it
+  runs now. No match → the job is removed before it ran and `ServiceUnavailable` names `RequestMemory`,
+  `RequestCpus`, `RequestGPUs` and the largest slot memory seen (`probe_symmetric_match.txt`: a fitting request
+  matches; an oversized memory request, a GPU request beyond the slots' GPUs and an `OpSysMajorVer == 99` requirements
+  term do not; a job behind a blocker matches only the substituted ad; the removed job's history has `NumJobStarts ==
+  0` and no `JobCurrentStartDate`; `probe_schedulable.txt` B: such a job otherwise idles forever). `_await_announce` sets no deadline while the job is idle or spooling (C: a
   fitting job behind a blocker idles, then starts once the blocker leaves), logging the key and `JobStatus` at the
   first such answer and every `IDLE_LOG_S = 30` s; `timeout_s` counts from the latest answer with `JobStatus == 2`;
   an ended or held job raises as today. DAG SERVICE nodes (§3.3 B2) are unchanged.
@@ -1152,14 +1158,14 @@ and place the higgs_dna data through a session fixture calling `hgg_harness.plac
 | File | Property | Witness |
 |---|---|---|
 | `test_histserv_managed.py` (all OS) | `SubmitRunner(ThreadBackend(2))` over a served plan (dyadic weights) sized to two servers: two statuses `leg="managed", host="driver"`, distinct ports; a spy's `resolve_services` sees each server's `stats()` count exactly its assigned slots; after `run` both ports are free and the value equals the unbacked twin's; `services={…}` for both names starts none (`leg="user"`) and leaves both empty; driverless (`python -m …driver`, `pilots="local"`): `result.pkl`, read after the in-job servers are gone, equals the twin; `ThreadBackend(2)` with `driver_memory_mb = 64` set on it and a context offering 1024: `ServiceUnavailable` whose `legs["managed"]` names 1024 and 64, no histserv process started; without that attribute (every OS), a context offering the host's physical memory + 1 MiB (read the same stdlib way) is refused naming both | statuses; ports; `stats()`; refusals |
-| `test_histserv_cluster.py` (minicondor) | `htcondor_runner(site="generic", service_hosts=("cluster",))` (dyadic weights), a context offering two sizes whose slots open one server of each: two `graphed-service-*` clusters, each with history `RequestMemory` equal to its spec's `resources["memory_mb"]`, the two differing; histograms equal the twin; both leave the queue at run end; `service_hosts=("driver",)`: statuses `host="driver"`, no service cluster; a profile with `service_ports=None` asked for `("driver",)` refused naming `("cluster",)` with no pilot submitted; the generic profile's own hosts with `backend.driver_memory_mb` one MiB below the server's size: status `host="cluster"`, `detail` naming both, history `RequestMemory` the server's size; a context offering the collector's largest `TotalSlotMemory` + 1024: `ServiceUnavailable` naming that size and the largest, no `graphed-service-*` job in queue or history; a blocker (`/bin/sleep`, its `request_memory` leaving room for the pilot but not the server) running and a one-server context with `timeout_s=20`: 35 s in, the run is pending, its service job `JobStatus == 1` and a log record names its key and `JobStatus=1`; the test removes the blocker and the run completes equal to the twin, the service job's history `JobCurrentStartDate` ≥ the removal | history ads; statuses; log records |
+| `test_histserv_cluster.py` (minicondor) | `htcondor_runner(site="generic", service_hosts=("cluster",))` (dyadic weights), a context offering two sizes whose slots open one server of each: two `graphed-service-*` clusters, each with history `RequestMemory` equal to its spec's `resources["memory_mb"]`, the two differing; histograms equal the twin; both leave the queue at run end; `service_hosts=("driver",)`: statuses `host="driver"`, no service cluster; a profile with `service_ports=None` asked for `("driver",)` refused naming `("cluster",)` with no pilot submitted; the generic profile's own hosts with `backend.driver_memory_mb` one MiB below the server's size: status `host="cluster"`, `detail` naming both, history `RequestMemory` the server's size; a context offering the collector's largest `TotalSlotMemory` + 1024: `ServiceUnavailable` naming that size and the largest, no `graphed-service-*` job left in the queue, and its history shows it removed before it ever ran (`NumJobStarts == 0`, no `JobCurrentStartDate`); after the pilots start, the launcher's `extra_submit` given `requirements = (TARGET.OpSysMajorVer == 99)` and `backend.host_service` of a fitting spec: `ServiceUnavailable`, its job likewise removed unrun; a blocker (`/bin/sleep`, its `request_memory` leaving room for the pilot but not the server) running and a one-server context with `timeout_s=20`: 35 s in, the run is pending, its service job `JobStatus == 1` and a log record names its key and `JobStatus=1`; the test removes the blocker and the run completes equal to the twin, the service job's history `JobCurrentStartDate` ≥ the removal | history ads; statuses; log records |
 | `test_hgg_diagnostics.py` (`test-hgg`) | `analysis.plan` without a context, on `SequentialRunner`: `plan.services == ()` and the seven are local `bh.Histogram`s equal bit for bit to the one-worker context run's; the seven over the MC (varied ± genWeight) and data fixtures, collated under one context: `plan.services` has `len(ctx.servers())` servers; with `ThreadBackend(1)` and managed servers each equals a direct `bh` fill of the oracle parts' columns folded in part order bit for bit, m69a parts and counters unchanged; `ThreadBackend(3)`, under a context of its own name, to 1e-12 relative | views |
 | `test_hgg_local_pilots.py` (`test-hgg`; `LocalPilots`, no pool) | `HTCondorRunner(HTCondorBackend(LocalPilots(pythonpath=[examples/hgg]), 2, host="127.0.0.1"), min_pilots=2)`, servers beside the driver (the generic profile's first host): each of the seven equals the direct `bh` fill to 1e-12 relative and the counters equal m69a's; no server outlives the run | equality; ports |
 
 Commits (`test(frozen): m69a totals read the counters beside the diagnostics` ~40 tagged `freeze-m69a-fixup`, then
 the freeze `test(m69b): frozen histserv services and H→γγ diagnostics` ~1.05k with the varied fixture): 1.
 `feat(htcondor): service_hosts narrows a site's service placement` (~20 src, ~150 extra tests); 2.
-`feat(services): a service starts only where it can be scheduled; condor waits for its start` (~85 src, ~250 extra
+`feat(services): a service starts only where it can be scheduled; condor waits for its start` (~90 src, ~250 extra
 tests); 3.
 `feat(examples): H→γγ diagnostics on histserv servers` (`analysis.py` ~150, `run_local.py`, `tests/extra/m69b`
 ~300); 4. `feat(examples): LPC runner, ci, docs` (`run_lpc.py` ~180, `docs/htcondor.rst` "Histograms on histserv
@@ -1196,7 +1202,7 @@ servers", "Schedulability" and "An H→γγ run", `docs/hgg.rst` diagnostics, ci
 ## 7. PR / commit partition
 Executors: m69a on `main` (~1.1k examples, ~2k fixture/test lines, two fixture binaries), and stacked PRs on
 `main` (`lane/htcondor` #34 merged as `eefc0f3`, m67 as `b966a28`): m68a (~1.2k src+ci+docs, ~1.3k tests) → m68b
-(~1.5k src+ci+docs, ~1.3k tests) → m70 (~500 src, ~800 tests); m69b (~105 src, ~300 examples, ~1.75k tests, ~280 ci+docs) on `main` db8fb0a, independent of m70.
+(~1.5k src+ci+docs, ~1.3k tests) → m70 (~500 src, ~800 tests); m69b (~110 src, ~300 examples, ~1.75k tests, ~280 ci+docs) on `main` db8fb0a, independent of m70.
 graphed: the m68 PR (~360 src, ~850 tests, docs), the resolve walk (§3.2, ~150) and m69b's `opt_level` PR (§5.0,
 ~75 src, ~300 tests, ~30 docs). graphed-histogram: one PR (m69b, ~680 src, ~2.6k tests, ~350 ci+docs, its first
 commit the m48/m49 refreeze). At m66's
@@ -1234,8 +1240,9 @@ graphed-histogram `design.rst` "Filling on histserv servers" (context, sizing, p
   Driver-hosted services on any real cluster need workers to dial `advertise_host` (dask: the client's fqdn); the
   probe fails closed when they cannot, and dask cluster hosting carries no such premise (D10).
 - The pool's collector (`htc.Collector()` from the login node) answers the slots of the pool the chosen schedd
-  submits to: true of the personal pool (`probe_schedulable.txt` A), unmeasured at LPC and lxplus → the m69b LPC run
-  records the check's answer (largest slot memory) beside the servers' sizes.
+  submits to, and a service job's ad `symmetricMatch`es a substituted partitionable ad of a slot it can run on: true
+  of the personal pool (`probe_schedulable.txt` A, `probe_symmetric_match.txt`), unmeasured at LPC and lxplus → the
+  m69b LPC run records each server's match answer and the largest slot memory beside the servers' sizes.
 - Parquet writes to EOS over xrootd from a job: unmeasured → `run_lpc.py` falls back to a local dir +
   `output_destination`.
 - `pull_files.py` places the 2024 golden and jet-ID JSONs at LPC (`probe_hgg_original_lpc.txt`); gitlab.cern.ch
@@ -1259,6 +1266,6 @@ graphed-histogram `design.rst` "Filling on histserv servers" (context, sizing, p
   network namespaces) is met per job or per DAG, never assumed: §3.3 "HTCondor behaviour relied on",
   `probes/m68b/condor_surface/RESULTS.md`; per-job network namespaces (N-02) remain a premise the site checks measure.
 - **Owner:** the m68b refreeze §5.2 "Schedulability" needs (`test_cluster_service_job.py` FAILURES `idle`/`spooling`,
-  `test_cluster_services_live.py`'s `gpus=2` leg), not yet authorized; lxplus submissions (m67 site check, m68b's site checks (1)–(3)); re-cut of the seven diagnostic histograms if wanted.
+  `test_cluster_services_live.py`'s `gpus=2` leg; tag the next free `freeze-m68b-fixupN`), not yet authorized; lxplus submissions (m67 site check, m68b's site checks (1)–(3)); re-cut of the seven diagnostic histograms if wanted.
   A service that fails mid-run surfaces in plan code (a task, a bind hook, `resolve_services`) and exits 3 (D6):
   retrying it would need task errors to carry their cause, a decision not taken here.
