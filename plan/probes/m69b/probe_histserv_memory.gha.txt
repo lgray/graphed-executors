@@ -1,0 +1,249 @@
+# GitHub-hosted runners, the graphed-histogram CI test env (.[dev,histserv] + graphed 0.0.6 + graphed-executors; pandas present). Regenerate: push the workflow in lgray/graphed-histogram branch m69b-probe-ci (run 36811610103).
+probe (ubuntu-24.04-arm, 3.11) |   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/arm64
+probe (ubuntu-24.04-arm, 3.11) |   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/arm64
+probe (ubuntu-24.04-arm, 3.11) | HOST aarch64 nproc=4 Python 3.11.16 (main, Aug 13 2026, 02:46:27) [GCC 13.3.0] pandas=3.0.6
+probe (ubuntu-24.04-arm, 3.11) | 2026-10-01 03:42:19.305 ERROR:histserv:RPC<Fill> - invalid fill request: ValueError('dense view byte size mismatch: expected 64, got 536869888') (hist_id=b817295f915847a4933ec27936f85f19)
+probe (ubuntu-24.04-arm, 3.11) | 2026-10-01 03:42:19.306 ERROR:histserv:RPC<Fill> - request=536.87 MB, duration=441.06 ms, response=<error> (hist_id=b817295f915847a4933ec27936f85f19)
+probe (ubuntu-24.04-arm, 3.11) | histserv 0.2.1 grpcio 1.84.0 python 3.11.16 linux
+probe (ubuntu-24.04-arm, 3.11) | A warm idle server: rss=128163840 (122.2 MiB)
+probe (ubuntu-24.04-arm, 3.11) | B per histogram beyond its dense bytes (Double, K=2000, one fill each): 3010
+probe (ubuntu-24.04-arm, 3.11) | B per histogram beyond its dense bytes (Weight, K=2000, one fill each): 3679
+probe (ubuntu-24.04-arm, 3.11) | D per recorded unique_id (40000 fills of one histogram): 138.5
+probe (ubuntu-24.04-arm, 3.11) | C/F one worker: two FillMany of one histogram, then a snapshot (kept, then deleted)
+probe (ubuntu-24.04-arm, 3.11) |   fills chunks=1: peak above warm 447.0 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 4.99 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.11) |   snapshot chunks=1: peak above warm 511.2 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 5.99 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.11) |   snapshot+delete chunks=1: peak above warm 511.2 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 5.99 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.11) |   fills chunks=4: peak above warm 419.7 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 5.31 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.11) |   snapshot chunks=4: peak above warm 531.8 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 7.06 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.11) |   snapshot+delete chunks=4: peak above warm 531.8 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 7.06 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.11) |   fills chunks=8: peak above warm 409.0 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 5.27 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.11) |   snapshot chunks=8: peak above warm 505.0 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 6.77 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.11) |   snapshot+delete chunks=8: peak above warm 505.0 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 6.77 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.11) | E n workers: n FillMany of one 32 MiB histogram in flight at once (worst of 3)
+probe (ubuntu-24.04-arm, 3.11) |   1 in flight: peak above warm 235.6 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 5.36 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.11) |   2 in flight: peak above warm 319.0 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 7.97 with 2 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.11) |   4 in flight: peak above warm 409.7 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 10.80 with 4 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.11) |   8 in flight: peak above warm 660.3 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 18.64 with 8 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.11) | H ceiling: dense_view 536869888 B (message 536869962 B): INVALID_ARGUMENT invalid fill request: ValueError('dense view byte size mismatch: expected 64, go
+probe (ubuntu-24.04-arm, 3.11) | H ceiling: dense_view 536870912 B (message 536870986 B): RESOURCE_EXHAUSTED CLIENT: Sent message larger than max (536870986 vs. 536870912)
+probe (ubuntu-24.04-arm, 3.11) | I prune after 2 s: untouched histogram exists=False, one filled every 0.5 s exists=True
+probe (ubuntu-24.04-arm, 3.11) | I `python -m histserv --help`: --prune-after-seconds Drop histograms that have not been accessed for at least this many seconds. (default: 86400)
+probe (ubuntu-24.04-arm, 3.11) | J announce.py (db8fb0a) imported, idle: rss=20402176 (19.5 MiB)
+probe (ubuntu-24.04-arm, 3.11) | MODEL B=142 MiB O=3700 B I=140 B a=4.5 b=3.0  (B = A + J; a, b cover every C/E/F row above by construction)
+probe (ubuntu-24.04-arm, 3.12) |   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/arm64
+probe (ubuntu-24.04-arm, 3.12) |   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/arm64
+probe (ubuntu-24.04-arm, 3.12) | HOST aarch64 nproc=4 Python 3.12.14 (main, Aug 13 2026, 02:48:06) [GCC 13.3.0] pandas=3.0.6
+probe (ubuntu-24.04-arm, 3.12) | 2026-10-01 03:42:22.127 ERROR:histserv:RPC<Fill> - invalid fill request: ValueError('dense view byte size mismatch: expected 64, got 536869888') (hist_id=9632f97290104e78a43f212c1fd1fef6)
+probe (ubuntu-24.04-arm, 3.12) | 2026-10-01 03:42:22.127 ERROR:histserv:RPC<Fill> - request=536.87 MB, duration=442.57 ms, response=<error> (hist_id=9632f97290104e78a43f212c1fd1fef6)
+probe (ubuntu-24.04-arm, 3.12) | histserv 0.2.1 grpcio 1.84.0 python 3.12.14 linux
+probe (ubuntu-24.04-arm, 3.12) | A warm idle server: rss=127975424 (122.0 MiB)
+probe (ubuntu-24.04-arm, 3.12) | B per histogram beyond its dense bytes (Double, K=2000, one fill each): 2944
+probe (ubuntu-24.04-arm, 3.12) | B per histogram beyond its dense bytes (Weight, K=2000, one fill each): 3575
+probe (ubuntu-24.04-arm, 3.12) | D per recorded unique_id (40000 fills of one histogram): 140.1
+probe (ubuntu-24.04-arm, 3.12) | C/F one worker: two FillMany of one histogram, then a snapshot (kept, then deleted)
+probe (ubuntu-24.04-arm, 3.12) |   fills chunks=1: peak above warm 448.3 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 5.00 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.12) |   snapshot chunks=1: peak above warm 512.3 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 6.00 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.12) |   snapshot+delete chunks=1: peak above warm 512.4 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 6.01 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.12) |   fills chunks=4: peak above warm 402.4 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 5.04 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.12) |   snapshot chunks=4: peak above warm 498.5 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 6.54 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.12) |   snapshot+delete chunks=4: peak above warm 498.5 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 6.54 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.12) |   fills chunks=8: peak above warm 442.7 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 5.79 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.12) |   snapshot chunks=8: peak above warm 538.7 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 7.29 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.12) |   snapshot+delete chunks=8: peak above warm 538.7 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 7.29 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.12) | E n workers: n FillMany of one 32 MiB histogram in flight at once (worst of 3)
+probe (ubuntu-24.04-arm, 3.12) |   1 in flight: peak above warm 227.4 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 5.11 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.12) |   2 in flight: peak above warm 311.1 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 7.72 with 2 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.12) |   4 in flight: peak above warm 386.4 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 10.07 with 4 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.12) |   8 in flight: peak above warm 549.3 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 15.17 with 8 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.12) | H ceiling: dense_view 536869888 B (message 536869962 B): INVALID_ARGUMENT invalid fill request: ValueError('dense view byte size mismatch: expected 64, go
+probe (ubuntu-24.04-arm, 3.12) | H ceiling: dense_view 536870912 B (message 536870986 B): RESOURCE_EXHAUSTED CLIENT: Sent message larger than max (536870986 vs. 536870912)
+probe (ubuntu-24.04-arm, 3.12) | I prune after 2 s: untouched histogram exists=False, one filled every 0.5 s exists=True
+probe (ubuntu-24.04-arm, 3.12) | I `python -m histserv --help`: --prune-after-seconds Drop histograms that have not been accessed for at least this many seconds. (default: 86400)
+probe (ubuntu-24.04-arm, 3.12) | J announce.py (db8fb0a) imported, idle: rss=22638592 (21.6 MiB)
+probe (ubuntu-24.04-arm, 3.12) | MODEL B=144 MiB O=3600 B I=150 B a=5.0 b=3.0  (B = A + J; a, b cover every C/E/F row above by construction)
+probe (ubuntu-24.04-arm, 3.13) |   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.15/arm64
+probe (ubuntu-24.04-arm, 3.13) |   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.15/arm64
+probe (ubuntu-24.04-arm, 3.13) | HOST aarch64 nproc=4 Python 3.13.15 (main, Aug  6 2026, 02:19:22) [GCC 13.3.0] pandas=3.0.6
+probe (ubuntu-24.04-arm, 3.13) | 2026-10-01 03:42:28.494 ERROR:histserv:RPC<Fill> - invalid fill request: ValueError('dense view byte size mismatch: expected 64, got 536869888') (hist_id=abaf75a1e94843ffbd7b6e766b73a657)
+probe (ubuntu-24.04-arm, 3.13) | 2026-10-01 03:42:28.495 ERROR:histserv:RPC<Fill> - request=536.87 MB, duration=457.90 ms, response=<error> (hist_id=abaf75a1e94843ffbd7b6e766b73a657)
+probe (ubuntu-24.04-arm, 3.13) | histserv 0.2.1 grpcio 1.84.0 python 3.13.15 linux
+probe (ubuntu-24.04-arm, 3.13) | A warm idle server: rss=128208896 (122.3 MiB)
+probe (ubuntu-24.04-arm, 3.13) | B per histogram beyond its dense bytes (Double, K=2000, one fill each): 3153
+probe (ubuntu-24.04-arm, 3.13) | B per histogram beyond its dense bytes (Weight, K=2000, one fill each): 3802
+probe (ubuntu-24.04-arm, 3.13) | D per recorded unique_id (40000 fills of one histogram): 140.0
+probe (ubuntu-24.04-arm, 3.13) | C/F one worker: two FillMany of one histogram, then a snapshot (kept, then deleted)
+probe (ubuntu-24.04-arm, 3.13) |   fills chunks=1: peak above warm 417.7 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 4.53 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.13) |   snapshot chunks=1: peak above warm 481.7 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 5.53 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.13) |   snapshot+delete chunks=1: peak above warm 481.8 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 5.53 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.13) |   fills chunks=4: peak above warm 391.3 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 4.86 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.13) |   snapshot chunks=4: peak above warm 487.3 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 6.36 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.13) |   snapshot+delete chunks=4: peak above warm 487.3 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 6.36 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.13) |   fills chunks=8: peak above warm 376.5 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 4.76 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.13) |   snapshot chunks=8: peak above warm 472.6 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 6.26 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.13) |   snapshot+delete chunks=8: peak above warm 472.6 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 6.26 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.13) | E n workers: n FillMany of one 32 MiB histogram in flight at once (worst of 3)
+probe (ubuntu-24.04-arm, 3.13) |   1 in flight: peak above warm 238.0 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 5.44 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.13) |   2 in flight: peak above warm 302.1 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 7.44 with 2 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.13) |   4 in flight: peak above warm 353.6 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 9.05 with 4 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.13) |   8 in flight: peak above warm 515.7 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 14.12 with 8 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.13) | H ceiling: dense_view 536869888 B (message 536869962 B): INVALID_ARGUMENT invalid fill request: ValueError('dense view byte size mismatch: expected 64, go
+probe (ubuntu-24.04-arm, 3.13) | H ceiling: dense_view 536870912 B (message 536870986 B): RESOURCE_EXHAUSTED CLIENT: Sent message larger than max (536870986 vs. 536870912)
+probe (ubuntu-24.04-arm, 3.13) | I prune after 2 s: untouched histogram exists=False, one filled every 0.5 s exists=True
+probe (ubuntu-24.04-arm, 3.13) | I `python -m histserv --help`: --prune-after-seconds Drop histograms that have not been accessed for at least this many seconds. (default: 86400)
+probe (ubuntu-24.04-arm, 3.13) | J announce.py (db8fb0a) imported, idle: rss=22528000 (21.5 MiB)
+probe (ubuntu-24.04-arm, 3.13) | MODEL B=144 MiB O=3900 B I=140 B a=4.5 b=2.5  (B = A + J; a, b cover every C/E/F row above by construction)
+probe (ubuntu-24.04-arm, 3.14) |   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.7/arm64
+probe (ubuntu-24.04-arm, 3.14) |   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.7/arm64
+probe (ubuntu-24.04-arm, 3.14) | HOST aarch64 nproc=4 Python 3.14.7 (main, Aug  6 2026, 02:21:34) [GCC 13.3.0] pandas=3.0.6
+probe (ubuntu-24.04-arm, 3.14) | 2026-10-01 03:42:29.175 ERROR:histserv:RPC<Fill> - invalid fill request: ValueError('dense view byte size mismatch: expected 64, got 536869888') (hist_id=6783694c93e241d0a09d836c630ab967)
+probe (ubuntu-24.04-arm, 3.14) | 2026-10-01 03:42:29.176 ERROR:histserv:RPC<Fill> - request=536.87 MB, duration=450.75 ms, response=<error> (hist_id=6783694c93e241d0a09d836c630ab967)
+probe (ubuntu-24.04-arm, 3.14) | histserv 0.2.1 grpcio 1.84.0 python 3.14.7 linux
+probe (ubuntu-24.04-arm, 3.14) | A warm idle server: rss=136118272 (129.8 MiB)
+probe (ubuntu-24.04-arm, 3.14) | B per histogram beyond its dense bytes (Double, K=2000, one fill each): 2989
+probe (ubuntu-24.04-arm, 3.14) | B per histogram beyond its dense bytes (Weight, K=2000, one fill each): 3649
+probe (ubuntu-24.04-arm, 3.14) | D per recorded unique_id (40000 fills of one histogram): 137.5
+probe (ubuntu-24.04-arm, 3.14) | C/F one worker: two FillMany of one histogram, then a snapshot (kept, then deleted)
+probe (ubuntu-24.04-arm, 3.14) |   fills chunks=1: peak above warm 434.6 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 4.79 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.14) |   snapshot chunks=1: peak above warm 498.8 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 5.79 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.14) |   snapshot+delete chunks=1: peak above warm 498.9 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 5.79 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.14) |   fills chunks=4: peak above warm 383.1 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 4.74 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.14) |   snapshot chunks=4: peak above warm 479.1 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 6.24 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.14) |   snapshot+delete chunks=4: peak above warm 479.1 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 6.24 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.14) |   fills chunks=8: peak above warm 420.7 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 5.45 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.14) |   snapshot chunks=8: peak above warm 500.8 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 6.70 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.14) |   snapshot+delete chunks=8: peak above warm 500.8 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 6.70 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.14) | E n workers: n FillMany of one 32 MiB histogram in flight at once (worst of 3)
+probe (ubuntu-24.04-arm, 3.14) |   1 in flight: peak above warm 236.6 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 5.39 with 1 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.14) |   2 in flight: peak above warm 327.6 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 8.24 with 2 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.14) |   4 in flight: peak above warm 391.2 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 10.23 with 4 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.14) |   8 in flight: peak above warm 705.1 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 20.03 with 8 fill(s) in flight
+probe (ubuntu-24.04-arm, 3.14) | H ceiling: dense_view 536869888 B (message 536869962 B): INVALID_ARGUMENT invalid fill request: ValueError('dense view byte size mismatch: expected 64, go
+probe (ubuntu-24.04-arm, 3.14) | H ceiling: dense_view 536870912 B (message 536870986 B): RESOURCE_EXHAUSTED CLIENT: Sent message larger than max (536870986 vs. 536870912)
+probe (ubuntu-24.04-arm, 3.14) | I prune after 2 s: untouched histogram exists=False, one filled every 0.5 s exists=True
+probe (ubuntu-24.04-arm, 3.14) | I `python -m histserv --help`: --prune-after-seconds Drop histograms that have not been accessed for at least this many seconds. (default: 86400)
+probe (ubuntu-24.04-arm, 3.14) | J announce.py (db8fb0a) imported, idle: rss=23433216 (22.3 MiB)
+probe (ubuntu-24.04-arm, 3.14) | MODEL B=153 MiB O=3700 B I=140 B a=4.0 b=3.0  (B = A + J; a, b cover every C/E/F row above by construction)
+probe (ubuntu-latest, 3.11) |   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/x64
+probe (ubuntu-latest, 3.11) |   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.16/x64
+probe (ubuntu-latest, 3.11) | HOST x86_64 nproc=4 Python 3.11.16 (main, Aug 13 2026, 02:46:14) [GCC 13.3.0] pandas=3.0.6
+probe (ubuntu-latest, 3.11) | 2026-10-01 03:42:17.430 ERROR:histserv:RPC<Fill> - invalid fill request: ValueError('dense view byte size mismatch: expected 64, got 536869888') (hist_id=68496fab8ea94907857296c526f1eb2e)
+probe (ubuntu-latest, 3.11) | 2026-10-01 03:42:17.430 ERROR:histserv:RPC<Fill> - request=536.87 MB, duration=353.21 ms, response=<error> (hist_id=68496fab8ea94907857296c526f1eb2e)
+probe (ubuntu-latest, 3.11) | histserv 0.2.1 grpcio 1.84.0 python 3.11.16 linux
+probe (ubuntu-latest, 3.11) | A warm idle server: rss=139755520 (133.3 MiB)
+probe (ubuntu-latest, 3.11) | B per histogram beyond its dense bytes (Double, K=2000, one fill each): 2997
+probe (ubuntu-latest, 3.11) | B per histogram beyond its dense bytes (Weight, K=2000, one fill each): 3665
+probe (ubuntu-latest, 3.11) | D per recorded unique_id (40000 fills of one histogram): 141.0
+probe (ubuntu-latest, 3.11) | C/F one worker: two FillMany of one histogram, then a snapshot (kept, then deleted)
+probe (ubuntu-latest, 3.11) |   fills chunks=1: peak above warm 504.2 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 5.88 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.11) |   snapshot chunks=1: peak above warm 568.2 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 6.88 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.11) |   snapshot+delete chunks=1: peak above warm 568.3 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 6.88 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.11) |   fills chunks=4: peak above warm 427.0 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 5.42 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.11) |   snapshot chunks=4: peak above warm 511.2 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 6.74 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.11) |   snapshot+delete chunks=4: peak above warm 511.2 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 6.74 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.11) |   fills chunks=8: peak above warm 409.6 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 5.27 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.11) |   snapshot chunks=8: peak above warm 493.9 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 6.59 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.11) |   snapshot+delete chunks=8: peak above warm 493.9 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 6.59 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.11) | E n workers: n FillMany of one 32 MiB histogram in flight at once (worst of 3)
+probe (ubuntu-latest, 3.11) |   1 in flight: peak above warm 260.0 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 6.12 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.11) |   2 in flight: peak above warm 319.0 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 7.97 with 2 fill(s) in flight
+probe (ubuntu-latest, 3.11) |   4 in flight: peak above warm 333.3 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 8.41 with 4 fill(s) in flight
+probe (ubuntu-latest, 3.11) |   8 in flight: peak above warm 794.2 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 22.82 with 8 fill(s) in flight
+probe (ubuntu-latest, 3.11) | H ceiling: dense_view 536869888 B (message 536869962 B): INVALID_ARGUMENT invalid fill request: ValueError('dense view byte size mismatch: expected 64, go
+probe (ubuntu-latest, 3.11) | H ceiling: dense_view 536870912 B (message 536870986 B): RESOURCE_EXHAUSTED CLIENT: Sent message larger than max (536870986 vs. 536870912)
+probe (ubuntu-latest, 3.11) | I prune after 2 s: untouched histogram exists=False, one filled every 0.5 s exists=True
+probe (ubuntu-latest, 3.11) | I `python -m histserv --help`: --prune-after-seconds Drop histograms that have not been accessed for at least this many seconds. (default: 86400)
+probe (ubuntu-latest, 3.11) | J announce.py (db8fb0a) imported, idle: rss=21573632 (20.6 MiB)
+probe (ubuntu-latest, 3.11) | MODEL B=154 MiB O=3700 B I=150 B a=4.5 b=2.5  (B = A + J; a, b cover every C/E/F row above by construction)
+probe (ubuntu-latest, 3.12) |   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+probe (ubuntu-latest, 3.12) |   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+probe (ubuntu-latest, 3.12) | HOST x86_64 nproc=4 Python 3.12.14 (main, Aug 13 2026, 02:47:42) [GCC 13.3.0] pandas=3.0.6
+probe (ubuntu-latest, 3.12) | 2026-10-01 03:42:26.060 ERROR:histserv:RPC<Fill> - invalid fill request: ValueError('dense view byte size mismatch: expected 64, got 536869888') (hist_id=5920f91f7120484886f78ba17650d545)
+probe (ubuntu-latest, 3.12) | 2026-10-01 03:42:26.060 ERROR:histserv:RPC<Fill> - request=536.87 MB, duration=332.52 ms, response=<error> (hist_id=5920f91f7120484886f78ba17650d545)
+probe (ubuntu-latest, 3.12) | histserv 0.2.1 grpcio 1.84.0 python 3.12.14 linux
+probe (ubuntu-latest, 3.12) | A warm idle server: rss=139202560 (132.8 MiB)
+probe (ubuntu-latest, 3.12) | B per histogram beyond its dense bytes (Double, K=2000, one fill each): 2928
+probe (ubuntu-latest, 3.12) | B per histogram beyond its dense bytes (Weight, K=2000, one fill each): 3548
+probe (ubuntu-latest, 3.12) | D per recorded unique_id (40000 fills of one histogram): 140.4
+probe (ubuntu-latest, 3.12) | C/F one worker: two FillMany of one histogram, then a snapshot (kept, then deleted)
+probe (ubuntu-latest, 3.12) |   fills chunks=1: peak above warm 453.1 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 5.08 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.12) |   snapshot chunks=1: peak above warm 517.2 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 6.08 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.12) |   snapshot+delete chunks=1: peak above warm 517.3 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 6.08 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.12) |   fills chunks=4: peak above warm 402.4 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 5.04 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.12) |   snapshot chunks=4: peak above warm 530.5 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 7.04 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.12) |   snapshot+delete chunks=4: peak above warm 530.5 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 7.04 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.12) |   fills chunks=8: peak above warm 431.3 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 5.61 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.12) |   snapshot chunks=8: peak above warm 515.0 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 6.92 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.12) |   snapshot+delete chunks=8: peak above warm 515.0 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 6.92 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.12) | E n workers: n FillMany of one 32 MiB histogram in flight at once (worst of 3)
+probe (ubuntu-latest, 3.12) |   1 in flight: peak above warm 257.7 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 6.05 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.12) |   2 in flight: peak above warm 337.4 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 8.54 with 2 fill(s) in flight
+probe (ubuntu-latest, 3.12) |   4 in flight: peak above warm 484.1 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 13.13 with 4 fill(s) in flight
+probe (ubuntu-latest, 3.12) |   8 in flight: peak above warm 678.2 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 19.19 with 8 fill(s) in flight
+probe (ubuntu-latest, 3.12) | H ceiling: dense_view 536869888 B (message 536869962 B): INVALID_ARGUMENT invalid fill request: ValueError('dense view byte size mismatch: expected 64, go
+probe (ubuntu-latest, 3.12) | H ceiling: dense_view 536870912 B (message 536870986 B): RESOURCE_EXHAUSTED CLIENT: Sent message larger than max (536870986 vs. 536870912)
+probe (ubuntu-latest, 3.12) | I prune after 2 s: untouched histogram exists=False, one filled every 0.5 s exists=True
+probe (ubuntu-latest, 3.12) | I `python -m histserv --help`: --prune-after-seconds Drop histograms that have not been accessed for at least this many seconds. (default: 86400)
+probe (ubuntu-latest, 3.12) | J announce.py (db8fb0a) imported, idle: rss=23875584 (22.8 MiB)
+probe (ubuntu-latest, 3.12) | MODEL B=156 MiB O=3600 B I=150 B a=5.0 b=2.5  (B = A + J; a, b cover every C/E/F row above by construction)
+probe (ubuntu-latest, 3.13) |   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.15/x64
+probe (ubuntu-latest, 3.13) |   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.15/x64
+probe (ubuntu-latest, 3.13) | HOST x86_64 nproc=4 Python 3.13.15 (main, Aug  6 2026, 02:15:18) [GCC 13.3.0] pandas=3.0.6
+probe (ubuntu-latest, 3.13) | 2026-10-01 03:41:50.923 ERROR:histserv:RPC<Fill> - invalid fill request: ValueError('dense view byte size mismatch: expected 64, got 536869888') (hist_id=52c4bb19773a402abc7d8a8d37721e2b)
+probe (ubuntu-latest, 3.13) | 2026-10-01 03:41:50.924 ERROR:histserv:RPC<Fill> - request=536.87 MB, duration=130.03 ms, response=<error> (hist_id=52c4bb19773a402abc7d8a8d37721e2b)
+probe (ubuntu-latest, 3.13) | histserv 0.2.1 grpcio 1.84.0 python 3.13.15 linux
+probe (ubuntu-latest, 3.13) | A warm idle server: rss=139751424 (133.3 MiB)
+probe (ubuntu-latest, 3.13) | B per histogram beyond its dense bytes (Double, K=2000, one fill each): 3163
+probe (ubuntu-latest, 3.13) | B per histogram beyond its dense bytes (Weight, K=2000, one fill each): 3778
+probe (ubuntu-latest, 3.13) | D per recorded unique_id (40000 fills of one histogram): 141.6
+probe (ubuntu-latest, 3.13) | C/F one worker: two FillMany of one histogram, then a snapshot (kept, then deleted)
+probe (ubuntu-latest, 3.13) |   fills chunks=1: peak above warm 479.9 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 5.50 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.13) |   snapshot chunks=1: peak above warm 544.0 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 6.50 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.13) |   snapshot+delete chunks=1: peak above warm 544.0 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 6.50 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.13) |   fills chunks=4: peak above warm 454.2 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 5.85 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.13) |   snapshot chunks=4: peak above warm 554.4 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 7.41 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.13) |   snapshot+delete chunks=4: peak above warm 554.4 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 7.41 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.13) |   fills chunks=8: peak above warm 459.2 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 6.05 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.13) |   snapshot chunks=8: peak above warm 541.7 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 7.34 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.13) |   snapshot+delete chunks=8: peak above warm 541.7 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 7.34 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.13) | E n workers: n FillMany of one 32 MiB histogram in flight at once (worst of 3)
+probe (ubuntu-latest, 3.13) |   1 in flight: peak above warm 248.4 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 5.76 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.13) |   2 in flight: peak above warm 348.0 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 8.87 with 2 fill(s) in flight
+probe (ubuntu-latest, 3.13) |   4 in flight: peak above warm 523.4 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 14.36 with 4 fill(s) in flight
+probe (ubuntu-latest, 3.13) |   8 in flight: peak above warm 675.2 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 19.10 with 8 fill(s) in flight
+probe (ubuntu-latest, 3.13) | H ceiling: dense_view 536869888 B (message 536869962 B): INVALID_ARGUMENT invalid fill request: ValueError('dense view byte size mismatch: expected 64, go
+probe (ubuntu-latest, 3.13) | H ceiling: dense_view 536870912 B (message 536870986 B): RESOURCE_EXHAUSTED CLIENT: Sent message larger than max (536870986 vs. 536870912)
+probe (ubuntu-latest, 3.13) | I prune after 2 s: untouched histogram exists=False, one filled every 0.5 s exists=True
+probe (ubuntu-latest, 3.13) | I `python -m histserv --help`: --prune-after-seconds Drop histograms that have not been accessed for at least this many seconds. (default: 86400)
+probe (ubuntu-latest, 3.13) | J announce.py (db8fb0a) imported, idle: rss=23683072 (22.6 MiB)
+probe (ubuntu-latest, 3.13) | MODEL B=156 MiB O=3800 B I=150 B a=4.5 b=3.5  (B = A + J; a, b cover every C/E/F row above by construction)
+probe (ubuntu-latest, 3.14) |   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.7/x64
+probe (ubuntu-latest, 3.14) |   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.7/x64
+probe (ubuntu-latest, 3.14) | HOST x86_64 nproc=4 Python 3.14.7 (main, Aug  6 2026, 02:19:46) [GCC 13.3.0] pandas=3.0.6
+probe (ubuntu-latest, 3.14) | 2026-10-01 03:43:05.450 ERROR:histserv:RPC<Fill> - invalid fill request: ValueError('dense view byte size mismatch: expected 64, got 536869888') (hist_id=2fcc3720a54b46cd8ab7d226cb65969c)
+probe (ubuntu-latest, 3.14) | 2026-10-01 03:43:05.451 ERROR:histserv:RPC<Fill> - request=536.87 MB, duration=339.65 ms, response=<error> (hist_id=2fcc3720a54b46cd8ab7d226cb65969c)
+probe (ubuntu-latest, 3.14) | histserv 0.2.1 grpcio 1.84.0 python 3.14.7 linux
+probe (ubuntu-latest, 3.14) | A warm idle server: rss=146833408 (140.0 MiB)
+probe (ubuntu-latest, 3.14) | B per histogram beyond its dense bytes (Double, K=2000, one fill each): 2962
+probe (ubuntu-latest, 3.14) | B per histogram beyond its dense bytes (Weight, K=2000, one fill each): 3610
+probe (ubuntu-latest, 3.14) | D per recorded unique_id (40000 fills of one histogram): 141.3
+probe (ubuntu-latest, 3.14) | C/F one worker: two FillMany of one histogram, then a snapshot (kept, then deleted)
+probe (ubuntu-latest, 3.14) |   fills chunks=1: peak above warm 481.1 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 5.52 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.14) |   snapshot chunks=1: peak above warm 545.2 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 6.52 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.14) |   snapshot+delete chunks=1: peak above warm 545.4 MiB, static 128.0 MiB, M 64 MiB -> (peak - static)/M = 6.52 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.14) |   fills chunks=4: peak above warm 441.5 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 5.65 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.14) |   snapshot chunks=4: peak above warm 569.8 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 7.65 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.14) |   snapshot+delete chunks=4: peak above warm 569.8 MiB, static 80.0 MiB, M 64 MiB -> (peak - static)/M = 7.65 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.14) |   fills chunks=8: peak above warm 415.1 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 5.36 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.14) |   snapshot chunks=8: peak above warm 497.5 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 6.65 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.14) |   snapshot+delete chunks=8: peak above warm 497.5 MiB, static 72.0 MiB, M 64 MiB -> (peak - static)/M = 6.65 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.14) | E n workers: n FillMany of one 32 MiB histogram in flight at once (worst of 3)
+probe (ubuntu-latest, 3.14) |   1 in flight: peak above warm 242.3 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 5.57 with 1 fill(s) in flight
+probe (ubuntu-latest, 3.14) |   2 in flight: peak above warm 329.7 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 8.30 with 2 fill(s) in flight
+probe (ubuntu-latest, 3.14) |   4 in flight: peak above warm 373.7 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 9.68 with 4 fill(s) in flight
+probe (ubuntu-latest, 3.14) |   8 in flight: peak above warm 660.7 MiB, static 64.0 MiB, M 32 MiB -> (peak - static)/M = 18.65 with 8 fill(s) in flight
+probe (ubuntu-latest, 3.14) | H ceiling: dense_view 536869888 B (message 536869962 B): INVALID_ARGUMENT invalid fill request: ValueError('dense view byte size mismatch: expected 64, go
+probe (ubuntu-latest, 3.14) | H ceiling: dense_view 536870912 B (message 536870986 B): RESOURCE_EXHAUSTED CLIENT: Sent message larger than max (536870986 vs. 536870912)
+probe (ubuntu-latest, 3.14) | I prune after 2 s: untouched histogram exists=False, one filled every 0.5 s exists=True
+probe (ubuntu-latest, 3.14) | I `python -m histserv --help`: --prune-after-seconds Drop histograms that have not been accessed for at least this many seconds. (default: 86400)
+probe (ubuntu-latest, 3.14) | J announce.py (db8fb0a) imported, idle: rss=24723456 (23.6 MiB)
+probe (ubuntu-latest, 3.14) | MODEL B=164 MiB O=3700 B I=150 B a=5.0 b=3.0  (B = A + J; a, b cover every C/E/F row above by construction)

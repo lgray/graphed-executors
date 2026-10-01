@@ -1,0 +1,2 @@
+real: 0/20 runs failed
+lockless-mutant: 20/20 runs failed

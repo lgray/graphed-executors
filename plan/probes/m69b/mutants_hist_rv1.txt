@@ -1,0 +1,31 @@
+ffd-ascending                KILLED   1 failed in 0.67s | FAILED tests/frozen/m69b/test_histserv_packing.py::test_slots_land_first_fit_in_stored_then_key_order_with_the_model_prediction
+ffd-insertion-order          KILLED   1 failed in 0.61s | FAILED tests/frozen/m69b/test_histserv_packing.py::test_slots_land_first_fit_in_stored_then_key_order_with_the_model_prediction
+place-largest-size           KILLED   1 failed, 2 passed in 0.74s | FAILED tests/frozen/m69b/test_histserv_packing.py::test_one_context_with_two_sizes_opens_the_smallest_that_fits_and_never_refuses_on_size
+oversize-refused             KILLED   1 failed, 2 passed in 0.85s | FAILED tests/frozen/m69b/test_histserv_packing.py::test_one_context_with_two_sizes_opens_the_smallest_that_fits_and_never_refuses_on_size
+oversize-shared              KILLED   1 failed, 2 passed in 0.70s | FAILED tests/frozen/m69b/test_histserv_packing.py::test_one_context_with_two_sizes_opens_the_smallest_that_fits_and_never_refuses_on_size
+no-first-fit-reuse           KILLED   1 failed in 0.58s | FAILED tests/frozen/m69b/test_histserv_packing.py::test_slots_land_first_fit_in_stored_then_key_order_with_the_model_prediction
+model-drop-task-term         KILLED   1 failed in 0.61s | FAILED tests/frozen/m69b/test_histserv_packing.py::test_slots_land_first_fit_in_stored_then_key_order_with_the_model_prediction
+model-drop-conn-term         KILLED   1 failed in 0.60s | FAILED tests/frozen/m69b/test_histserv_packing.py::test_slots_land_first_fit_in_stored_then_key_order_with_the_model_prediction
+model-chunks-not-plus-one    KILLED   1 failed in 0.61s | FAILED tests/frozen/m69b/test_histserv_packing.py::test_slots_land_first_fit_in_stored_then_key_order_with_the_model_prediction
+size-without-flow            KILLED   1 failed in 0.60s | FAILED tests/frozen/m69b/test_histserv_packing.py::test_slots_land_first_fit_in_stored_then_key_order_with_the_model_prediction
+ceiling-off-by-one           KILLED   1 failed, 4 passed in 0.93s | FAILED tests/frozen/m69b/test_histserv_packing.py::test_a_slot_past_the_message_ceiling_is_refused_naming_the_sizes
+equal-context-fresh-pack     KILLED   1 failed, 7 passed in 0.97s | FAILED tests/frozen/m69b/test_histserv_packing.py::test_an_equal_second_context_shares_the_first_ones_servers_without_overfilling
+different-args-shared        KILLED   1 failed, 8 passed, 1 warning in 0.97s | FAILED tests/frozen/m69b/test_histserv_packing.py::test_a_name_holds_its_arguments_for_the_process
+equal-no-warning             KILLED   1 failed, 7 passed in 0.99s | FAILED tests/frozen/m69b/test_histserv_packing.py::test_an_equal_second_context_shares_the_first_ones_servers_without_overfilling
+services-unsorted            KILLED   1 failed, 10 passed in 0.98s | FAILED tests/frozen/m69b/test_histserv_packing.py::test_plan_services_are_sorted_by_name
+unique-id-random             KILLED   1 failed in 1.14s | FAILED tests/frozen/m69b/test_histserv_retries.py::test_a_partition_run_twice_fills_once_and_another_partition_adds
+already-exists-raises        KILLED   1 failed in 1.27s | FAILED tests/frozen/m69b/test_histserv_retries.py::test_a_partition_run_twice_fills_once_and_another_partition_adds
+resolve-keeps-copies         KILLED   1 failed in 1.94s | FAILED tests/frozen/m69b/test_histserv_fill_path.py::test_receipts_ride_the_tree_and_each_server_holds_exactly_its_slots
+unpack-deletes               KILLED   1 failed in 1.86s | FAILED tests/frozen/m69b/test_histserv_fill_path.py::test_receipts_ride_the_tree_and_each_server_holds_exactly_its_slots
+error-formatted-args         KILLED   1 failed, 1 passed in 1.75s | FAILED tests/frozen/m69b/test_histserv_retries.py::test_a_killed_server_raises_a_histserv_error_that_survives_a_pickle
+eager-histserv-import        KILLED   1 failed, 3 passed in 4.87s | FAILED tests/frozen/m69b/test_histserv_lazy_init.py::test_nothing_imports_histserv_before_a_bound_run_does
+worker-creates               KILLED   1 failed, 2 passed in 3.12s | FAILED tests/frozen/m69b/test_histserv_lazy_init.py::test_a_process_pool_creates_once_and_equals_the_local_run
+create-at-bind               KILLED   1 failed in 1.61s | FAILED tests/frozen/m69b/test_histserv_lazy_init.py::test_require_bound_names_every_server_and_accepts_names_sharing_an_endpoint
+no-pickle-create             KILLED   1 failed, 1 passed in 1.62s | FAILED tests/frozen/m69b/test_histserv_lazy_init.py::test_histograms_are_created_on_the_first_call_once_and_on_a_bound_pickle_once
+bind-no-merge                KILLED   1 failed in 0.68s | FAILED tests/frozen/m69b/test_histserv_lazy_init.py::test_require_bound_names_every_server_and_accepts_names_sharing_an_endpoint
+receipt-adds-anything        KILLED   1 failed, 2 passed in 2.19s | FAILED tests/frozen/m69b/test_histserv_retries.py::test_receipts_of_two_server_histograms_refuse_to_add
+positions-dedup              KILLED   1 failed, 49 passed in 1.23s | FAILED tests/frozen/m48/test_optimizer_merge_guard.py::test_a_varied_program_whose_labels_the_optimizer_merges_fills_every_label
+second-firing-records-first  KILLED   1 failed, 3 passed in 1.32s | FAILED tests/frozen/m69b/test_pieces_composition.py::test_one_pieces_feeds_one_plan_and_the_first_still_runs_right
+tls-allowed                  KILLED   1 failed, 2 passed in 2.80s | FAILED tests/frozen/m69b/test_histserv_fill_path.py::test_a_tls_or_http_endpoint_is_refused_and_never_dialled[grpcs]
+handles-no-lock              KILLED   1 failed in 1.60s | FAILED tests/extra/m69b/test_histserv_served.py::test_concurrent_first_calls_create_each_histogram_once
+worktree diff after mutants: ''

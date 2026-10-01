@@ -1,0 +1,12 @@
+# local gates, worktree at b3a6a84, ~/vibe-coding/cloud/graphed-histogram/.venv (graphed a0638719), macOS arm64 py3.12
+405 passed, 6 skipped, 23 warnings in 68.92s (0:01:08)
+per-file:
+src/graphed_histogram/__init__.py                  100.00%
+src/graphed_histogram/_spec.py                      95.92%
+src/graphed_histogram/boost.py                      98.91%
+src/graphed_histogram/histserv.py                  100.00%
+
+diff-cover vs origin/main 4c4b79f: 369 lines, 0 missing, 100%
+ruff check / ruff format --check / mypy (src tests scripts): clean
+sphinx -W: exit 0
+frozen diffs since freeze-m69b / freeze-m48-fixup2 / freeze-m49-fixup: empty

@@ -1,0 +1,14 @@
+=== python:3.12-slim linux/arm64
+histserv only:
+warm VmRSS 59.4 MiB; pandas mapped: False; pyarrow mapped: False; B = 129 MiB
++ pandas pyarrow:
+warm VmRSS 122.0 MiB; pandas mapped: True; pyarrow mapped: True; B = 129 MiB
+=== python:3.12-slim linux/amd64
+Unable to find image 'python:3.12-slim' locally
+3.12-slim: Pulling from library/python
+Digest: sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f
+Status: Downloaded newer image for python:3.12-slim
+histserv only:
+warm VmRSS 88.9 MiB; pandas mapped: False; pyarrow mapped: False; B = 129 MiB
++ pandas pyarrow:
+warm VmRSS 176.0 MiB; pandas mapped: True; pyarrow mapped: True; B = 129 MiB

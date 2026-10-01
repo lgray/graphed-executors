@@ -1,0 +1,2 @@
+opt_level=1: positions=[0] values equal 2x-fill: True
+opt_level=0: positions=[0, 1] values equal 2x-fill: True

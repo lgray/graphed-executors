@@ -1,0 +1,49 @@
+# graphed-histogram PR #24 CI run 36809889213, head b3a6a84: failing tests per leg (from gh api .../actions/jobs/<id>/logs)
+== test windows-latest py3.12 (job 110202374045)
+FAILED tests/frozen/m69b/test_histserv_surface.py::test_the_frozen_suites_before_m69b_are_unmodified_but_for_the_refreeze - AssertionError: assert {'m23': '3b59...b1b33f2', ...} == {'m23': '7cc9...94d08f0', ...}
+1 failed, 404 passed, 6 skipped, 23 warnings in 115.99s (0:01:55)
+== test windows-latest py3.13 (job 110202374087)
+FAILED tests/frozen/m69b/test_histserv_surface.py::test_the_frozen_suites_before_m69b_are_unmodified_but_for_the_refreeze - AssertionError: assert {'m23': '3b59...b1b33f2', ...} == {'m23': '7cc9...94d08f0', ...}
+1 failed, 404 passed, 6 skipped, 23 warnings in 107.32s (0:01:47)
+== test windows-latest py3.11 (job 110202374171)
+FAILED tests/frozen/m69b/test_histserv_surface.py::test_the_frozen_suites_before_m69b_are_unmodified_but_for_the_refreeze - AssertionError: assert {'m23': '3b59...b1b33f2', ...} == {'m23': '7cc9...94d08f0', ...}
+1 failed, 404 passed, 6 skipped, 23 warnings in 122.99s (0:02:02)
+== test windows-latest py3.14 (job 110202374209)
+FAILED tests/frozen/m69b/test_histserv_surface.py::test_the_frozen_suites_before_m69b_are_unmodified_but_for_the_refreeze - AssertionError: assert {'m23': '3b59...b1b33f2', ...} == {'m23': '7cc9...94d08f0', ...}
+1 failed, 404 passed, 6 skipped, 23 warnings in 100.45s (0:01:40)
+== test ubuntu-latest py3.14 (job 110202374255)
+FAILED tests/frozen/m69b/test_histserv_memory_model.py::test_a_64_mib_double_slot_filled_and_resolved_stays_under_its_prediction - assert 147341312 < 135266304
+FAILED tests/frozen/m69b/test_histserv_memory_model.py::test_four_fillers_released_together_stay_under_the_four_worker_prediction - assert 146964480 < 135266304
+FAILED tests/frozen/m69b/test_histserv_memory_model.py::test_an_eight_label_weight_slot_stays_under_its_prediction - assert 146948096 < 135266304
+FAILED tests/frozen/m69b/test_histserv_memory_model.py::test_two_thousand_one_bin_slots_stay_under_a_prediction_made_of_per_histogram_terms - assert 146935808 < 135266304
+FAILED tests/frozen/m69b/test_histserv_memory_model.py::test_one_connection_per_worker_stays_under_the_prediction - assert 147107840 < 135266304
+5 failed, 405 passed, 1 skipped, 23 warnings in 94.92s (0:01:34)
+== test ubuntu-latest py3.13 (job 110202374279)
+FAILED tests/frozen/m69b/test_histserv_memory_model.py::test_a_64_mib_double_slot_filled_and_resolved_stays_under_its_prediction - assert 139366400 < 135266304
+FAILED tests/frozen/m69b/test_histserv_memory_model.py::test_four_fillers_released_together_stay_under_the_four_worker_prediction - assert 139157504 < 135266304
+FAILED tests/frozen/m69b/test_histserv_memory_model.py::test_an_eight_label_weight_slot_stays_under_its_prediction - assert 139476992 < 135266304
+FAILED tests/frozen/m69b/test_histserv_memory_model.py::test_two_thousand_one_bin_slots_stay_under_a_prediction_made_of_per_histogram_terms - assert 139526144 < 135266304
+FAILED tests/frozen/m69b/test_histserv_memory_model.py::test_one_connection_per_worker_stays_under_the_prediction - assert 139460608 < 135266304
+5 failed, 405 passed, 1 skipped, 23 warnings in 107.46s (0:01:47)
+== test ubuntu-24.04-arm py3.14 (job 110202374331)
+FAILED tests/frozen/m69b/test_histserv_memory_model.py::test_a_64_mib_double_slot_filled_and_resolved_stays_under_its_prediction - assert 136073216 < 135266304
+FAILED tests/frozen/m69b/test_histserv_memory_model.py::test_four_fillers_released_together_stay_under_the_four_worker_prediction - assert 136060928 < 135266304
+FAILED tests/frozen/m69b/test_histserv_memory_model.py::test_an_eight_label_weight_slot_stays_under_its_prediction - assert 136060928 < 135266304
+FAILED tests/frozen/m69b/test_histserv_memory_model.py::test_two_thousand_one_bin_slots_stay_under_a_prediction_made_of_per_histogram_terms - assert 136056832 < 135266304
+FAILED tests/frozen/m69b/test_histserv_memory_model.py::test_one_connection_per_worker_stays_under_the_prediction - assert 136060928 < 135266304
+5 failed, 405 passed, 1 skipped, 23 warnings in 82.65s (0:01:22)
+== test ubuntu-latest py3.12 (job 110202374345)
+FAILED tests/frozen/m69b/test_histserv_memory_model.py::test_a_64_mib_double_slot_filled_and_resolved_stays_under_its_prediction - assert 139018240 < 135266304
+FAILED tests/frozen/m69b/test_histserv_memory_model.py::test_four_fillers_released_together_stay_under_the_four_worker_prediction - assert 139206656 < 135266304
+FAILED tests/frozen/m69b/test_histserv_memory_model.py::test_an_eight_label_weight_slot_stays_under_its_prediction - assert 138985472 < 135266304
+FAILED tests/frozen/m69b/test_histserv_memory_model.py::test_two_thousand_one_bin_slots_stay_under_a_prediction_made_of_per_histogram_terms - assert 139345920 < 135266304
+FAILED tests/frozen/m69b/test_histserv_memory_model.py::test_one_connection_per_worker_stays_under_the_prediction - assert 139116544 < 135266304
+5 failed, 405 passed, 1 skipped, 29 warnings in 113.19s (0:01:53)
+== test ubuntu-latest py3.11 (job 110202374423)
+FAILED tests/frozen/m69b/test_histserv_memory_model.py::test_a_64_mib_double_slot_filled_and_resolved_stays_under_its_prediction - assert 140140544 < 135266304
+FAILED tests/frozen/m69b/test_histserv_memory_model.py::test_four_fillers_released_together_stay_under_the_four_worker_prediction - assert 139980800 < 135266304
+FAILED tests/frozen/m69b/test_histserv_memory_model.py::test_an_eight_label_weight_slot_stays_under_its_prediction - assert 140115968 < 135266304
+FAILED tests/frozen/m69b/test_histserv_memory_model.py::test_two_thousand_one_bin_slots_stay_under_a_prediction_made_of_per_histogram_terms - assert 140095488 < 135266304
+FAILED tests/frozen/m69b/test_histserv_memory_model.py::test_one_connection_per_worker_stays_under_the_prediction - assert 139968512 < 135266304
+5 failed, 405 passed, 1 skipped, 23 warnings in 86.35s (0:01:26)
+== passing: ubuntu-24.04-arm py3.11/3.12/3.13, macos-latest py3.11-3.14, test (experimental) py3.14t, docs, sdist+wheel

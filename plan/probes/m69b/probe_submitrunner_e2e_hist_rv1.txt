@@ -1,0 +1,4 @@
+services: [('rv1-e2e-a-0', 'histserv', {'memory_mb': 512}), ('rv1-e2e-b-0', 'histserv', {'memory_mb': 512})]
+value types: {'a': 'Histogram', 'b': 'Histogram'}
+equal twin: True
+histserv left after run: none

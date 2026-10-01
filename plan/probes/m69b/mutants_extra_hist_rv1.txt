@@ -1,0 +1,13 @@
+size-without-flow          KILLED   1 failed in 0.86s
+axis-mode-one-chunk        KILLED   1 failed in 0.61s
+refusal-after-placement    KILLED   1 failed in 0.60s
+services-drop-own          KILLED   1 failed in 0.59s
+no-declare                 KILLED   1 failed in 0.67s
+workers-zero-accepted      KILLED   1 failed in 0.30s
+ports-not-compared         KILLED   1 failed, 1 warning in 0.31s
+setstate-creates           KILLED   1 failed in 1.84s
+empty-is-zero-hist         KILLED   1 failed in 0.61s
+unbound-call-silent        KILLED   1 failed in 0.71s
+grpc-refused               KILLED   1 failed in 1.66s
+positions-dedup            KILLED   1 failed in 0.75s
+worktree diff after mutants: ''

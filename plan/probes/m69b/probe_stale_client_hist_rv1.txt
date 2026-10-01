@@ -1,0 +1,5 @@
+run1 stats: 0
+run2 cached call 0: 0 0.00s
+run2 cached call 1: 0 0.00s
+run2 cached call 2: 0 0.00s
+control fresh client: 0
