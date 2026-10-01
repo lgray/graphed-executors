@@ -159,3 +159,38 @@ test author. None of them makes a round unclean.
      details would keep §9's "fails loudly (`NOT_FOUND` …)" readable on every runner.
 10. **D8 "as few servers as a measured size model allows"** should say first-fit decreasing, which does not
     guarantee the fewest servers.
+
+## r6-B
+From `reviews/plan-services-m69b-r6-B.md` (unit B delta, e23af1c). These are constraints for the implementer and
+test author. None of them makes a round unclean.
+
+1. **What "a `HistservError` … equal after a pickle round trip" (`test_histserv_retries.py`) means.**
+   - `Exception` has no value equality. Assert the same type, the same `str()`, and equal endpoint, code and details
+     attributes, not `==`.
+   - Implementer trap: a subclass whose `__init__(endpoint, code, details)` passes one formatted message to
+     `super().__init__` fails to unpickle. Pass every field through `args`, or define `__reduce__`.
+   - Store the code as its name string, so unpickling imports no `grpc`.
+   - Evidence: `probes/m69b/probe_histserv_error_pickle_rv6b.txt`:
+     ```
+     Positional: round trip ok; r == e: False; same type+str: True
+     Formatted: round trip FAILS: TypeError: Formatted.__init__() missing 2 required positional arguments: 'code' and 'details'
+     ```
+2. **The m69b hgg files import `hgg_harness` from another directory.**
+   - Today that works only when `tests/frozen/m69a` is collected in the same session. Under pytest's prepend mode it
+     is: in `test-hgg`'s line and in every job that runs `tests/frozen` whole.
+   - Add `"tests/frozen/m69a"` to `[tool.pytest.ini_options] pythonpath`, as `tests/frozen/m7`, `m10`, `m31`, `m34`,
+     `m37` and `m65` already are. Then `pytest tests/frozen/m69b` alone also collects.
+3. **`tests/extra/m69b`'s hgg tests run in more jobs than `test-hgg`.**
+   - The all-OS `test` job runs `pytest tests/frozen tests/extra`.
+   - `test-htcondor` runs `tests/extra/m6*`.
+   - Neither job has coffea, so these files follow `hgg_harness`'s convention: `importorskip` unless
+     `GRAPHED_HGG_REQUIRED=1`.
+   - §6's "no other job runs the `test_hgg_*` files" means that no other job runs them unskipped.
+4. **`pieces.serve` with no backed slot returns the plan unchanged and refuses nothing.**
+   - `gh.plan(partitions=[p, p])` is reachable today, because `gh.plan` takes `partitions=`. Unbacked, it keeps
+     0.0.4's behaviour.
+   - The refusals of a repeated partition, `next_tasks` and a double serve are sizing refusals, so they apply only
+     with a backed slot.
+5. **`run_lpc.py --driverless` must pass `request_memory_mb` (`submit_driverless` requires it).**
+   - In-job servers share the driver job's slot: `in_job` gives `service_hosts=("driver",)`.
+   - So it covers `len(ctx.servers()) × memory_mb` plus the driver and the local pilots.

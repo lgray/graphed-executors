@@ -1,0 +1,2 @@
+Positional: round trip ok; r == e: False; same type+str: True
+Formatted: round trip FAILS: TypeError: Formatted.__init__() missing 2 required positional arguments: 'code' and 'details'

@@ -1,0 +1,10 @@
+=== python:3.12-slim linux/arm64 (docker run ... python -u /p/probe_concurrent_conns_rv6b.py)
+histserv 0.2.1 grpcio 1.84.0 python 3.12.14
+  1 in flight, shared connection (1 server conns): (peak-static)/M =  5.81  model a+b*n =   8.5  within
+  1 in flight, own connections   (2 server conns): (peak-static)/M =  6.47  model a+b*n =   8.5  within
+  2 in flight, shared connection (1 server conns): (peak-static)/M =  7.91  model a+b*n =  11.5  within
+  2 in flight, own connections   (3 server conns): (peak-static)/M =  9.19  model a+b*n =  11.5  within
+  4 in flight, shared connection (1 server conns): (peak-static)/M = 13.21  model a+b*n =  17.5  within
+  4 in flight, own connections   (5 server conns): (peak-static)/M = 12.58  model a+b*n =  17.5  within
+  8 in flight, shared connection (1 server conns): (peak-static)/M = 20.81  model a+b*n =  29.5  within
+  8 in flight, own connections   (9 server conns): (peak-static)/M = 17.84  model a+b*n =  29.5  within

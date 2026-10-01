@@ -1,0 +1,6 @@
+Weight 10000    : 160364 B  > 100 KiB: True
+Weight 100x100  : 166827 B  > 100 KiB: True
+Double 10000    :  80350 B  > 100 KiB: False
+Double 100x100  :  83597 B  > 100 KiB: False
+Int64  10000    :  80349 B  > 100 KiB: False
+Int64  100x100  :  83596 B  > 100 KiB: False
