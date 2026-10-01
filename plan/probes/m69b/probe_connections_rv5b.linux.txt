@@ -1,0 +1,5 @@
+x86_64
+server rss with 4 connections: 86.7 MiB
+68 connections: rss 87.9 MiB, per extra connection 18.0 KiB
+260 connections: rss 90.7 MiB, per extra connection 16.0 KiB
+516 connections: rss 95.0 MiB, per extra connection 16.5 KiB

@@ -106,3 +106,56 @@ None of them makes a round unclean.
    `reduce_with_outputs` do.
 3. **§5's opening says "graphed (d0ad16b) does not change".** That is false beside §5.0's graphed PR. Scope the
    sentence to the histserv backend.
+
+## r5-A
+From `reviews/plan-services-m69b-r5-A.md` (unit A delta, eea3f4f). These are constraints for the implementer and
+test author. None of them makes a round unclean.
+
+1. **The frozen `GraphStore.cone` clause asserts `ValueError`, not `BadNodeId`.**
+   - Python never sees a `BadNodeId`. `map_err` turns it into `ValueError("no node with id <n>")`, and no name
+     containing `Bad` is importable from `graphed`, `graphed.core` or `graphed.core.graphed_core`
+     (`probes/m69b/probe_opt0_rv5a.txt` "badnodeid").
+   - Assert `pytest.raises(ValueError, match="no node with id")`.
+   - The clause still fails in its direction. An unvalidated `dead_code_elimination` indexes `keep[i]` out of range
+     and panics. That surfaces as pyo3's `PanicException`, a `BaseException`, which this assert does not catch.
+2. **`replaying.py`'s docstrings say "the plan's optimized graph"** (`ReplayDiff`, `Replay.diff`) for the
+   "re-evaluated" reference. At `0` that graph is the cone. Say "the plan's graph".
+
+## r5-B
+From `reviews/plan-services-m69b-r5-B.md` (unit B whole part, eea3f4f). These are constraints for the implementer and
+test author. None of them makes a round unclean.
+
+1. **`gh.plan` serves its backed histograms itself.** §5.1 `boost.py` says only that it "builds from a fresh `pieces`".
+   - D8 ("the user declares and binds nothing") and the rows that run `gh.plan({"h": backed})` need it to return
+     `pieces.serve(plan)`.
+   - `serve` with no backed slot returns the plan unchanged. An unbacked `plan.process` then stays the
+     `_PartitionReduce` that frozen m49 `test_variation_labels_payload.py` reads (`plan.process.variation_labels`).
+2. **Runner choice in `test_hgg_diagnostics.py`'s no-context clause.** Run the no-context plan on `SequentialRunner`, or
+   keep each dataset at three or fewer partitions.
+   - `SequentialRunner` is a left fold in key order, which equals the one-worker arrival fold.
+   - `SubmitRunner`'s `plan_tree` fold of four or more float partials differs in the last bits:
+     `probe_fold_order_rv5b.txt` gives `4 partials: tree vs left fold differ in 17 bins` (2–3 partials: 0).
+3. **`test_histserv_cluster.py`'s "histograms equal the twin"** runs over pool pilots, so fills arrive concurrently.
+   Use dyadic or integer weights, as the managed row does, or a 1e-12 relative tolerance.
+4. **The m69b hgg files place the higgs_dna data themselves**, through a session fixture calling
+   `hgg_harness.place_higgs_dna_data()`. m69a's autouse `placed` fixture is scoped to `tests/frozen/m69a/`.
+5. **`run_lpc.py` must contain no `import uproot` and no `uproot.` text, not even in a comment.** It lives in
+   `examples/hgg/`, which frozen m69a `test_the_events_are_coffea_nanoevents` scans with
+   `import uproot|uproot\.`. Take entry counts from coffea's lazy NanoEvents, as `run_local.py`'s `num_entries` does.
+6. **`run_lpc.py` needs a driverless mode** for `probes/site-lpc/m69-hgg-driverless.txt`. §5.2 describes only the
+   attached `--placement`.
+7. **The m69a README's freeze sentence names the fixup tag.** It reads "read-only after the `freeze-m72` tag".
+   `freeze-m69a-fixup` is free (`git ls-remote --tags upstream`).
+8. **mypy for `graphed_histogram/histserv.py`.**
+   - histserv and grpc ship no `py.typed`, so they join the `ignore_missing_imports` override in `pyproject.toml`.
+   - The m69b frozen test stems join the frozen-residuals module list (the mypy hook is `system`, and
+     `files = ["src", "tests", "scripts"]`).
+9. **(small behaviour, the dispatcher's call) A histserv RPC error should cross a process boundary.**
+   `grpc._channel._InactiveRpcError` does not pickle: `probe_rpcerror_pickle_rv5b.txt` gives
+   `pickle: TypeError: cannot pickle '_thread.RLock' object`.
+   - The pilots' `_run` and `PinnedProcessPool` fall back to a `RuntimeError` that carries the error's text.
+   - The stdlib process-pool path ships only the `TypeError`.
+   - Re-raising RPC errors from the reduce as a picklable error naming histserv, the endpoint, the status code and the
+     details would keep §9's "fails loudly (`NOT_FOUND` …)" readable on every runner.
+10. **D8 "as few servers as a measured size model allows"** should say first-fit decreasing, which does not
+    guarantee the fewest servers.

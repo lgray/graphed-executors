@@ -1,0 +1,2 @@
+Regular(10,0,1) vs Regular(10000,0,1): receipt pickles 280 vs 283 B; histograms pickle 510 vs 160364 B
+Regular(100,0,1)x2 (10^4 bins) vs Regular(10,0,1): receipt pickles 280 vs 381 B; histograms pickle 510 vs 166827 B
