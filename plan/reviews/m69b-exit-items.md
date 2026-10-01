@@ -194,3 +194,22 @@ test author. None of them makes a round unclean.
 5. **`run_lpc.py --driverless` must pass `request_memory_mb` (`submit_driverless` requires it).**
    - In-job servers share the driver job's slot: `in_job` gives `service_hosts=("driver",)`.
    - So it covers `len(ctx.servers()) × memory_mb` plus the driver and the local pilots.
+
+## r7-B
+From `reviews/plan-services-m69b-r7-B.md` (unit B delta + whole part, f61d22c). These are constraints for the
+implementer and test author. None of them makes a round unclean.
+
+1. **No "histserv" text in `htcondor_backend/`.** The `service_hosts` narrowing (§5.2) must not name histserv or
+   Triton in code, docstrings or messages under `src/graphed_executors/htcondor_backend/` (other than `sites.py`).
+   Frozen m68a `test_services_packaging.py::test_no_service_is_named_in_the_engine` searches those files with
+   `triton|histserv` (case-insensitive).
+2. **Status witnesses read the log.** The engine's `ServiceSet` is internal to `SubmitRunner.run`, so the
+   `leg`/`host` witnesses in `test_histserv_managed.py` and `test_histserv_cluster.py` come from the
+   `graphed_executors.services` log records (`extra={"status": …}`). Read them as m68a does, through
+   `services_harness.status_records`.
+3. **`test_histserv_cluster.py` fits the CI pool.**
+   - The test-htcondor pool is one partitionable slot with 4 CPUs and 15 989 MB (run 36731794292:
+     `slot1@… Unclaimed 4 15989 1`).
+   - Pilots are submitted at `HTCondorBackend.__init__`, and `HTCondorRunner.run` waits for them before
+     `ServiceSet.start` submits the two service jobs (1 CPU each). Idle pilots keep their slots.
+   - So use `n_pilots ≤ 2`. Otherwise the second service job waits out `timeout_s`.
