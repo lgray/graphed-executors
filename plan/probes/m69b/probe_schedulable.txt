@@ -1,0 +1,13 @@
+htcondor2 $CondorVersion: 25.13.2 2026-08-20 BuildID: UW_Python_Wheel_Build $
+A empty pool: default ad_type + MyType constraint -> 1 ads; AdType.Startd -> 1 ads
+    {'Name': 'slot1@edd0c3833c27', 'SlotType': 'Partitionable', 'PartitionableSlot': True, 'TotalSlotMemory': 15973, 'TotalSlotCpus': 10, 'TotalSlotGPUs': 0, 'Memory': 15973, 'Cpus': 10, 'GPUs': 0}
+A largest slot memory (partitionable TotalSlotMemory, static Memory, dynamic skipped): 15973 MiB
+B request_memory=15974: JobStatus after 20 s = 1 (1 = idle)
+C blocker request_memory=14949: running after 2.5 s
+A blocker running: default ad_type + MyType constraint -> 1 ads; AdType.Startd -> 1 ads
+    {'Name': 'slot1@edd0c3833c27', 'SlotType': 'Partitionable', 'PartitionableSlot': True, 'TotalSlotMemory': 15973, 'TotalSlotCpus': 10, 'TotalSlotGPUs': 0, 'Memory': 15973, 'Cpus': 10, 'GPUs': 0}
+A largest slot memory with the blocker running: 15973 MiB (unchanged = True)
+C service request_memory=4096 behind the blocker: JobStatus after 25 s = 1
+C blocker removed -> service JobStatus 2 after 0.5 s
+D linux: os.sysconf SC_PAGE_SIZE*SC_PHYS_PAGES = 15973 MiB
+D darwin host: 32768 MiB True

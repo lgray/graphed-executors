@@ -1,0 +1,6 @@
+To monitor your job(s), run: condor_watch_q -clusters 1
+Cpus = 1
+Memory = 3072
+SlotType = "Dynamic"
+TotalSlotMemory = 3072
+RequestMemory = 3000
