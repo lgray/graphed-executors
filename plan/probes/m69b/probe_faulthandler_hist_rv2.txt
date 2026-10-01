@@ -1,0 +1,12 @@
+1:Timeout (0:00:10)!
+2:Thread 0x0000000172117000 (most recent call first):
+3:  File "/Users/lgray/vibe-coding/cloud/graphed-histogram/.venv/lib/python3.12/site-packages/grpc/_channel.py", line 1152 in _blocking
+4:  File "/Users/lgray/vibe-coding/cloud/graphed-histogram/.venv/lib/python3.12/site-packages/grpc/_channel.py", line 1165 in __call__
+5:  File "/private/tmp/claude-501/-Users-lgray-vibe-coding-graphed-workdir/c445639e-fd6b-4941-b012-0166b71d96e2/scratchpad/clean6ddb/src/graphed_histogram/histserv.py", line 375 in <lambda>
+6:  File "/private/tmp/claude-501/-Users-lgray-vibe-coding-graphed-workdir/c445639e-fd6b-4941-b012-0166b71d96e2/scratchpad/clean6ddb/src/graphed_histogram/histserv.py", line 279 in _call
+7:  File "/private/tmp/claude-501/-Users-lgray-vibe-coding-graphed-workdir/c445639e-fd6b-4941-b012-0166b71d96e2/scratchpad/clean6ddb/src/graphed_histogram/histserv.py", line 375 in _ship
+10:  File "/private/tmp/claude-501/-Users-lgray-vibe-coding-graphed-workdir/c445639e-fd6b-4941-b012-0166b71d96e2/scratchpad/clean6ddb/src/graphed_histogram/histserv.py", line 453 in __call__
+18:Thread 0x00000001f5462180 (most recent call first):
+90:>       assert not thread.is_alive(), f"HARD TIMEOUT: call did not finish within {timeout_s}s"
+92:E       AssertionError: HARD TIMEOUT: call did not finish within 20.0s
+97:1 failed in 21.61s

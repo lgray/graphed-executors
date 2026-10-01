@@ -1,0 +1,50 @@
+# local gates, clean worktree at 6ddb1b1, ~/vibe-coding/cloud/graphed-histogram/.venv (graphed a0638719), macOS arm64 py3.12
+pytest tests/frozen tests/extra: 410 collected, exit 0; progress marks: 405 passed, 5 skipped (memory model, Linux only), 0 failed
+file                                                   pct
+src/graphed_histogram/__init__.py                  100.00%
+src/graphed_histogram/_spec.py                      95.92%
+src/graphed_histogram/boost.py                      98.91%
+src/graphed_histogram/histserv.py                  100.00%
+
+4 files checked against the 90% per-file gate.
+Total:   369 lines
+Missing: 0 lines
+Coverage: 100%
+DIFFCOVER EXIT 0
+== ruff
+All checks passed!
+exit 0
+== format
+77 files already formatted
+exit 0
+== mypy
+Success: no issues found in 76 source files
+== sphinx
+sphinx exit 0
+== precommit
+  toml-valid       ok   
+  workflows-valid  ok   
+  integrity-scan   ok   
+  prek             ok   ruff check...............................................................Passed
+ruff format..............................................................Passed
+
+PRECOMMIT-GATE: ok (hist-rv2)
+# Linux arm64 legs (python:3.1x-slim, git archive 6ddb1b1, graphed CI wheel run 36801426917, .[dev,histserv])
+== arm312
+/usr/local/lib/python3.12/site-packages/graphed/__init__.py /work/src/graphed_histogram/__init__.py 3.0.6 25.0.1
+graphed           0.0.6
+grpcio            1.84.0
+histserv          0.2.1
+pandas            3.0.6
+pyarrow           25.0.1
+SKIPPED [1] tests/extra/m48/test_correctionlib_fill_execution.py:41: could not import 'correctionlib': No module named 'correctionlib'
+410 passed, 1 skipped, 23 warnings in 67.74s (0:01:07)
+== arm314
+/usr/local/lib/python3.14/site-packages/graphed/__init__.py /work/src/graphed_histogram/__init__.py 3.0.6 25.0.1
+graphed           0.0.6
+grpcio            1.84.0
+histserv          0.2.1
+pandas            3.0.6
+pyarrow           25.0.1
+64 passed in 28.04s
+# frozen after freeze-m69b-fixup: git diff --stat 1d432af 6ddb1b1 -- tests/frozen -> ''; control 56992b7..6ddb1b1:  6 files changed, 50 insertions(+), 37 deletions(-)

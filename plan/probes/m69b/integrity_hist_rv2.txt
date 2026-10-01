@@ -1,0 +1,4 @@
+range 0 []
+control 2 [('skip_or_xfail_added', 'x.py'), ('target_stubbed', 'x.py')]
+whole-PR range 1 [('ci_config_modified', '.github/workflows/ci.yml')]
+whole-PR control 2 [('skip_or_xfail_added', 'x.py'), ('target_stubbed', 'x.py')]
