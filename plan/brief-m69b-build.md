@@ -15,6 +15,9 @@ Remotes: graphed-m69b and graphed-histogram `origin` = graphed-org, `lgray` = th
 `upstream` = graphed-org, `origin` = the lgray fork. Never touch `~/vibe-coding/cloud/{m68a,m68c-*,docs-*,fix-lxplus-submit,plan}`,
 `~/vibe-coding/integ/mains/*`, `~/vibe-coding/m52`, or containers you did not start (e.g. `fixlx-pool`).
 
+## Pins
+CI's `GRAPHED` in the histogram and executors PRs is graphed main a0638719da2f7af93767ff7acfa0e9d8eb492507 (d0ad16b + #64, the §5.0 `opt_level` PR); wherever the plan says "graphed @ d0ad16b" for an install, read that sha. The local venvs are rebuilt on it before the implementers start.
+
 ## Roles (each a fresh subagent; they communicate only through committed artifacts)
 1. **Test author** writes the frozen suite + README traceability table (test → plan clause → what it shows → the wrong
    implementation it fails). Never reads or writes the implementation; throwaway stubs live outside the repo.
