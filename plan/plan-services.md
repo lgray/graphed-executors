@@ -974,8 +974,9 @@ m69b file calls it; the PR merges on its own, independent of the m68c unit.
   `chunks` = its labels (1 without), `stored = chunks × dense`. A server's predicted peak is `B + Σ (O + I × tasks +
   (chunks + 1) × dense) + (a + b × workers) × M + K × workers`, `tasks = len(plan.tasks)`, `M` its largest `stored`,
   `K` one client connection (a worker process holds one per server; `B` holds the driver's); `B, O, I, a, b`
-  are module constants, each the maximum over every `MODEL` line of `probes/m69b/probe_histserv_memory.txt` and
-  `.amd64.txt`, and `K` over those of `probe_histserv_connections.txt` and `.amd64.txt` (CI Pythons 3.11–3.14, arm64
+  are module constants, each the maximum over every `MODEL` line of `probes/m69b/probe_histserv_memory.txt`,
+  `.amd64.txt` and `.gha.txt` (GitHub runners in the CI test env: the server's baseline depends on its environment,
+  since `hist.interop` imports pandas and pyarrow when installed, so probes run where pandas is), and `K` over those of `probe_histserv_connections.txt` and `.amd64.txt` (CI Pythons 3.11–3.14, arm64
   and amd64: `[SCEN=connections] probes/m69b/run_memory_probe.sh [amd64]`; `B` includes the condor job's
   `announce.py`). A slot fits a server when that server's prediction with the slot added is ≤ the server's size. A
   serve sorts its slots by (`stored` descending, `str(slot)`); each context packs only its own slots, placing each (a)
