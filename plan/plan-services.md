@@ -95,8 +95,8 @@ carries the service surface and its preservation; §7 orders the PRs.
   `tritonclient.grpc`, `ssl=True` on the `s`, the client given the bare `host:port` (both refuse a scheme, P-b); a
   literal `url` without `://` stays 0.0.6's HTTP; `params["transport"]` still overrides.
 - **D8 histserv is a graphed-histogram backend beside `gh.boost`, sized before the run.** A
-  `histserv.Context(memory_mb=, workers=)` handed to histograms packs their slots onto as few servers as a measured
-  size model allows and declares one `ServiceSpec` per server on the session; the executor provisions them as any
+  `histserv.Context(memory_mb=, workers=)` handed to histograms packs their slots first-fit decreasing over a measured
+  size model and declares one `ServiceSpec` per server on the session; the executor provisions them as any
   service (D2), so the user declares and binds nothing. IR, params, evaluators and replay ids are the unbacked
   twin's. The reduce ships (it receives values, never the partition, `probes/m69b/trace_plan_shape.txt`, so a wrapper
   of the plan's process hands the partition to it): server-side histograms created on first use in the driver
@@ -966,10 +966,12 @@ m69b file calls it; the PR merges on its own, independent of the m68c unit.
 - **Sizing and packing** (at `pieces.serve`, no server, no allocation). Per backed slot (a sibling label is its own
   slot): `dense` = its non-variation axes' flow extents (from `_spec._make_axis`) × the storage's item size,
   `chunks` = its labels (1 without), `stored = chunks × dense`. A server's predicted peak is `B + Σ (O + I × tasks +
-  (chunks + 1) × dense) + (a + b × workers) × M`, `tasks = len(plan.tasks)`, `M` its largest `stored`; `B, O, I, a,
-  b` are module constants, each the maximum over every `MODEL` line of `probes/m69b/probe_histserv_memory.txt` and
-  `.amd64.txt` (CI Pythons 3.11–3.14, arm64 and amd64: `probes/m69b/run_memory_probe.sh [amd64]`; `B` includes the
-  condor job's `announce.py`). A serve
+  (chunks + 1) × dense) + (a + b × workers) × M + K × workers`, `tasks = len(plan.tasks)`, `M` its largest
+  `stored`, `K` one client connection (a worker process holds one per server; `B` holds the driver's); `B, O, I, a, b`
+  are module constants, each the maximum over every `MODEL` line of `probes/m69b/probe_histserv_memory.txt` and
+  `.amd64.txt`, and `K` over those of `probe_histserv_connections.txt` and `.amd64.txt` (CI Pythons 3.11–3.14, arm64
+  and amd64: `[SCEN=connections] probes/m69b/run_memory_probe.sh [amd64]`; `B` includes the condor job's
+  `announce.py`). A serve
   sorts its slots by (`stored` descending, `str(slot)`) and places each on the first server, in index order and
   including earlier serves' servers, that stays within `memory_mb`, else on a new one; so one context across two
   datasets' plans packs both and `collate` starts each server once. Refused, naming the slot and both sizes: a slot
@@ -986,7 +988,7 @@ m69b file calls it; the PR merges on its own, independent of the m68c unit.
   (`htcondor_backend/services.py` `request_memory`) and the model keeps server and `announce.py` under it.
   Driver-hosted (a site offering `"driver"`; dask and parsl always, cluster hosting there is m70),
   `ServiceSet._on_driver` enforces no limit, so the guarantee is the prediction alone and the driver host must hold
-  `len(ctx.servers()) × memory_mb`. Legs 1–2 are outside it; a user may bind several server names to one server. `workers` is the user's bound on fills in flight to one server.
+  `len(ctx.servers()) × memory_mb`. Legs 1–2 are outside it; a user may bind several server names to one server. `workers` is the user's bound on fills in flight to one server and on the worker processes that dial it.
 - **Served process.** `_Served(inner, slots, endpoints=None, handles=None)` wraps the plan's process.
   `bind_services(endpoints)` makes no RPC: a missing server raises `UnboundService` naming it; `grpcs`/`http`/`https`
   (histserv's client dials `insecure_channel` only) is refused; else a copy with the endpoints, a fresh `_Handles`
@@ -998,8 +1000,9 @@ m69b file calls it; the PR merges on its own, independent of the m68c unit.
   (`probes/m69b/probe_lazy_init_paths.txt`; `SubmitRunner`'s engine pickles the process in the driver,
   `engine.py` `_fingerprint` → `backend.broadcast`). `__call__(partition, resources)` sets the task scope
   (`str(partition)`, slot → `(endpoint, hist_id)`) around `inner`; `part_paths` and `resolve_services` forward. The
-  pieces' reduce sums each slot as today, then ships a backed slot's partial (`ALREADY_EXISTS` is done, other RPC
-  errors propagate, each RPC bounded at 600 s) and returns a `Receipt`; outside a task scope it raises naming
+  pieces' reduce sums each slot as today, then ships a backed slot's partial (`ALREADY_EXISTS` is done; any other RPC error is
+  re-raised as a picklable `HistservError` naming histserv, the endpoint, the status code and the details, since
+  grpc's does not pickle, `probes/m69b/probe_rpcerror_pickle_rv5b.txt`; each RPC bounded at 600 s) and returns a `Receipt`; outside a task scope it raises naming
   `pieces.serve`. Clients are cached per endpoint per process. Receipts add by identity (an empty one is the
   identity; two different server histograms raise naming both). `resolve_services(value)` replaces each receipt with
   its snapshot (`delete_from_server=True`) placed by label into `zero_of(spec)` (P3), so `run().value` equals the
@@ -1015,9 +1018,11 @@ m69b file calls it; the PR merges on its own, independent of the m68c unit.
   whatever order (`probes/m69b/probe_merged_leaves.txt` B); it raises naming `on_compiled` if the hook never ran. A
   composing plan marks its own outputs first and `fill_nodes` after, passes `on_compiled=pieces.on_compiled`,
   hands the whole value list to `pieces.reduce` and forwards `resolve_services`. `gh.plan` (backed or not) builds
-  from a fresh `pieces` per call, and `Histogram.plan()` reads its fills the same way, so neither refuses a merge:
+  from a fresh `pieces` per call and returns `pieces.serve(plan)` (with no backed slot, the plan unchanged, so
+  `plan.process.variation_labels` stays), and `Histogram.plan()` reads its fills the same way, so neither refuses a merge:
   `_refuse_shortfall` goes. `Histogram.plan()` refuses a backed histogram.
-- **Packaging.** extra `histserv = ["histserv>=0.2.1,<0.3"]`; CI's `GRAPHED` = graphed @ d0ad16b (the floor becomes
+- **Packaging.** extra `histserv = ["histserv>=0.2.1,<0.3"]`; `histserv`/`grpc` (no `py.typed`) join `pyproject.toml`'s
+  `ignore_missing_imports` override and the m69b frozen stems its frozen-residuals module list; CI's `GRAPHED` = graphed @ d0ad16b (the floor becomes
   the release holding services); GIL legs install `.[dev,histserv]`, the 3.14t leg `.[dev]` (grpcio 1.84.0 has no
   cp314t wheel, https://pypi.org/pypi/grpcio/json). Server files `importorskip("histserv")`; bounded waits copy
   `tests/frozen/m66/htcondor_harness.py::run_bounded` (daemon thread + `join(timeout)`); `pytest.skip(` is refused by
@@ -1049,11 +1054,11 @@ names its context uniquely):
 |---|---|---|
 | `test_histserv_surface.py` (no server) | subclass and `backed()`; IR bytes and `external_key`s equal the unbacked twin's; a growth axis and `Mean`/`WeightedMean`/`Unlimited`/`AtomicInt64` storage refused naming histserv, `StrCategory`, `IntCategory` and `Boolean` axes accepted; `Histogram.plan()` refused; in a subprocess, backing + `gh.plan` leave `histserv`/`grpc` unimported; an unbacked merge-free `gh.plan` equals the per-partition direct `bh` fill folded in partition order bit for bit, with `services == ()`, and the frozen suites before m69b pass unmodified but for the refrozen m48/m49 tests; `import histserv` succeeds wherever the GIL is enabled | `sys.modules`; bytes |
 | `test_histserv_packing.py` (no server) | slots of distinct sizes land on the expected servers in (`stored`, key) order; every prediction ≤ `memory_mb`; server count strictly rises with `workers` and with the task count and falls with `memory_mb`; oversize and ceiling refusals name the sizes; `next_tasks`, repeated partition, double serve refused; one context over two plans fills the first's last server before opening one and `collate` holds each name once; a second `Context` with equal arguments warns naming the name, its plan's slot → server map puts the slot that no longer fits on a server the first plan does not declare, and each shared server's prediction recomputed from both plans' maps is ≤ `memory_mb`; after `Context(name=n, memory_mb=m1)`, `Context(name=n, memory_mb=m2)` refused naming both, in a later test too (the name holds for the process); spec fields and argv; `plan.services` sorted by name; `(plan.services, slot → server)` pickles byte-identically from two interpreters with different `PYTHONHASHSEED` | `plan.services`; `ctx.servers()`; pickles |
-| `test_histserv_fill_path.py` | Weight axis-mode, Double sibling, Int64 and a local slot over ≥ 2 servers, bound by hand, `SequentialRunner`: backed values are receipts naming their assigned server, pickled at one length for 10- and 10⁴-bin twins; each server's `stats()` counts exactly its assigned slots and bytes; `unpack` equals the local twin bit for bit (flow, variances, variation axis) twice, servers still holding them, including `StrCategory`, `IntCategory` and `Boolean` slots (axis mode and siblings) with filled overflow bins; `resolve_services` equals the twin's value and empties every server; two server names bound to one endpoint: runs, each receipt names that endpoint and its own `hist_id`, values equal the twin's; `grpcs`/`https` refused with no connection accepted | `stats()`; views |
-| `test_histserv_retries.py` | one partition run twice → `was_filled_with_unique_id`, one fill's contents; another partition adds; a killed server → `UNAVAILABLE` from the task; receipts of two server histograms refuse to add | server answers |
+| `test_histserv_fill_path.py` | Weight axis-mode, Double sibling, Int64 and a local slot over ≥ 2 servers, bound by hand, `SequentialRunner`: backed values are receipts naming their assigned server, each pickling under 1 KiB for 10- and 10⁴-bin twins while the 10⁴-bin local twin's histogram pickles over 100 KiB; each server's `stats()` counts exactly its assigned slots and bytes; `unpack` equals the local twin bit for bit (flow, variances, variation axis) twice, servers still holding them, including `StrCategory`, `IntCategory` and `Boolean` slots (axis mode and siblings) with filled overflow bins; `resolve_services` equals the twin's value and empties every server; two server names bound to one endpoint: runs, each receipt names that endpoint and its own `hist_id`, values equal the twin's; `grpcs`/`https` refused with no connection accepted | `stats()`; views |
+| `test_histserv_retries.py` | one partition run twice → `was_filled_with_unique_id`, one fill's contents; another partition adds; a killed server → a `HistservError` naming the endpoint and `UNAVAILABLE` from the task, equal after a pickle round trip; receipts of two server histograms refuse to add | server answers |
 | `test_histserv_lazy_init.py` | `require_bound` of an unbound plan on ≥ 2 servers → `UnboundService` whose `names` are every server, and with ≥ 2 names bound to one endpoint returns; `histserv` unimported (control: imported after a bound run); after bind every server counts 0, after the first call its assigned ones, a `replace`d copy adds none; a fresh bind's pickle creates once, an unbound pickle none; `ProcessPoolExecutor(2)` (integer weights) creates once and equals the local run | server counts |
 | `test_pieces_composition.py` | a counter + `p.fill_nodes` + `p.serve`: histograms equal `gh.plan`'s; unserved, the first task raises naming `serve`; a reduce whose hook never ran raises naming `on_compiled`; a second `aggregate_plan` over the same `pieces`, marking the counter last where the first marked it first, raises naming `pieces`, and the first plan run afterwards still equals the direct fill; `gh.plan({"h": backed})` of merged fills, served and run, equals a direct boost fill done twice; two fills the optimizer merges (`weight=[w]`, `weight=[w * 1.0]`), backed and local, with the counter marked first and last: each histogram equals a direct boost fill done twice (values and variances) and the counter is right (instrument: the pair compiles to one output); `collate` of two served plans: each plan's receipts name only its assigned servers, each sub-value equals its plan run alone | endpoints; equality |
-| `test_histserv_memory_model.py` (Linux legs) | a 64 MiB `Double` slot at `workers=1` (fills + resolve), a 32 MiB slot with 4 fillers released by one `threading.Barrier`, an 8-label `Weight` slot, and ≥ 2000 one-bin `Weight` slots on one server filled once each (its prediction − `B` ≥ 90 % `O` terms): each VmHWM − warm RSS ≤ prediction − `B`, the warm RSS < `B`, and the three large ones > warm RSS + `(chunks + 1) × dense + M` | VmHWM |
+| `test_histserv_memory_model.py` (Linux legs) | a 64 MiB `Double` slot at `workers=1` (fills + resolve), a 32 MiB slot with 4 fillers released by one `threading.Barrier`, an 8-label `Weight` slot, ≥ 2000 one-bin `Weight` slots on one server filled once each (its prediction − `B` ≥ 90 % `O` terms), and one one-bin slot at `workers=N`, N ≥ 256, dialled by N channels each with `("grpc.use_local_subchannel_pool", 1)` and one RPC each, held open: each VmHWM − warm RSS ≤ prediction − `B`, the warm RSS < `B`, the three large ones > warm RSS + `(chunks + 1) × dense + M`, and the connections' VmHWM − warm RSS > `K × N / 2` (each channel its own connection) | VmHWM |
 
 Fails on: a histogram riding the tree, a snapshot per partition, a server histogram created at bind or in a worker,
 a retry counted twice, a slot off its assigned server, a server past its prediction, packing by hash order, equal
@@ -1089,7 +1094,7 @@ names).
 `value == expected` and the leaf-type map over `value[ds]`; both become the same assertions over `value[ds]`
 without its `"diagnostics"` key, plus `set(value[ds]["diagnostics"]) == set(analysis.DIAGNOSTICS)` with every entry a
 `bh.Histogram` (their contents are m69b's `test_hgg_diagnostics.py`), and `README.md`'s row for it names the
-`"diagnostics"` key; `test_each_dataset_run_on_its_own_collects_into_the_same_product` stays as it is
+`"diagnostics"` key and its freeze sentence the `freeze-m69a-fixup` tag; `test_each_dataset_run_on_its_own_collects_into_the_same_product` stays as it is
 (`probes/m69b/probe_m69a_each_rv2.txt`: collated and per-dataset values stay equal with the histograms in them). The
 fixup commits
 `.graphed/m69a/disputes/test_one_plan_writes_every_part_and_returns_the_totals.md` (the test, the clause, the
@@ -1099,7 +1104,10 @@ graphed_orchestrator.precommit --allow-refreeze tests/frozen/m69a`, tagged `free
 steps (bounded `--files N`), `htcondor_runner(site="lpc", service_hosts=(placement,), user_modules=[examples/hgg])`
 with `--placement cluster` (default) or `driver` (beside the driver at the login node), a `Context` with
 `memory_mb` from `--server-mb` and `workers` the run's concurrent tasks, parquet to `root://cmseos.fnal.gov//store/user/<user>/hgg/` (fsspec-xrootd; the job has the
-proxy, P2), histograms saved as UHI JSON. Evidence: `probes/site-lpc/m69-hgg.txt` (cluster placement; per
+proxy, P2), histograms saved as UHI JSON; `--driverless` submits the same run through
+`submit_driverless(…, pilots="local")` with in-job servers. `run_lpc.py` holds no `import uproot` and no `uproot.`
+text, comments included (m69a's `test_the_events_are_coffea_nanoevents` scans `examples/hgg/`): entry counts come from
+`run_local.num_entries`. Evidence: `probes/site-lpc/m69-hgg.txt` (cluster placement; per
 server, from history, `RequestMemory`, `MemoryUsage` and `ResidentSetSize` beside `ctx.servers()`'s prediction, and
 its submit and ready times) and `probes/site-lpc/m69-hgg-driverless.txt` (in-job servers beside
 `LocalPilots` on the fat slot). Until the histogram PR merges, executors CI's `HISTOGRAM` names its head sha. The MC
@@ -1107,19 +1115,21 @@ fixture has varied ± genWeight (nNeg > 0: lognormal magnitudes × random signs,
 `reviews/impl-r1-probe_ranges.py` builds it); pool legs run on Linux (no macOS arm64 htcondor wheel); an HTTP
 server a test adds subclasses `graphed_executors.local._transport.LookupFreeHTTPServer`.
 
-Frozen `tests/frozen/m69b/` (executors; server files `importorskip("histserv")`; each context named uniquely):
+Frozen `tests/frozen/m69b/` (executors; server files `importorskip("histserv")`; each context named uniquely; the
+`test_hgg_*` files skip without coffea, higgs_dna or histserv unless `GRAPHED_HGG_REQUIRED=1`, as `hgg_harness` does,
+and place the higgs_dna data through a session fixture calling `hgg_harness.place_higgs_dna_data()`):
 | File | Property | Witness |
 |---|---|---|
 | `test_histserv_managed.py` (all OS) | `SubmitRunner(ThreadBackend(2))` over a served plan (dyadic weights) sized to two servers: two statuses `leg="managed", host="driver"`, distinct ports; a spy's `resolve_services` sees each server's `stats()` count exactly its assigned slots; after `run` both ports are free and the value equals the unbacked twin's; `services={…}` for both names starts none (`leg="user"`) and leaves both empty; driverless (`python -m …driver`, `pilots="local"`): `result.pkl`, read after the in-job servers are gone, equals the twin | statuses; ports; `stats()` |
-| `test_histserv_cluster.py` (minicondor) | `htcondor_runner(site="generic", service_hosts=("cluster",))`: two `graphed-service-*` clusters with history `RequestMemory == memory_mb`; histograms equal the twin; both leave the queue at run end; `service_hosts=("driver",)`: statuses `host="driver"`, no service cluster; a profile with `service_ports=None` asked for `("driver",)` refused naming `("cluster",)` with no pilot submitted | history ads; statuses |
-| `test_hgg_diagnostics.py` (`test-hgg`) | `analysis.plan` without a context: `plan.services == ()` and the six are local `bh.Histogram`s equal bit for bit to the one-worker context run's; the six over the MC (varied ± genWeight) and data fixtures, collated under one context: `plan.services` has `len(ctx.servers())` servers; with `ThreadBackend(1)` and managed servers each equals a direct `bh` fill of the oracle parts' columns folded in part order bit for bit, m69a parts and counters unchanged; `ThreadBackend(3)`, under a context of its own name, to 1e-12 relative | views |
-| `test_hgg_live_pool.py` (minicondor) | two local pilots, driver-hosted servers: each of the six equals the direct `bh` fill to 1e-12 relative and the counters equal m69a's; no server outlives the run | equality; ports |
+| `test_histserv_cluster.py` (minicondor) | `htcondor_runner(site="generic", service_hosts=("cluster",))` (dyadic weights): two `graphed-service-*` clusters with history `RequestMemory == memory_mb`; histograms equal the twin; both leave the queue at run end; `service_hosts=("driver",)`: statuses `host="driver"`, no service cluster; a profile with `service_ports=None` asked for `("driver",)` refused naming `("cluster",)` with no pilot submitted | history ads; statuses |
+| `test_hgg_diagnostics.py` (`test-hgg`) | `analysis.plan` without a context, on `SequentialRunner`: `plan.services == ()` and the six are local `bh.Histogram`s equal bit for bit to the one-worker context run's; the six over the MC (varied ± genWeight) and data fixtures, collated under one context: `plan.services` has `len(ctx.servers())` servers; with `ThreadBackend(1)` and managed servers each equals a direct `bh` fill of the oracle parts' columns folded in part order bit for bit, m69a parts and counters unchanged; `ThreadBackend(3)`, under a context of its own name, to 1e-12 relative | views |
+| `test_hgg_local_pilots.py` (`test-hgg`; `LocalPilots`, no pool) | `HTCondorRunner(HTCondorBackend(LocalPilots(pythonpath=[examples/hgg]), 2, host="127.0.0.1"), min_pilots=2)`, servers beside the driver (the generic profile's first host): each of the six equals the direct `bh` fill to 1e-12 relative and the counters equal m69a's; no server outlives the run | equality; ports |
 
 Commits (`test(frozen): m69a totals read the counters beside the diagnostics` ~40 tagged `freeze-m69a-fixup`, then
 the freeze `test(m69b): frozen histserv services and H→γγ diagnostics` ~850 with the varied fixture): 1.
 `feat(htcondor): service_hosts narrows a site's service placement` (~20 src, ~150 extra tests); 2.
 `feat(examples): H→γγ diagnostics on histserv servers` (`analysis.py` ~150, `run_local.py`, `tests/extra/m69b`
-~300); 3. `feat(examples): LPC runner, ci, docs` (`run_lpc.py` ~150, `docs/htcondor.rst` "Histograms on histserv
+~300); 3. `feat(examples): LPC runner, ci, docs` (`run_lpc.py` ~180, `docs/htcondor.rst` "Histograms on histserv
 servers" and "An H→γγ run", `docs/hgg.rst` diagnostics, ci, changelog; ~400).
 
 ## 6. CI
@@ -1129,15 +1139,18 @@ servers" and "An H→γγ run", `docs/hgg.rst` diagnostics, ci, changelog; ~400)
   disk-free step included), waited on by `check_ready`, + `pip install "tritonclient[grpc]" histserv
   grpcio-health-checking` (`histserv` from the m69b PR on: no m68a file imports it), from the m68b PR on adds
   `probes/m68b/sim_gpu.config`'s two lines to the runner's pool config (one simulated GPU) before the pool starts,
-  or follows them with `condor_restart -daemon startd` (`probe_sim_gpu.py`), runs `tests/frozen/m66 m67 m68a m68b m69b tests/extra/m6*` (each PR the dirs it has);
+  or follows them with `condor_restart -daemon startd` (`probe_sim_gpu.py`), runs `tests/frozen/m66 m67 m68a m68b`, m69b's `test_histserv_*.py` and `tests/extra/m6*` (each PR the dirs it has);
   `.coveragerc-htcondor` sources add `graphed_executors.submit.services`; diff-cover include adds
   `src/graphed_executors/submit/services.py`. The all-OS `test` job installs `histserv grpcio-health-checking` (not on
   3.14t: no `cp314t` grpcio, P-d) and runs the no-bindings files of m67/m68a/m68b/m69b (m68b: `test_announce_route`,
-  `test_cluster_service_job`, `test_driverless_dag`) (the histserv subprocess and
+  `test_cluster_service_job`, `test_driverless_dag`; m69b: `test_histserv_managed.py`) (the histserv subprocess and
   the in-process gRPC servers on every OS; a Windows bind failure is a finding, not a skip). **`test-dask`** adds
   `tests/frozen/m68a/test_scope_dask_memory.py` to its explicit file list; it and **`test-parsl`** (existing legs) add `tests/frozen/m70` and their backend's `_service.py`/`transport_peer.py` deltas
   to their coverage sources. From the m69b PR on, `env.HISTOGRAM` names the histogram m69b PR's head sha until it
-  merges (then `@main`), `test-hgg` also installs `histserv`, and `test-experimental` (3.14t) installs none.
+  merges (then `@main`), `test-hgg` adds `histserv` to its install and its pytest step becomes
+  `pytest -rs tests/frozen/m69a tests/frozen/m69b/test_hgg_diagnostics.py tests/frozen/m69b/test_hgg_local_pilots.py
+  tests/extra/m69b` under its job-level `GRAPHED_HGG_REQUIRED=1` (two changed lines; no other job runs the `test_hgg_*`
+  files, and there a missing stack fails instead of skipping), and `test-experimental` (3.14t) installs none.
 - **graphed-histogram** (m69b): `env.GRAPHED` = graphed @ d0ad16b; GIL legs `.[dev,histserv]`, the 3.14t leg
   `.[dev]`; `test_histserv_memory_model.py` runs on the ubuntu legs; per-file and diff coverage count the m69b files.
 - **graphed**: the main matrix runs `tests/frozen/preserve/m68` on the fake transports and, from §5.0's PR,
@@ -1192,7 +1205,7 @@ graphed-histogram `design.rst` "Filling on histserv servers" (context, sizing, p
 - `pull_files.py` places the 2024 golden and jet-ID JSONs at LPC (`probe_hgg_original_lpc.txt`); gitlab.cern.ch
   from GitHub runners (`test-hgg`'s higgs_dna install) is unmeasured → freeze commit A's first CI run measures it.
 - histserv's size model is fitted in `python:3.1x-slim` (3.11–3.14) on Linux arm64 and emulated amd64
-  (`probes/m69b/run_memory_probe.sh`); the ubuntu legs' memory test catches a missing or mis-scaled `O`, `a`, `b` or server part of `B`
+  (`probes/m69b/run_memory_probe.sh`); the ubuntu legs' memory test catches a missing or mis-scaled `O`, `a`, `b`, `K` or server part of `B`
   on their Pythons, the LPC run the whole model on a site host. histserv 0.2.1 merges `FillMany` on its asyncio loop
   (`Snapshot` alone goes `to_thread`, `histserv/service.py`), so a server fills at one core's rate: unmeasured under many pilots, as is the Windows start-up. Cluster-hosted servers start one
   after another (`ServiceSet.start`), so start-up grows with `len(ctx.servers())`: the LPC transcript records it.

@@ -9,6 +9,8 @@ The model a server is packed against:
 B the warm server plus the condor job's announce.py, O per histogram, I per recorded unique_id, dense_h one
 chunk's dense flow view, M the largest histogram's stored bytes (= its FillMany message); a covers one fill's or
 one snapshot's transient plus the heap it leaves behind, b each further fill in flight.
+`python probe_histserv_memory.py connections` measures K alone, the server memory per open client connection (one
+per worker process in a run, each channel on its own subchannel pool as a separate process would be).
 """
 
 from __future__ import annotations
@@ -258,6 +260,31 @@ def scenario_wrapper() -> int:
     return rss
 
 
+def scenario_connections() -> None:
+    from histserv.protos import hist_pb2_grpc
+
+    print("K n client connections, each its own channel and subchannel pool, one Stats RPC each, held open")
+    worst = 0.0
+    for n in (64, 256, 512):
+        srv = Server()
+        opts = [("grpc.use_local_subchannel_pool", 1)]
+        channels = []
+        try:
+            for _ in range(n):
+                ch = grpc.insecure_channel(f"127.0.0.1:{srv.port}", options=opts)
+                hist_pb2_grpc.HistogrammerServiceStub(ch).Stats(hist_pb2.StatsRequest(), timeout=TIMEOUT)
+                channels.append(ch)
+            srv.settle()
+            above = srv.above()
+            worst = max(worst, above / n)
+            print(f"  {n} connections: peak above warm {above / MiB:.1f} MiB -> {above / n / 1024:.1f} KiB per connection")
+        finally:
+            for ch in channels:
+                ch.close()
+            srv.close()
+    print(f"MODEL K={up(worst / 1024, 1):.0f} KiB  (K covers every row above by construction)")
+
+
 def up(x: float, step: float) -> float:
     return math.ceil(x / step) * step
 
@@ -266,6 +293,9 @@ if __name__ == "__main__":
     from importlib.metadata import version
 
     print(f"histserv {version('histserv')} grpcio {version('grpcio')} python {sys.version.split()[0]} {sys.platform}")
+    if sys.argv[1:] == ["connections"]:
+        scenario_connections()
+        sys.exit(0)
     base = scenario_baseline()
     per_hist = scenario_overhead()
     per_id = scenario_unique_ids()
