@@ -1,0 +1,7 @@
+announced={} service_hosts=('driver',) driver_memory_mb=100 host_service=no
+  ServiceUnavailable: service 'small' is unavailable: user: no endpoint given; site: the site has no endpoint for kind 'http'; managed: its 200 MiB would bring the services beside the driver to 200 MiB, above the backend's driver_memory_mb of 100 MiB
+  legs: {'user': 'no endpoint given', 'site': "the site has no endpoint for kind 'http'", 'managed': "its 200 MiB would bring the services beside the driver to 200 MiB, above the backend's driver_memory_mb of 100 MiB"}
+announced={'gpu': 'svc0'} service_hosts=('driver',) driver_memory_mb=100 host_service=yes
+  ValueError: service 'small' has no SERVICE node in this run's DAG (announce_only={'gpu': 'svc0'}), and a driver job submits no service job
+  legs: None
+exit=0 (at 245d0c6)

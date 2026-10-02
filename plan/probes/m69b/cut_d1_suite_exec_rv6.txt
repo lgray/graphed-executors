@@ -1,0 +1,2 @@
+.....sss.........................s...............s.....sssss             [100%]
+(6877abc..245d0c6 tree + starting_services releases a hold at the last phase's end: tests/extra/m69b + frozen test_service_order.py, macOS)

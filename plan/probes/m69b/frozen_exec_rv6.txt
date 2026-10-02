@@ -1,0 +1,16 @@
+== tags: freeze-m69b-fixup2=22df587 freeze-m68a-fixup2=eb8691d freeze-m68b-fixup4=eb8691d
+freeze-m69b-fixup2 vs 245d0c6 -- tests/frozen/m69b: 0 files differ (of 11)
+freeze-m68a-fixup2 vs 245d0c6 -- tests/frozen/m68a: 0 files differ (of 15)
+freeze-m68b-fixup4 vs 245d0c6 -- tests/frozen/m68b: 0 files differ (of 11)
+freeze-m69b-fixup2 vs 245d0c6 -- tests/frozen: 0 files differ (of 256)
+control: 67ba8f2 vs freeze-m69b-fixup2 -- tests/frozen: tests/frozen/m69b/test_service_order.py 
+commits in 6877abc..245d0c6 touching tests/frozen: []
+== lock order (backend.py): every acquisition of _lock or _pilots_lock, with its enclosing def and indent
+141: __init__: indent=8 | self._lock = threading.Lock()  # a service job is recorded before close() reads the record, or refused
+155: __init__: indent=8 | self._pilots_lock = threading.Lock()
+176: _need: indent=8 | with self._pilots_lock:
+199: starting_services: indent=8 | with self._pilots_lock:
+204: starting_services: indent=12 | with self._pilots_lock:
+302: _host_service: indent=8 | with self._pilots_lock:
+313: _host_service: indent=12 | with self._lock:
+403: close: indent=8 | with self._pilots_lock, self._lock:  # a pilot submit in flight finishes first, so the stop removes it

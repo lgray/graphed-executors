@@ -1,0 +1,15 @@
+== direct need raised=['RuntimeError: 0 of 1 pilots connected when the runner closed']
+    0.00s mark             pilot submit begins
+    0.31s mark             backend.close()
+    1.50s submit-pilots   7001 
+   21.66s act             7001 Remove ClusterId == 7001
+   22.07s mark             close() returned
+  pilot clusters submitted=[7001] left in the queue=[]
+== runner-close-sigint 
+    0.00s mark             pilot submit begins
+    0.00s mark             block left normally: close() drains
+    1.51s submit-pilots   7001 
+   21.67s act             7001 Remove ClusterId == 7001
+   22.06s mark             KeyboardInterrupt left close()
+  pilot clusters submitted=[7001] left in the queue=[]
+exit=0 (probe_start_close_exec_rv5.py at 245d0c6)

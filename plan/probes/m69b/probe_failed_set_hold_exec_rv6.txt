@@ -1,0 +1,30 @@
+== leg control
+    3.0s blocker 1 runs (15717 of 15973 MiB): a 512 MiB pilot stays idle
+    8.1s plan A in flight, done=False; pilots 2: JobStatus=1 
+    8.1s blocker removed: room for the pilot
+   10.1s 90 s later: plan A done=True; pilots 2: JobStatus=2 
+   10.1s plan A value: ('mem://rv6-control-A/0',)
+   11.3s runner closed
+exit=0
+== leg failed-set
+   11.0s blocker 3 runs (15717 of 15973 MiB): a 512 MiB pilot stays idle
+   16.1s plan A in flight, done=False; pilots 4: JobStatus=1 
+   16.1s plan B refused: service 'web' is unavailable: user: no endpoint given; site: the site has no endpoint for kind 'http'; managed: service 
+   16.1s pilots 4: JobStatus=5 graphed: a service of this run waits for a slot (by user submituser)
+   16.1s blocker removed: room for the pilot
+  106.3s 90 s later: plan A done=False; pilots 4: JobStatus=5 graphed: a service of this run waits for a slot (by user submituser)
+  106.3s after one need: pilots 4: JobStatus=1 
+  116.3s then: plan A done=True
+  116.3s plan A value: ('mem://rv6-failed-set-A/0',)
+  117.6s runner closed
+exit=0
+== leg failed-set-cut
+    6.1s blocker 11 runs (15717 of 15973 MiB): a 512 MiB pilot stays idle
+   11.1s plan A in flight, done=False; pilots 12: JobStatus=1 
+   11.1s plan B refused: service 'web' is unavailable: user: no endpoint given; site: the site has no endpoint for kind 'http'; managed: service 
+   11.1s pilots 12: JobStatus=1 
+   11.1s blocker removed: room for the pilot
+   13.1s 90 s later: plan A done=True; pilots 12: JobStatus=2 
+   13.1s plan A value: ('mem://rv6-failed-set-A/0',)
+   14.4s runner closed
+exit=0

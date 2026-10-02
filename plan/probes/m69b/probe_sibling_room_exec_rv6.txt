@@ -1,0 +1,27 @@
+== leg fit
+    0.0s slots: [('Partitionable', 15973)]
+   10.0s done=False; servers: 6: JobStatus=2 RequestMemory=6000, 7: JobStatus=1 RequestMemory=6000
+   20.0s done=True; servers: 
+   20.0s after 120s: done=True
+   20.0s value: ('mem://rv6-fit/0',)
+   21.2s closed; future exception: None
+   21.2s queue: no server left
+exit=0
+== leg sum-over
+    0.0s slots: [('Partitionable', 15973)]
+   10.0s done=False; servers: 10: JobStatus=1 RequestMemory=9000, 9: JobStatus=2 RequestMemory=9000
+   20.0s done=False; servers: 10: JobStatus=1 RequestMemory=9000, 9: JobStatus=2 RequestMemory=9000
+   30.0s done=False; servers: 10: JobStatus=1 RequestMemory=9000, 9: JobStatus=2 RequestMemory=9000
+   40.0s done=False; servers: 10: JobStatus=1 RequestMemory=9000, 9: JobStatus=2 RequestMemory=9000
+   50.1s done=False; servers: 10: JobStatus=1 RequestMemory=9000, 9: JobStatus=2 RequestMemory=9000
+   60.1s done=False; servers: 10: JobStatus=1 RequestMemory=9000, 9: JobStatus=2 RequestMemory=9000
+   70.1s done=False; servers: 10: JobStatus=1 RequestMemory=9000, 9: JobStatus=2 RequestMemory=9000
+   80.1s done=False; servers: 10: JobStatus=1 RequestMemory=9000, 9: JobStatus=2 RequestMemory=9000
+   90.1s done=False; servers: 10: JobStatus=1 RequestMemory=9000, 9: JobStatus=2 RequestMemory=9000
+  100.1s done=False; servers: 10: JobStatus=1 RequestMemory=9000, 9: JobStatus=2 RequestMemory=9000
+  110.1s done=False; servers: 10: JobStatus=1 RequestMemory=9000, 9: JobStatus=2 RequestMemory=9000
+  120.1s done=False; servers: 10: JobStatus=1 RequestMemory=9000, 9: JobStatus=2 RequestMemory=9000
+  120.1s after 120s: done=False
+  121.6s closed; future exception: service 'web2' (7b089cd1-7fb8e13c36ed2aca) still waited for a slot when the runner closed: JobStatus=1
+  121.6s queue: no server left
+exit=0

@@ -1,0 +1,17 @@
+== 245d0c6: ruff check
+All checks passed!
+== ruff format --check
+110 files already formatted
+== mypy
+Success: no issues found in 326 source files
+== mypy win32
+Success: no issues found in 326 source files
+== sphinx -W
+exit=0
+== integrity
+-- upstream/main...245d0c6
+range 1 [('ci_config_modified', '.github/workflows/ci.yml')]
+control 2 [('skip_or_xfail_added', 'x.py'), ('target_stubbed', 'x.py')]
+-- 6877abc..245d0c6
+range 0 []
+control 2 [('skip_or_xfail_added', 'x.py'), ('target_stubbed', 'x.py')]

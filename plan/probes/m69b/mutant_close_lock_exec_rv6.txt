@@ -1,0 +1,7 @@
+== mutant close-without-the-pilots-lock: close() back to 6877abc's 'with self._lock:'
+1
+403:        with self._lock:
+E   AssertionError: close() returned with a pilot submit in flight
+/private/tmp/claude-501/-Users-lgray-vibe-coding-graphed-workdir/c445639e-fd6b-4941-b012-0166b71d96e2/scratchpad/mut6/tests/extra/m69b/test_m69b_schedulable.py:656: AssertionError: close() returned with a pilot submit in flight
+== control (unmutated)
+.                                                                        [100%]
