@@ -1149,7 +1149,7 @@ needed.
   plan's services in that plan's run (`probe_order_trace.txt`: plans 2 and 3 each submit a service job and no
   pilot). Once its backend's pilots are submitted, a later plan's first `_host_service` holds the runner's
   queued pilots once (`act(Hold, "ClusterId == <pilots> && JobStatus == 1", reason=<graphed's reason>)`) before it
-  submits; they stay held across all of that plan's services and are released at that plan's next need of a worker
+  submits; they stay held across all of that plan's services and are released once those services have started or failed
   (`act(Release, "ClusterId == <pilots> && JobStatus == 5 && HoldReason == <graphed's reason>")`), so a hold the
   user placed is never released. A need of a worker, from any plan or thread, submits or releases the runner's
   pilots only while no plan of the backend is starting its services (a `ServiceSet`'s resolve phase, its
