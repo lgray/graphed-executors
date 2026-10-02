@@ -1,0 +1,15 @@
+    0.00s submit-pilots   7001 
+    0.00s mark             plan B's ServiceSet starts
+    0.00s pilot-start     7001 
+    0.00s act             7001 Hold ClusterId == 7001 && JobStatus == 1
+    0.00s pilot-start     7001 
+    0.01s submit-service  7002 planB-e6c870532378436e
+    2.02s announce         planB-e6c870532378436e
+    4.05s submit-service  7003 planB-697af3d51a1db9a6
+    6.05s announce         planB-697af3d51a1db9a6
+    6.05s act             7001 Release ClusterId == 7001 && JobStatus == 5 && substr(HoldReason, 0, 47) == "graphed: a service of t
+    6.08s mark             plan B's ServiceSet started
+    6.08s act             7003 Remove ClusterId == 7003
+    6.08s act             7002 Remove ClusterId == 7002
+inside the set: Holds=1 Releases=1 service submits=2
+exit=0 (probe_set_gap_exec_rv4.py at 6877abc)

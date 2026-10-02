@@ -1,0 +1,66 @@
+Exception in thread Thread-4 (wait_for_pilots):
+Traceback (most recent call last):
+  File "/Users/lgray/miniforge3/lib/python3.12/threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "/Users/lgray/miniforge3/lib/python3.12/threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "/private/tmp/claude-501/-Users-lgray-vibe-coding-graphed-workdir/c445639e-fd6b-4941-b012-0166b71d96e2/scratchpad/exec-rv5/src/graphed_executors/htcondor_backend/backend.py", line 465, in wait_for_pilots
+    return self.backend.wait_for_pilots(self._min_pilots)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/claude-501/-Users-lgray-vibe-coding-graphed-workdir/c445639e-fd6b-4941-b012-0166b71d96e2/scratchpad/exec-rv5/src/graphed_executors/htcondor_backend/backend.py", line 233, in wait_for_pilots
+    raise RuntimeError(
+RuntimeError: 0 of 1 pilots connected when the runner closed; none was submitted
+Exception in thread Thread-9 (wait_for_pilots):
+Traceback (most recent call last):
+  File "/Users/lgray/miniforge3/lib/python3.12/threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "/Users/lgray/miniforge3/lib/python3.12/threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "/private/tmp/claude-501/-Users-lgray-vibe-coding-graphed-workdir/c445639e-fd6b-4941-b012-0166b71d96e2/scratchpad/exec-rv5/src/graphed_executors/htcondor_backend/backend.py", line 465, in wait_for_pilots
+    return self.backend.wait_for_pilots(self._min_pilots)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/claude-501/-Users-lgray-vibe-coding-graphed-workdir/c445639e-fd6b-4941-b012-0166b71d96e2/scratchpad/exec-rv5/src/graphed_executors/htcondor_backend/backend.py", line 233, in wait_for_pilots
+    raise RuntimeError(
+RuntimeError: 0 of 1 pilots connected when the runner closed; none was submitted
+Exception in thread Thread-13 (wait_for_pilots):
+Traceback (most recent call last):
+  File "/Users/lgray/miniforge3/lib/python3.12/threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "/Users/lgray/miniforge3/lib/python3.12/threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "/private/tmp/claude-501/-Users-lgray-vibe-coding-graphed-workdir/c445639e-fd6b-4941-b012-0166b71d96e2/scratchpad/exec-rv5/src/graphed_executors/htcondor_backend/backend.py", line 233, in wait_for_pilots
+    raise RuntimeError(
+RuntimeError: 0 of 1 pilots connected when the runner closed
+== result-control 
+    0.00s submit-service  7001 862ce6ea-e1fba8e8226b1e67
+    1.07s mark             Ctrl-C in result
+    2.54s act             7001 Remove ClusterId == 7001
+    3.01s mark             KeyboardInterrupt left the block
+  pilot clusters submitted=[] left in the queue=[]
+== result-need 
+    0.00s submit-service  7001 43adeb60-091bc1ddf1bced41
+    1.07s mark             Ctrl-C in result
+    2.54s act             7001 Remove ClusterId == 7001
+    3.01s mark             KeyboardInterrupt left the block
+  pilot clusters submitted=[] left in the queue=[]
+== close-control 
+    0.00s submit-service  7001 b640f360-6194435cf34aa848
+    1.06s mark             Ctrl-C in close
+    2.07s act             7001 Remove ClusterId == 7001
+    2.50s mark             KeyboardInterrupt left the block
+  pilot clusters submitted=[] left in the queue=[]
+== close-need 
+    0.00s submit-service  7001 c4c335f3-0c7b2f4acc9849a1
+    1.06s mark             Ctrl-C in close
+    2.07s act             7001 Remove ClusterId == 7001
+    2.50s mark             KeyboardInterrupt left the block
+  pilot clusters submitted=[] left in the queue=[]
+== direct server raised=["RuntimeError: service 'web' (planB-199549aa1362d82d) still waited for a slot when the runner closed:"] need thread alive 3s after close=False
+    0.00s submit-service  7001 planB-199549aa1362d82d
+    0.05s submit-pilots   7002 
+    1.06s mark             backend.close()
+    1.06s act             7001 Remove ClusterId == 7001
+   21.22s act             7002 Remove ClusterId == 7002
+   21.57s mark             close() returned
+  pilot clusters submitted=[7002] left in the queue=[]
+exit=0 (probe_close_need_exec_rv4.py at 6877abc)

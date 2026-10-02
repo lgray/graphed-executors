@@ -1,0 +1,16 @@
+SERVICE node announce answered 200
+driver exit 0
+    0.00s mark           ServiceSet asks for the SERVICE node's announce
+    0.05s mark           driver published its url
+    3.06s announce       svc0
+    3.09s submit-pilots  
+    3.09s pilot-start    
+pilots submitted after the SERVICE node's announce
+driver pid=14888 dir=/private/tmp/claude-501/-Users-lgray-vibe-coding-graphed-workdir/c445639e-fd6b-4941-b012-0166b71d96e2/scratchpad/rv5-driver_order/job
+1 condor pilots on http://macbookpro.meanphysicist.com:10000 submitted at the first need of a worker
+2026-10-02 14:06:38,088 graphed_executors.services INFO service 'web': managed leg (cluster) at http://127.0.0.1:53363
+1 pilots live after 3.3s
+2026-10-02 14:06:38,276 graphed_executors.services INFO service 'web': user leg at http://127.0.0.1:53363
+exit 0 after 4.8s
+
+exit=0 (probe_driver_order_exec_rv3.py at 6877abc)

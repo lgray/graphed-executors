@@ -1,0 +1,35 @@
+KILLED   phase-per-resolve            exit=1 | FAILED tests/extra/m69b/test_m69b_announce_gate.py::test_a_need_between_a_set_s_services_leaves_the_pilots_held_to_its_last_announce / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: [Event(t=435931.303485666, kind='pilot-start', cluster=7001, text='', reason=None), Event(t=435931.305704791, kind='ac...04f55c59a', reason=None), Event(t=435931.827694833, kind='mark', cluster=None, text='web announced'
+           FAILED tests/extra/m69b/test_m69b_announce_gate.py::test_a_need_between_a_set_s_services_leaves_the_pilots_held_to_its_last_announce
+KILLED   no-phase                     exit=1 | AILED tests/extra/m69b/test_m69b_announce_gate.py::test_a_need_beside_a_starting_service_releases_the_held_pilots_only_after_its_announce / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: [Event(t=435934.513134625, kind='act', cluster=7001, text='Release ClusterId == 7001 && JobStatus == 5 && substr(HoldReason, 0, 47) == "graphed: a service of this run waits for a slot"', reason=None)]
+           FAILED tests/extra/m69b/test_m69b_announce_gate.py::test_a_need_beside_a_starting_service_releases_the_held_pilots_only_after_its_announce
+KILLED   probe-inside-the-phase       exit=hung>240s | 
+KILLED   release-on-any-need          exit=1 | AILED tests/extra/m69b/test_m69b_announce_gate.py::test_a_need_beside_a_starting_service_releases_the_held_pilots_only_after_its_announce / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: [Event(t=436177.128021916, kind='act', cluster=7001, text='Release ClusterId == 7001 && JobStatus == 5 && substr(HoldReason, 0, 47) == "graphed: a service of this run waits for a slot"', reason=None)]
+           FAILED tests/extra/m69b/test_m69b_announce_gate.py::test_a_need_beside_a_starting_service_releases_the_held_pilots_only_after_its_announce
+KILLED   submit-while-closing         exit=1 | FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_need_beside_a_starting_service_submits_no_pilot_once_the_run_ends[stop_waiting] / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: [('submit', 'graphed-service-s-37b60431a562baa9 70'), ('act', 'Remove ClusterId == 70'), ('submit', 'graphed-pilots-099609b6 71')]
+           FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_need_beside_a_starting_service_submits_no_pilot_once_the_run_ends[stop_waiting]
+KILLED   wait-ignores-the-close       exit=1 | FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_need_beside_a_starting_service_submits_no_pilot_once_the_run_ends[stop_waiting] / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: {'server': RuntimeError("service 'idle' (s-5ba0090c63ce5b7c) still waited for a slot when the runner closed: JobStatus=1")}
+                +      where <built-in method get of dict object at 0x104289f80> = {'server': RuntimeError("service 'idle' (s-5ba0090c63ce5b7c) still waited for a slot when the runner closed: JobStatus=1")}.get
+KILLED   no-release-while-closing     exit=1 | AILED tests/extra/m69b/test_m69b_schedulable.py::test_a_need_beside_a_later_plan_s_starting_service_releases_its_pilots_once_the_run_ends / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: [('submit', 'graphed-pilots-dbd1845b 70'), ('act', 'Hold ClusterId == 70 && JobStatus == 1'), ('submit', 'graphed-service-s-cc9ea9c82e11b2b2 71'), ('act', 'Remove ClusterId == 71')]
+           FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_need_beside_a_later_plan_s_starting_service_releases_its_pilots_once_the_run_ends
+KILLED   last-phase-does-not-move     exit=1 | AILED tests/extra/m69b/test_m69b_schedulable.py::test_a_need_beside_a_later_plan_s_starting_service_releases_its_pilots_once_the_run_ends / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: [('submit', 'graphed-pilots-853bfb60 70'), ('act', 'Hold ClusterId == 70 && JobStatus == 1'), ('submit', 'graphed-service-s-cc014684ff0a84f4 71'), ('act', 'Remove ClusterId == 71')]
+           FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_need_beside_a_later_plan_s_starting_service_releases_its_pilots_once_the_run_ends
+KILLED   wait-ends-only-unsubmitted   exit=1 | FAILED tests/extra/m69b/test_m69b_schedulable.py::test_once_the_pilots_are_submitted_only_close_ends_a_wait_for_them / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: assert [] == ['0 of 1 pilo...unner closed']
+           FAILED tests/extra/m69b/test_m69b_schedulable.py::test_once_the_pilots_are_submitted_only_close_ends_a_wait_for_them
+KILLED   wait-ends-at-any-close       exit=1 | FAILED tests/extra/m69b/test_m69b_schedulable.py::test_once_the_pilots_are_submitted_only_close_ends_a_wait_for_them / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: the drain's plans wait for submitted pilots
+           FAILED tests/extra/m69b/test_m69b_schedulable.py::test_once_the_pilots_are_submitted_only_close_ends_a_wait_for_them
+KILLED   deadline-from-the-call       exit=1 | FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_need_deferred_by_a_service_start_times_its_wait_from_the_pilots_submit / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: (0.050571166968438774, RuntimeError('0 of 1 pilots connected after 1.0s; see the pilot logs in /private/var/folders/_8/wdyynsx91n91t7x7xwn69bsc0000gn/T/pytest-of-lgray/pytest-2458/test_a_need_deferred_by_a_serv0'))
+           FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_need_deferred_by_a_service_start_times_its_wait_from_the_pilots_submit
+KILLED   deadline-from-the-submit     exit=1 | FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_wait_called_after_the_pilots_submit_times_from_the_call / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_wait_called_after_the_pilots_submit_times_from_the_call
+control (unmutated, 9 selections) exit=0 | ['..........                                                               [100%]']
+exit=0

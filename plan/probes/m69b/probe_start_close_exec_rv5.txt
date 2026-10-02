@@ -1,0 +1,13 @@
+== direct need raised=['RuntimeError: 0 of 1 pilots connected when the runner closed']
+    0.00s mark             pilot submit begins
+    0.31s mark             backend.close()
+    0.50s mark             close() returned
+    1.51s submit-pilots   7001 
+  pilot clusters submitted=[7001] left in the queue=[7001]
+== runner-close-sigint 
+    0.00s mark             pilot submit begins
+    0.00s mark             block left normally: close() drains
+    0.50s mark             KeyboardInterrupt left close()
+    1.51s submit-pilots   7001 
+  pilot clusters submitted=[7001] left in the queue=[7001]
+exit=0 (at 6877abc)
