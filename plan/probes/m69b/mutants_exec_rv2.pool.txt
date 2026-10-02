@@ -1,0 +1,4 @@
+KILLED   disk-not-whole-live          exit=1 | ================== short test summary info ============================ / FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_job_waiting_only_on_a_busy_node_s_disk_matches / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: assert False
+           /mut-pool/tests/extra/m69b/test_m69b_schedulable.py:326: AssertionError: assert False
+control (unmutated, 1 selections) exit=0 | .                                                                        [100%]

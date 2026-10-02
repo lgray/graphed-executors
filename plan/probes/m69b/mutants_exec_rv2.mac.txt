@@ -1,0 +1,14 @@
+KILLED   runner-close-no-stop         exit=1 | ===================== short test summary info ============================ / FAILED tests/extra/m69b/test_m69b_schedulable.py::test_close_ends_a_wait_for_a_slot_removing_the_job / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: close() still waits for the slot
+           /private/tmp/claude-501/-Users-lgray-vibe-coding-graphed-workdir/c445639e-fd6b-4941-b012-0166b71d96e2/scratchpad/mut-mac/tests/extra/m69b/test_m69b_schedulable.py:427: AssertionError: close() still waits for the slot
+KILLED   closing-check-gone           exit=1 | ===================== short test summary info ============================ / FAILED tests/extra/m69b/test_m69b_schedulable.py::test_close_ends_a_wait_for_a_slot_removing_the_job / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: close() still waits for the slot
+           /private/tmp/claude-501/-Users-lgray-vibe-coding-graphed-workdir/c445639e-fd6b-4941-b012-0166b71d96e2/scratchpad/mut-mac/tests/extra/m69b/test_m69b_schedulable.py:427: AssertionError: close() still waits for the slot
+SURVIVED backend-close-no-stop        exit=0 | .................s..                                                     [100%]
+KILLED   disk-not-whole               exit=1 | ===================== short test summary info ============================ / FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_partitionable_slot_is_matched_at_its_totals / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: assert {'Partitionab...pus': 10, ...} == {'Partitionab...pus': 10, ...}
+           /private/tmp/claude-501/-Users-lgray-vibe-coding-graphed-workdir/c445639e-fd6b-4941-b012-0166b71d96e2/scratchpad/mut-mac/tests/extra/m69b/test_m69b_schedulable.py:307: AssertionError: assert {'Partitionab...pus': 10, ...} == {'Partitionab..
+KILLED   no-ads-guard-gone            exit=1 | ============ short test summary info ============================ / FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_pool_whose_collector_lists_no_slot_submits_and_waits / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   ValueError: max() iterable argument is empty
+           FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_pool_whose_collector_lists_no_slot_submits_and_waits
+control (unmutated, 4 selections) exit=0 | .................s..                                                     [100%]

@@ -1,0 +1,11 @@
+wait logged after 20s; SIGINT to 9840
+exit=0 3s after SIGINT (2s)
+  18917ms graphed_executors.htcondor_backend.backend: service 'rv2-sigint-jjolidig-0' (5876b5da-354186341e24367c) waits for a slot: JobStatus=1
+19.8s: KeyboardInterrupt 
+    print("run returned", runner.run(served_plan({"h": 8}, ctx)).value, flush=True)
+KeyboardInterrupt
+Interrupt
+Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended
+61 graphed-pilots-1b1fd92e 4 1
+61 graphed-pilots-1b1fd92e 4 1
+62 graphed-service-5876b5da-354186341e24367c 3 0

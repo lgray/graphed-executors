@@ -1,0 +1,13 @@
+== frozen byte-equality at df4d059 (blank = equal)
+freeze-m69b -- tests/frozen/m69b: []
+freeze-m69a-fixup -- tests/frozen/m69a: []
+upstream/main -- tests/frozen/m68c: []
+freeze-m68b-fixup3 -- tests/frozen/m68b/test_cluster_service_job.py tests/frozen/m68b/README.md tests/frozen/m68b/test_cluster_services_live.py: []
+upstream/main -- tests/frozen/m66 tests/frozen/m67 tests/frozen/m68a: []
+upstream/main vs df4d059, the other m68b files: []
+whole tests/frozen d3f2820..df4d059: []
+impl d8f6923 -- tests/frozen: []
+impl d536f04 -- tests/frozen: []
+impl df4d059 -- tests/frozen: []
+control freeze-m69b^..freeze-m69b -- tests/frozen: [ 2 files changed, 16 insertions(+), 8 deletions(-)]
+control upstream/main vs df4d059 tests/frozen/m69b: [ 8 files changed, 1313 insertions(+)]

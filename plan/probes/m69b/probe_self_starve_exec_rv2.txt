@@ -1,0 +1,13 @@
+TotalSlotMemory=15973 TotalSlotCpus=10; 2 pilots x 7474 MiB; server 2048 MiB
+t= 90.0s done=False queue=[(43, 'graphed-service-f1840213', 1), (42, 'graphed-pilots-dd4f1c13', 2), (42, 'graphed-pilots-dd4f1c13', 2)]
+after 90s (timeout_s=20.0): done=False; wait-log lines=3
+  log: service 'rv-starve-ncdlnfgc-0' (f1840213-78d3a2a9a768ad84) waits for a slot: JobStatus=1
+  log: service 'rv-starve-ncdlnfgc-0' (f1840213-78d3a2a9a768ad84) waits for a slot: JobStatus=1
+closed; the run then raised RuntimeError("service 'rv-starve-ncdlnfgc-0' (f1840213-78d3a2a9a768ad84) still waited for a slot when the runner closed: JobStatus=1")
+exit=0 wall=101s
+42 graphed-pilots-dd4f1c13 4 1
+Total for query: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended 
+Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended
+42 graphed-pilots-dd4f1c13 4 1
+42 graphed-pilots-dd4f1c13 4 1
+43 graphed-service-f1840213-78d3a2a9a768ad84 3 0

@@ -1,0 +1,79 @@
+== frozen byte-equality (df4d059; 40470e6 changes no tests/frozen)
+== frozen byte-equality at df4d059 (blank = equal)
+freeze-m69b -- tests/frozen/m69b: []
+freeze-m69a-fixup -- tests/frozen/m69a: []
+upstream/main -- tests/frozen/m68c: []
+freeze-m68b-fixup3 -- tests/frozen/m68b/test_cluster_service_job.py tests/frozen/m68b/README.md tests/frozen/m68b/test_cluster_services_live.py: []
+upstream/main -- tests/frozen/m66 tests/frozen/m67 tests/frozen/m68a: []
+upstream/main vs df4d059, the other m68b files: []
+whole tests/frozen d3f2820..df4d059: []
+impl d8f6923 -- tests/frozen: []
+impl d536f04 -- tests/frozen: []
+impl df4d059 -- tests/frozen: []
+control freeze-m69b^..freeze-m69b -- tests/frozen: [ 2 files changed, 16 insertions(+), 8 deletions(-)]
+control upstream/main vs df4d059 tests/frozen/m69b: [ 8 files changed, 1313 insertions(+)]
+
+== macOS py3.12 (.venv-m69b, graphed 7e048bf, histogram 3830aca) df4d059: pytest tests/frozen tests/extra --cov=graphed_executors --cov-branch
+exit=0
+1138 passed, 33 skipped
+src/graphed_executors/local/shuffle.py                                  93.02
+gate-exit=0
+Total:   44 lines
+Missing: 0 lines
+Coverage: 100%
+dc-exit=0
+
+== Linux pool (m68b-minicondor:local, CI test-htcondor line) df4d059
+506 passed, 10 skipped in 668.95s (0:11:08)
+pytest-exit=0
+queue after: Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended
+src/graphed_executors/htcondor_backend/backend.py                       98.39
+gate-exit=0
+diff-cover (htcondor_backend/** + submit/services.py): 110 lines, 0 missing, 100%
+
+== test-dask equivalent (.venv-m69b-dask) df4d059
+406 passed, 1 skipped; gate-exit=0
+Total:   44 lines
+Missing: 0 lines
+Coverage: 100%
+dc-exit=0
+
+== test-hgg equivalent (.venv-m69b-hgg, GRAPHED_HGG_REQUIRED=1)
+df4d059: 63 passed, 4 skipped (exit=0); 40470e6: 62 passed, 4 skipped (exit=0)
+
+== lint/types/docs df4d059
+== ruff check
+All checks passed!
+exit=0
+== ruff format --check
+109 files already formatted
+exit=0
+== mypy
+Success: no issues found in 322 source files
+== mypy win32
+Success: no issues found in 322 source files
+== sphinx -W
+exit=0
+
+== 40470e6: ruff check
+All checks passed!
+exit=0
+== ruff format --check
+109 files already formatted
+exit=0
+== mypy
+Success: no issues found in 322 source files
+== mypy win32
+Success: no issues found in 322 source files
+== sphinx -W
+exit=0
+== integrity
+-- upstream/main...40470e6
+range 1 [('ci_config_modified', '.github/workflows/ci.yml')]
+control 2 [('skip_or_xfail_added', 'x.py'), ('target_stubbed', 'x.py')]
+-- d3f2820..40470e6
+range 1 [('ci_config_modified', '.github/workflows/ci.yml')]
+control 2 [('skip_or_xfail_added', 'x.py'), ('target_stubbed', 'x.py')]
+== frozen
+40470e6 vs df4d059 tests/frozen: []
+impl 40470e6 -- tests/frozen: []

@@ -1,0 +1,6 @@
+== upstream/main...df4d059
+range 1 [('ci_config_modified', '.github/workflows/ci.yml')]
+control 2 [('skip_or_xfail_added', 'x.py'), ('target_stubbed', 'x.py')]
+== d3f2820..df4d059
+range 1 [('ci_config_modified', '.github/workflows/ci.yml')]
+control 2 [('skip_or_xfail_added', 'x.py'), ('target_stubbed', 'x.py')]

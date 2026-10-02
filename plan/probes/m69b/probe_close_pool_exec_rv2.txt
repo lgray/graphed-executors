@@ -1,0 +1,45 @@
+=== src=/work/src case=free
+graphed_executors: /work/src/graphed_executors/__init__.py | stop_waiting: True
+free pool, POLL_S=10.0: close() 6.7s; plan: VALUE 1
+  service history (ClusterId, QDate, JobCurrentStartDate, NumJobStarts, JobStatus): [(45, 1790884478, 1790884483, 1, 3)]
+queue after: []
+  log:   20.9s service 'web': managed leg (cluster) at http://7f056d8478d3:10001
+=== src=/work/src case=free 2
+graphed_executors: /work/src/graphed_executors/__init__.py | stop_waiting: True
+free pool, POLL_S=2.0: close() 3.5s; plan: RuntimeError: service 'web' (f1f95724-147ba073c64445dd) still waited for a slot when the runner closed: JobStatus=1
+  service history (ClusterId, QDate, JobCurrentStartDate, NumJobStarts, JobStatus): [(47, 1790884494, None, 0, 3)]
+queue after: []
+=== src=/work-d536/src case=free 2
+graphed_executors: /work-d536/src/graphed_executors/__init__.py | stop_waiting: False
+free pool, POLL_S=2.0: close() 6.9s; plan: VALUE 1
+  service history (ClusterId, QDate, JobCurrentStartDate, NumJobStarts, JobStatus): [(49, 1790884508, 1790884513, 1, 3)]
+queue after: []
+  log:    7.3s service 'web' (112fed41-29e01f15af83d39c) waits for a slot: JobStatus=1
+  log:   10.7s service 'web': managed leg (cluster) at http://7f056d8478d3:10001
+=== src=/work/src case=queue
+graphed_executors: /work/src/graphed_executors/__init__.py | stop_waiting: True
+before close: [(52, 'graphed-service-526d7469-4dc', 1), (51, 'graphed-service-d0a21987-647', 2), (50, 'graphed-pilots-302dc98d', 2), (50, 'graphed-pilots-302dc98d', 2)]
+submitted R, direct W: close() 6.6s
+  R (running, submitted): VALUE 1
+  W (waiting, direct): ('raised', "RuntimeError: service 'web' (526d7469-4dcad771fd4d8f57) ended before it announced: JobStatus=4, ExitCode=0; its service.out/.err, if it wrote them, are in /tmp/rv2-both/service-526d7469-4dcad771fd4d8f57")
+queue after: []
+  log:   30.7s service 'web': managed leg (cluster) at http://7f056d8478d3:10001
+  log:   40.9s service 'web' (526d7469-4dcad771fd4d8f57) waits for a slot: JobStatus=1
+=== src=/work/src case=direct
+graphed_executors: /work/src/graphed_executors/__init__.py | stop_waiting: True
+before close: [(55, 'graphed-service-ed85492a-e6d', 1), (54, 'graphed-service-31221564-2d0', 2), (53, 'graphed-pilots-41118673', 2), (53, 'graphed-pilots-41118673', 2)]
+direct R, submitted W: close() 11.3s
+  R (running, direct): ('value', 1)
+  W (waiting, submitted): RuntimeError: service 'web' (ed85492a-e6d81fbde7658d83) still waited for a slot when the runner closed: JobStatus=1
+queue after: []
+  log:   20.7s service 'web': managed leg (cluster) at http://7f056d8478d3:10001
+  log:   30.9s service 'web' (ed85492a-e6d81fbde7658d83) waits for a slot: JobStatus=1
+=== src=/work/src case=direct 60
+graphed_executors: /work/src/graphed_executors/__init__.py | stop_waiting: True
+before close: [(58, 'graphed-service-8b4b1c41-0ed', 1), (57, 'graphed-service-c54bb56f-96c', 2), (56, 'graphed-pilots-2e0c8083', 2), (56, 'graphed-pilots-2e0c8083', 2)]
+direct R, submitted W, gate opens 60 s after close(): close() 30.5s
+  R (running, direct): ('raised', 'RuntimeError: task graphed-fff20b7ea1dd-c54bb56f-leaf-0 unfinished when the HTCondor backend closed')
+  W (waiting, submitted): RuntimeError: service 'web' (8b4b1c41-0edd30afd21979c6) still waited for a slot when the runner closed: JobStatus=1
+queue after: []
+  log:   23.0s service 'web': managed leg (cluster) at http://7f056d8478d3:10001
+  log:   33.3s service 'web' (8b4b1c41-0edd30afd21979c6) waits for a slot: JobStatus=1

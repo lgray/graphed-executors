@@ -1,0 +1,7 @@
+KILLED   servertimes-gone             exit=1 | ======= short test summary info ============================ / FAILED tests/extra/m69b/test_m69b_run_lpc.py::test_each_server_s_status_line_names_when_it_was_submitted_and_ready / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: INFO:graphed_executors.services:service 'hgg-1d025411-0': managed leg (cluster)
+           /private/tmp/claude-501/-Users-lgray-vibe-coding-graphed-workdir/c445639e-fd6b-4941-b012-0166b71d96e2/scratchpad/mut-hgg/tests/extra/m69b/test_m69b_run_lpc.py:125: AssertionError: INFO:graphed_executors.services:service 'hgg-1d025411-0': ma
+KILLED   servertimes-ready-dropped    exit=1 | ======= short test summary info ============================ / FAILED tests/extra/m69b/test_m69b_run_lpc.py::test_each_server_s_status_line_names_when_it_was_submitted_and_ready / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: INFO:graphed_executors.services:service 'hgg-5e1d0bf0-0': managed leg (cluster) started_at=1000.25
+           /private/tmp/claude-501/-Users-lgray-vibe-coding-graphed-workdir/c445639e-fd6b-4941-b012-0166b71d96e2/scratchpad/mut-hgg/tests/extra/m69b/test_m69b_run_lpc.py:125: AssertionError: INFO:graphed_executors.services:service 'hgg-5e1d0bf0-0': ma
+control (unmutated, 1 selections) exit=0 | -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html

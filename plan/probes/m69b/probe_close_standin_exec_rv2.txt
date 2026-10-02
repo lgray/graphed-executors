@@ -1,0 +1,12 @@
+tree: df4d059 | graphed_executors from graphed_executors.htcondor_backend.backend /private/tmp/claude-501/-Users-lgray-vibe-coding-graphed-workdir/c445639e-fd6b-4941-b012-0166b71d96e2/scratchpad/exec-rv2/src/graphed_executors/__init__.py
+(a) spooling 5/16: logged-wait=True close-returned-after=0.28 s removes=2 secrets-left={} | RuntimeError: service 'a-spooling 5/16' (6029d36e-2c013d49e71049b1) still waited for a slot when the runner closed: JobStatus=5, HoldReasonCode=16
+(a) JobStatus 6: logged-wait=False close-returned-after=0.5 s removes=2 secrets-left={} | RuntimeError: service 'a-JobStatus 6' (a3f6fe5d-a88467797e72b2db) ended before it announced: JobStatus=6; its service.out/.err, if it wrote them, are in /var/folders/_8/wdyynsx91n91t7x7xwn69bsc0000gn/
+(b) two idle plans: close-returned-after=0.78 s service-jobs=2 removed=2
+    first:  RuntimeError: service 'b-first' (8574b13d-c760c6f1e2ac5ae3) still waited for a slot when the runner closed: JobStatus=1
+    second: RuntimeError: service 'b-second' (f952fa19-9221b6ab15aa9054) still waited for a slot when the runner closed: JobStatus=1
+(c) job idle at its first poll, running at 1.5 s, stop_waiting=True: ["RuntimeError: service 'c-soon' (scope-d90ed4ec5a8cc844) still waited for a slot when the runner closed: JobStatus=1"]
+exit=0
+== control: no stop_waiting
+tree: pre | graphed_executors from graphed_executors.htcondor_backend.backend /private/tmp/claude-501/-Users-lgray-vibe-coding-graphed-workdir/c445639e-fd6b-4941-b012-0166b71d96e2/scratchpad/exec-rv2/src/graphed_executors/__init__.py
+(c) job idle at its first poll, running at 1.5 s, stop_waiting=False: ['endpoint=tcp://127.0.0.1:10007']
+exit=0

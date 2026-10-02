@@ -1,0 +1,6 @@
+KILLED   driver-limit-ignored         exit=1 | === short test summary info ============================ / FAILED tests/extra/m69b/test_m69b_dask_driver_check.py::test_a_service_above_driver_memory_is_refused_before_it_starts / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           FAILED tests/extra/m69b/test_m69b_dask_driver_check.py::test_a_service_above_driver_memory_is_refused_before_it_starts
+KILLED   driver-fit-strict            exit=1 | == short test summary info ============================ / FAILED tests/extra/m69b/test_m69b_dask_driver_check.py::test_a_service_that_fits_driver_memory_starts_beside_the_driver / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           FAILED tests/extra/m69b/test_m69b_dask_driver_check.py::test_a_service_that_fits_driver_memory_starts_beside_the_driver
+SURVIVED posix-pages-wrong            exit=0 | ...                                                                      [100%]
+control (unmutated, 1 selections) exit=0 | ...                                                                      [100%]
