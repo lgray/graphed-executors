@@ -1,0 +1,8 @@
+leg=repair POLL_S=5.0: exited -2 0.6 s after SIGINT; submitted={'70': 'pilots', '71': 'service'} removed=['70', '71'] queue-left={}
+    ['KeyboardInterrupt']
+leg=close-signals-waiter POLL_S=5.0: exited -2 0.6 s after SIGINT; submitted={'70': 'pilots', '71': 'service'} removed=['70'] queue-left={'71': 'service'}
+    ['KeyboardInterrupt']
+leg=repair POLL_S=5.0: exited -2 0.6 s after SIGINT; submitted={'70': 'pilots', '71': 'service'} removed=['70', '71'] queue-left={}
+    ['KeyboardInterrupt']
+leg=close-signals-waiter POLL_S=5.0: exited -2 0.6 s after SIGINT; submitted={'70': 'pilots', '71': 'service'} removed=['70'] queue-left={'71': 'service'}
+    ['KeyboardInterrupt']

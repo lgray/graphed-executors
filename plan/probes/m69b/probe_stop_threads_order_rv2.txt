@@ -1,0 +1,4 @@
+3.12.10 (GIL) race x20000: raised=0; removals per trial: {1: 20000}
+   early: B returned at 0.055 s, A's removal completed at 0.210 s -> B returned BEFORE the removal
+3.14.6 (free-threaded) race x20000: raised={'IndexError': 1}; removals per trial: {1: 20000}
+   early: B returned at 0.053 s, A's removal completed at 0.210 s -> B returned BEFORE the removal
