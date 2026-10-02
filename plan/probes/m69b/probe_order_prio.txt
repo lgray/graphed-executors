@@ -1,0 +1,11 @@
+pool: TotalSlotMemory=15973; blocker=7986 service=9982 pilot=3977
+D0 pilots-then-service, equal priority (control), pilots queued beside the blocker: running=['blocker.0', 'pilots.0'] idle=['pilots.1']
+  JobPrio: ['blocker 0', 'pilots 0', 'pilots 0', 'service 0']
+D0 pilots-then-service, equal priority (control), after the blocker left: running=['pilots.0', 'pilots.1'] idle=['service.0']
+D pilots-then-service, service priority=10, pilots queued beside the blocker: running=['blocker.0', 'pilots.0'] idle=['pilots.1']
+  JobPrio: ['blocker 0', 'pilots 0', 'pilots 0', 'service 10']
+D pilots-then-service, service priority=10, after the blocker left: running=['pilots.0', 'pilots.1'] idle=['service.0']
+E as D, both -spool, pilots queued beside the blocker: running=['blocker.0', 'pilots.0'] idle=['pilots.1']
+  JobPrio: ['blocker 0', 'pilots 0', 'pilots 0', 'service 10']
+E as D, both -spool, after the blocker left: running=['pilots.0', 'pilots.1'] idle=['service.0']
+exit=0
