@@ -1152,9 +1152,11 @@ needed.
   submits; they stay held across all of that plan's services and are released at that plan's next need of a worker
   (`act(Release, "ClusterId == <pilots> && JobStatus == 5 && HoldReason == <graphed's reason>")`), so a hold the
   user placed is never released. A need of a worker, from any plan or thread, submits or releases the runner's
-  pilots only while none of its backend's servers waits to announce (no `_host_service`/`_host_announced` in
-  progress); a need that arrives during one is recorded, the last of them to return or raise then submits or
-  releases, and a first need's `min_pilots` wait counts from that submit. And §5.2's match counts each slot whole minus the claims of the
+  pilots only while no plan of the backend is starting its services (a `ServiceSet`'s resolve phase, its
+  `_probe`, which needs a worker, outside it) and the run is not ending; a need that arrives during a resolve
+  phase is recorded, the last phase to end then submits or releases, and a first need's `min_pilots` wait counts
+  from that submit. Once the backend is closing or its waits are stopped, no pilot is submitted and a wait that
+  depends on one ends naming the close; a release still runs, for the plans the drain finishes. And §5.2's match counts each slot whole minus the claims of the
   runner's running pilots (one schedd query of the pilots' cluster, `JobStatus == 2`: each `RemoteHost`'s parent
   slot loses that job's `MemoryProvisioned`/`CpusProvisioned`/`GPUsProvisioned`/`DiskProvisioned`, else its
   `Request*`). Those pilots keep their slots to `close()`, so room only they hold is room the job can never get: it
