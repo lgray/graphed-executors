@@ -1161,6 +1161,9 @@ needed.
   slot loses that job's `MemoryProvisioned`/`CpusProvisioned`/`GPUsProvisioned`/`DiskProvisioned`, else its
   `Request*`). Those pilots keep their slots to `close()`, so room only they hold is room the job can never get: it
   is removed unrun and refused as §5.2, the refusal naming the pilots' cluster and the largest room beside them.
+  The same holds for the set's own earlier servers, which keep their slots to the run's end: in every plan the
+  match also subtracts the running claims of that set's earlier service jobs (its scope's, never another plan's),
+  so a set whose servers each fit a slot but not together is refused naming them, never left waiting.
   Hence in every plan a server waits only on other jobs: no pilot of its runner is matchable while it waits (the
   first plan's are not yet submitted, a later plan's queued ones are held), and none holds room it was admitted to
   wait for. `CondorPilots.alive()` counts a pilot under graphed's own hold (that `HoldReason`) as alive, so a task
