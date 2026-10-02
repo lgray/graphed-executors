@@ -1147,16 +1147,18 @@ needed.
   waits on them after that job leaves (`probes/m69b/probe_order_fifo.txt`, case C; A and B are its controls).
 - Later plans. The pilots are the runner's, submitted once and kept to `close()` (m66), while the engine starts each
   plan's services in that plan's run (`probe_order_trace.txt`: plans 2 and 3 each submit a service job and no
-  pilot). Once its backend's pilots are submitted, `_host_service` holds the runner's queued pilots
-  (`act(Hold, "ClusterId == <pilots> && JobStatus == 1")`) before it submits, and releases them (`JobStatus == 5 &&
-  HoldReasonCode == 1`) when it returns or raises; and §5.2's match counts each slot whole minus the claims of the
+  pilot). Once its backend's pilots are submitted, a later plan's first `_host_service` holds the runner's
+  queued pilots once (`act(Hold, "ClusterId == <pilots> && JobStatus == 1", reason=<graphed's reason>)`) before it
+  submits; they stay held across all of that plan's services and are released at that plan's next need of a worker
+  (`act(Release, "ClusterId == <pilots> && JobStatus == 5 && HoldReason == <graphed's reason>")`), so a hold the
+  user placed is never released; and §5.2's match counts each slot whole minus the claims of the
   runner's running pilots (one schedd query of the pilots' cluster, `JobStatus == 2`: each `RemoteHost`'s parent
   slot loses that job's `MemoryProvisioned`/`CpusProvisioned`/`GPUsProvisioned`/`DiskProvisioned`, else its
   `Request*`). Those pilots keep their slots to `close()`, so room only they hold is room the job can never get: it
   is removed unrun and refused as §5.2, the refusal naming the pilots' cluster and the largest room beside them.
   Hence in every plan a server waits only on other jobs: no pilot of its runner is matchable while it waits (the
   first plan's are not yet submitted, a later plan's queued ones are held), and none holds room it was admitted to
-  wait for. `CondorPilots.alive()` counts a pilot under a submitter hold (`HoldReasonCode == 1`) as alive, so a task
+  wait for. `CondorPilots.alive()` counts a pilot under graphed's own hold (that `HoldReason`) as alive, so a task
   of a concurrent run is not failed as pilot-less meanwhile. `probes/m69b/probe_order_claims.txt`: dynamic slots name
   the pilots' jobs; the whole-minus-own match refuses a job the whole-slot match admits and admits a control; a held
   pilot stays unmatched while room frees and starts once released; the schedd's view names a running job's slot and
@@ -1311,7 +1313,7 @@ servers", "Schedulability" and "An H→γγ run", `docs/hgg.rst` diagnostics, ci
   disk-free step included), waited on by `check_ready`, + `pip install "tritonclient[grpc]" histserv
   grpcio-health-checking` (`histserv` from the m69b PR on: no m68a file imports it), from the m68b PR on adds
   `probes/m68b/sim_gpu.config`'s two lines to the runner's pool config (one simulated GPU) before the pool starts,
-  or follows them with `condor_restart -daemon startd` (`probe_sim_gpu.py`), runs `tests/frozen/m66 m67 m68a m68b`, m69b's `test_histserv_*.py` and `tests/extra/m6*` (each PR the dirs it has);
+  or follows them with `condor_restart -daemon startd` (`probe_sim_gpu.py`), runs `tests/frozen/m66 m67 m68a m68b`, m69b's `test_histserv_*.py` and `test_service_order.py`, and `tests/extra/m6*` (each PR the dirs it has);
   `.coveragerc-htcondor` sources add `graphed_executors.submit.services`; diff-cover include adds
   `src/graphed_executors/submit/services.py`. The all-OS `test` job installs `histserv grpcio-health-checking` (not on
   3.14t: no `cp314t` grpcio, P-d) and runs the no-bindings files of m67/m68a/m68b/m69b (m68b: `test_announce_route`,
