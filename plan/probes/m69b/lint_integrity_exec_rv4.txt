@@ -1,0 +1,18 @@
+== 0008028: ruff check
+All checks passed!
+exit=0
+== ruff format --check
+110 files already formatted
+== mypy
+Success: no issues found in 326 source files
+== mypy win32
+Success: no issues found in 326 source files
+== sphinx -W
+exit=0
+== integrity (graphed_orchestrator.precommit from /Users/lgray/vibe-coding/graphed-workdir/graphed-orchestrator)
+-- upstream/main...0008028
+range 1 [('ci_config_modified', '.github/workflows/ci.yml')]
+control 2 [('skip_or_xfail_added', 'x.py'), ('target_stubbed', 'x.py')]
+-- 67ba8f2..0008028
+range 0 []
+control 2 [('skip_or_xfail_added', 'x.py'), ('target_stubbed', 'x.py')]

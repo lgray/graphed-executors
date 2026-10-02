@@ -1,0 +1,35 @@
+== result-control 
+    0.00s submit-service  7001 74f013f9-8604631dfe376ec9
+    1.06s mark             Ctrl-C in result
+    2.53s act             7001 Remove ClusterId == 7001
+    3.00s mark             KeyboardInterrupt left the block
+  pilot clusters submitted=[] left in the queue=[]
+== result-need 
+    0.00s submit-service  7001 35b1c38f-cc48d8161cd5a2b0
+    1.06s mark             Ctrl-C in result
+    2.52s act             7001 Remove ClusterId == 7001
+    2.52s submit-pilots   7002 
+   22.59s act             7002 Remove ClusterId == 7002
+   23.04s mark             KeyboardInterrupt left the block
+  pilot clusters submitted=[7002] left in the queue=[]
+== close-control 
+    0.00s submit-service  7001 455b8c36-671a0360747b4026
+    1.06s mark             Ctrl-C in close
+    2.06s act             7001 Remove ClusterId == 7001
+    2.50s mark             KeyboardInterrupt left the block
+  pilot clusters submitted=[] left in the queue=[]
+== close-need 
+    0.00s submit-service  7001 e48e8f1b-de687080c82ea89b
+    1.06s mark             Ctrl-C in close
+    2.06s act             7001 Remove ClusterId == 7001
+    2.50s mark             KeyboardInterrupt left the block
+    2.52s submit-pilots   7002 
+  pilot clusters submitted=[7002] left in the queue=[7002]
+== direct server raised=["RuntimeError: service 'web' (planB-b76b281205e51e8a) still waited for a slot when the runner closed:"] need thread alive 3s after close=True
+    0.00s submit-service  7001 planB-b76b281205e51e8a
+    1.06s mark             backend.close()
+    1.06s act             7001 Remove ClusterId == 7001
+    1.50s mark             close() returned
+    1.51s submit-pilots   7002 
+  pilot clusters submitted=[7002] left in the queue=[7002]
+exit=0

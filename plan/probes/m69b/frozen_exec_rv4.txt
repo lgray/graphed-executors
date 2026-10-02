@@ -1,0 +1,8 @@
+== tags: freeze-m69b-fixup2=22df587 freeze-m68a-fixup2=eb8691d freeze-m68b-fixup4=eb8691d
+freeze-m69b-fixup2 vs 0008028 -- tests/frozen/m69b: 0 files differ (of 11)
+freeze-m68a-fixup2 vs 0008028 -- tests/frozen/m68a: 0 files differ (of 15)
+freeze-m68b-fixup4 vs 0008028 -- tests/frozen/m68b: 0 files differ (of 11)
+freeze-m69b-fixup2 vs 0008028 -- tests/frozen: 0 files differ (of 256)
+control: 67ba8f2 vs freeze-m69b-fixup2 -- tests/frozen: tests/frozen/m69b/test_service_order.py 
+commits in freeze-m69b-fixup2..0008028 touching tests/frozen: []
+22df587:  ...t_service_jobs_go_before_the_pilots_and_later_plans_hold_them.md | 2 +-; tests/frozen/m69b/test_service_order.py | 6 ++++--; 2 files changed, 5 insertions(+), 3 deletions(-);

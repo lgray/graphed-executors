@@ -1,0 +1,37 @@
+KILLED   release-on-any-need          exit=1 | mary info ============================ / FAILED tests/extra/m69b/test_m69b_announce_gate.py::test_a_need_beside_a_waiting_server_releases_the_held_pilots_only_after_its_announce / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: [Event(t=429801.714189833, kind='act', cluster=7001, text='Release ClusterId == 7001 && JobStatus == 5 && substr(HoldReason, 0, 47) == "graphed: a service of this run waits for a slot"', reason=None)]
+           FAILED tests/extra/m69b/test_m69b_announce_gate.py::test_a_need_beside_a_waiting_server_releases_the_held_pilots_only_after_its_announce
+KILLED   last-server-does-not-move    exit=1 | mary info ============================ / FAILED tests/extra/m69b/test_m69b_announce_gate.py::test_a_need_beside_a_waiting_server_releases_the_held_pilots_only_after_its_announce / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: [Event(t=429823.202905083, kind='announce', cluster=None, text='planB-0c0411d3307fbb30', reason=None), Event(t=429823....'), Event(t=429843.288419041, kind='act', cluster=7001, text='Remove ClusterId == 7001', reason='gr
+           FAILED tests/extra/m69b/test_m69b_announce_gate.py::test_a_need_beside_a_waiting_server_releases_the_held_pilots_only_after_its_announce
+KILLED   driver-waits-before-services exit=1 |  short test summary info ============================ / FAILED tests/extra/m69b/test_m69b_announce_gate.py::test_a_driver_job_submits_its_pilots_after_its_service_node_announced / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: ['submit-pilots', 'pilot-start', 'announce']
+           FAILED tests/extra/m69b/test_m69b_announce_gate.py::test_a_driver_job_submits_its_pilots_after_its_service_node_announced
+KILLED   wait-inside-the-run-try      exit=1 | ====== short test summary info ============================ / FAILED tests/extra/m69b/test_m69b_announce_gate.py::test_a_driver_job_whose_pilots_never_start_exits_1[no-services] / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: assert 3 == 1
+           FAILED tests/extra/m69b/test_m69b_announce_gate.py::test_a_driver_job_whose_pilots_never_start_exits_1[no-services]
+KILLED   closing-after-ad-check       exit=1 | ===== short test summary info ============================ / FAILED tests/extra/m69b/test_m69b_schedulable.py::test_backend_close_removes_a_waiting_service_job_before_it_returns / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: RuntimeError("service 'idle' (scope-56985d4fd8730c02) ended before it announced: no job ad; its service.out/.err, if i...x91n91t7x7xwn69bsc0000gn/T/pytest-of-lgray/pytest-2395/test_backend_close_removes_a_w0/service-scop
+           FAILED tests/extra/m69b/test_m69b_schedulable.py::test_backend_close_removes_a_waiting_service_job_before_it_returns
+KILLED   any-wait-is-the-first-need   exit=1 | ====== short test summary info ============================ / FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_wait_below_min_pilots_leaves_the_first_need_s_wait_to_come / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: the first need did not wait for min_pilots
+           E   RuntimeError: cannot join thread before it is started
+KILLED   no-wait-is-the-first-need    exit=1 | ====== short test summary info ============================ / FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_wait_below_min_pilots_leaves_the_first_need_s_wait_to_come / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: [1]
+           FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_wait_below_min_pilots_leaves_the_first_need_s_wait_to_come
+SURVIVED deadline-from-the-call       exit=0 | ..                                                                       [100%]
+SURVIVED deadline-from-the-submit     exit=0 | .................s.........s............................................ [ 44%] / ........................................................................ [ 89%] / .................                                                        [100%]
+KILLED   unlink-every-stop            exit=1 | ================ short test summary info ============================ / FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_second_stop_returns_only_after_the_first_removal / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: assert False
+           FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_second_stop_returns_only_after_the_first_removal
+KILLED   unlink-outside-the-lock      exit=1 | ================ short test summary info ============================ / FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_second_stop_returns_only_after_the_first_removal / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: assert False
+           FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_second_stop_returns_only_after_the_first_removal
+SURVIVED record-after-submit          exit=0 | .................s.........s........                                     [100%]
+control (unmutated, 17 selections) exit=0 | .................                                                        [100%]
+exit=0
+KILLED   deadline-from-the-call-unguarded exit=1 |  test summary info ============================ / FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_need_beside_a_waiting_server_counts_its_timeout_from_the_pilots_submit / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: [RuntimeError('0 of 1 pilots connected after 0.2s; see the pilot logs in /private/var/folders/_8/wdyynsx91n91t7x7xwn69bsc0000gn/T/pytest-of-lgray/pytest-2405/test_a_need_beside_a_waiting_s0')]
+           FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_need_beside_a_waiting_server_counts_its_timeout_from_the_pilots_submit
+control (unmutated, 1 selections) exit=0 | .                                                                        [100%]
+exit=0
