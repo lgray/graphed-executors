@@ -1151,7 +1151,10 @@ needed.
   queued pilots once (`act(Hold, "ClusterId == <pilots> && JobStatus == 1", reason=<graphed's reason>)`) before it
   submits; they stay held across all of that plan's services and are released at that plan's next need of a worker
   (`act(Release, "ClusterId == <pilots> && JobStatus == 5 && HoldReason == <graphed's reason>")`), so a hold the
-  user placed is never released; and §5.2's match counts each slot whole minus the claims of the
+  user placed is never released. A need of a worker, from any plan or thread, submits or releases the runner's
+  pilots only while none of its backend's servers waits to announce (no `_host_service`/`_host_announced` in
+  progress); a need that arrives during one is recorded, the last of them to return or raise then submits or
+  releases, and a first need's `min_pilots` wait counts from that submit. And §5.2's match counts each slot whole minus the claims of the
   runner's running pilots (one schedd query of the pilots' cluster, `JobStatus == 2`: each `RemoteHost`'s parent
   slot loses that job's `MemoryProvisioned`/`CpusProvisioned`/`GPUsProvisioned`/`DiskProvisioned`, else its
   `Request*`). Those pilots keep their slots to `close()`, so room only they hold is room the job can never get: it
@@ -1197,7 +1200,8 @@ needed.
   ordered and nothing changes. A DAG's SERVICE nodes are submitted at the DAG's start
   ([DAGMan node types](https://htcondor.readthedocs.io/en/23.0/automated-workflows/dagman-node-types.html)), before
   the driver node can run; with `pilots="condor"` the driver job's backend (`announced`) defers its pilots as above,
-  so they follow the SERVICE nodes' announces. `_host_announced`'s `timeout_s` is unchanged; `driver.py`'s start-up
+  and `driver.main` makes its `wait_for_pilots()` inside its `ServiceSet`, before `runner.run`, so they follow the
+  SERVICE nodes' announces (a no-services plan whose pilots never start still exits as before, not 3). `_host_announced`'s `timeout_s` is unchanged; `driver.py`'s start-up
   line says the pilots are submitted at the first need of a worker instead of naming a cluster not yet submitted.
 
 Frozen additions, `tests/frozen/m69b/test_service_order.py` (the recorder from m68a's `services_harness`, as
