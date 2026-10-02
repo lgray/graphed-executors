@@ -1,0 +1,13 @@
+=== probe_close_pool_exec_rv2.py free 2 at 67ba8f2
+graphed_executors: /work/src/graphed_executors/__init__.py | stop_waiting: True
+free pool, POLL_S=2.0: close() 12.3s; plan: VALUE 1
+  service history (ClusterId, QDate, JobCurrentStartDate, NumJobStarts, JobStatus): [(2, 1790957097, 1790957102, 1, 3)]
+queue after: []
+  log:   13.4s service 'web' (01a8d6e6-387dfd07cd47cb43) waits for a slot: JobStatus=1
+  log:   22.1s service 'web': managed leg (cluster) at http://74c41e431382:10001
+=== probe_close_pool_exec_rv2.py free at 67ba8f2
+graphed_executors: /work/src/graphed_executors/__init__.py | stop_waiting: True
+free pool, POLL_S=10.0: close() 12.3s; plan: VALUE 1
+  service history (ClusterId, QDate, JobCurrentStartDate, NumJobStarts, JobStatus): [(4, 1790957122, 1790957127, 1, 3)]
+queue after: []
+  log:   18.1s service 'web': managed leg (cluster) at http://74c41e431382:10001

@@ -1,0 +1,50 @@
+== frozen: see frozen_exec_rv3.txt
+
+== macOS py3.12 (.venv-m69b, graphed 7e048bf; CI pins a51bee4, which changes only graphed's writers) 67ba8f2: pytest tests/frozen tests/extra --cov=graphed_executors --cov-branch
+exit=0
+1148 passed, 39 skipped
+src/graphed_executors/local/shuffle.py                                  93.02
+gate-exit=0
+Total:   44 lines
+Missing: 0 lines
+Coverage: 100%
+dc-exit=0
+
+== Linux pool (m68b-minicondor:local, graphed a51bee4, histogram 3830aca[histserv]), CI test-htcondor line incl. tests/frozen/m69b/test_service_order.py
+522 passed, 10 skipped in 768.41s (0:12:48)
+pytest-exit=0
+queue after: Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended
+SKIPPED [1] tests/frozen/m68c/test_m68c_submit_dask.py:11: could not import 'distributed': No module named 'distributed'
+SKIPPED [1] tests/frozen/m68c/test_m68c_submit_parsl.py:14: could not import 'parsl': No module named 'parsl'
+SKIPPED [2] tests/frozen/m69a/hgg_harness.py:24: could not import 'coffea': No module named 'coffea'
+SKIPPED [1] tests/frozen/m68a/test_scope_dask_memory.py:81: could not import 'distributed': No module named 'distributed'
+SKIPPED [1] tests/frozen/m68a/test_services_live.py:146: no Triton container (set GRAPHED_TRITON_GRPC=host:port; the test-htcondor job does)
+SKIPPED [1] tests/frozen/m68a/test_services_live.py:164: no Triton container (set GRAPHED_TRITON_GRPC=host:port; the test-htcondor job does)
+SKIPPED [1] tests/extra/m69b/test_m69b_dask_driver_check.py:89: could not import 'distributed': No module named 'distributed'
+SKIPPED [1] tests/extra/m69b/test_m69b_dask_driver_check.py:102: could not import 'distributed': No module named 'distributed'
+SKIPPED [1] tests/extra/m69b/test_m69b_dask_driver_check.py:112: could not import 'distributed': No module named 'distributed'
+src/graphed_executors/htcondor_backend/backend.py                       98.69
+gate-exit=0
+diff-cover (htcondor_backend/** + submit/services.py vs upstream/main): 233 lines, 0 missing, 100%
+
+== test-hgg equivalent (.venv-m69b-hgg, GRAPHED_HGG_REQUIRED=1) 67ba8f2: 67 passed, 5 skipped, exit=0
+== test-dask: no src under submit/, dask_backend/ or common/ changes in 40470e6..67ba8f2; not re-run
+
+== 67ba8f2: ruff check
+All checks passed!
+exit=0
+== ruff format --check
+109 files already formatted
+== mypy
+Success: no issues found in 325 source files
+== mypy win32
+Success: no issues found in 325 source files
+== sphinx -W
+exit=0
+== integrity
+-- upstream/main...67ba8f2
+range 1 [('ci_config_modified', '.github/workflows/ci.yml')]
+control 2 [('skip_or_xfail_added', 'x.py'), ('target_stubbed', 'x.py')]
+-- 40470e6..67ba8f2
+range 1 [('ci_config_modified', '.github/workflows/ci.yml')]
+control 2 [('skip_or_xfail_added', 'x.py'), ('target_stubbed', 'x.py')]

@@ -1,0 +1,7 @@
+KILLED   hold-str-reason              exit=1 | ========== short test summary info ============================ / FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_real_schedd_releases_graphed_s_hold_and_not_the_user_s / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_real_schedd_releases_graphed_s_hold_and_not_the_user_s
+KILLED   release-any-hold             exit=1 | ========== short test summary info ============================ / FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_real_schedd_releases_graphed_s_hold_and_not_the_user_s / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: [1, 1]
+           /mut-pool/tests/extra/m69b/test_m69b_schedulable.py:573: AssertionError: [1, 1]
+control (unmutated, 1 selections) exit=0 | .                                                                        [100%]
+Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended

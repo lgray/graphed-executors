@@ -1,0 +1,10 @@
+CondorReason  hold  -> 1 {'ClusterId': 7, 'JobStatus': 5, 'HoldReason': 'graphed: a service of this run waits for a slot (by user submituser)', 'HoldReasonCode': 1, 'HoldReasonSubCode': 0, 'RemoveReason': None}
+CondorReason  release by prefix -> TotalSuccess=1 {'ClusterId': 7, 'JobStatus': 1, 'HoldReason': None, 'HoldReasonCode': None, 'HoldReasonSubCode': None, 'RemoveReason': None}
+CondorReason  removed -> {'ClusterId': 7, 'JobStatus': 3, 'HoldReason': None, 'HoldReasonCode': None, 'HoldReasonSubCode': None, 'RemoveReason': 'graphed: run closed (by user submituser)'}
+str           hold  -> 1 {'ClusterId': 8, 'JobStatus': 5, 'HoldReason': '', 'HoldReasonCode': 1, 'HoldReasonSubCode': 0, 'RemoveReason': None}
+str           release by prefix -> TotalSuccess=0 {'ClusterId': 8, 'JobStatus': 5, 'HoldReason': '', 'HoldReasonCode': 1, 'HoldReasonSubCode': 0, 'RemoveReason': None}
+str           removed -> {'ClusterId': 8, 'JobStatus': 3, 'HoldReason': None, 'HoldReasonCode': None, 'HoldReasonSubCode': None, 'RemoveReason': None}
+(text, 0)     hold  -> 1 {'ClusterId': 9, 'JobStatus': 5, 'HoldReason': 'graphed: a service of this run waits for a slot (by user submituser)', 'HoldReasonCode': 1, 'HoldReasonSubCode': 0, 'RemoveReason': None}
+(text, 0)     release by prefix -> TotalSuccess=1 {'ClusterId': 9, 'JobStatus': 1, 'HoldReason': None, 'HoldReasonCode': None, 'HoldReasonSubCode': None, 'RemoveReason': None}
+(text, 0)     removed -> {'ClusterId': 9, 'JobStatus': 3, 'HoldReason': None, 'HoldReasonCode': None, 'HoldReasonSubCode': None, 'RemoveReason': 'graphed: a service of this run waits for a slot (by user submituser)'}
+CondorPilots.alive counts our hold: True

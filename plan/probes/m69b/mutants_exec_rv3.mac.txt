@@ -1,0 +1,29 @@
+KILLED   backend-close-no-remove      exit=1 | ===== short test summary info ============================ / FAILED tests/extra/m69b/test_m69b_schedulable.py::test_backend_close_removes_a_waiting_service_job_before_it_returns / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: [('submit', 'graphed-service-scope-a8510022b77c2e3a 70'), ('act', 'Remove ClusterId == 70')]
+           /private/tmp/claude-501/-Users-lgray-vibe-coding-graphed-workdir/c445639e-fd6b-4941-b012-0166b71d96e2/scratchpad/mut3-mac/tests/extra/m69b/test_m69b_schedulable.py:424: AssertionError: [('submit', 'graphed-service-scope-a8510022b77c2e3a 70'
+KILLED   stop-unserialized            exit=1 | ================ short test summary info ============================ / FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_second_stop_returns_only_after_the_first_removal / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: a second stop() returned before the removal ran
+           /private/tmp/claude-501/-Users-lgray-vibe-coding-graphed-workdir/c445639e-fd6b-4941-b012-0166b71d96e2/scratchpad/mut3-mac/tests/extra/m69b/test_m69b_schedulable.py:477: AssertionError: a second stop() returned before the removal ran
+KILLED   stopped-check-gone           exit=1 | ================ short test summary info ============================ / FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_job_stopped_before_its_submit_is_never_submitted / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   Failed: DID NOT RAISE RuntimeError
+           FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_job_stopped_before_its_submit_is_never_submitted
+KILLED   closing-submit-check-gone    exit=1 | ============ short test summary info ============================ / FAILED tests/extra/m69b/test_m69b_schedulable.py::test_no_service_job_is_submitted_once_the_waits_are_stopped / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: Regex pattern did not match.
+           /private/tmp/claude-501/-Users-lgray-vibe-coding-graphed-workdir/c445639e-fd6b-4941-b012-0166b71d96e2/scratchpad/mut3-mac/tests/extra/m69b/test_m69b_schedulable.py:505: AssertionError: Regex pattern did not match.
+KILLED   alive-held-not-counted       exit=1 | ======= short test summary info ============================ / FAILED tests/extra/m69b/test_m69b_schedulable.py::test_alive_counts_a_pilot_graphed_held_and_not_one_the_user_held / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           FAILED tests/extra/m69b/test_m69b_schedulable.py::test_alive_counts_a_pilot_graphed_held_and_not_one_the_user_held
+KILLED   alive-any-hold               exit=1 | ======= short test summary info ============================ / FAILED tests/extra/m69b/test_m69b_schedulable.py::test_alive_counts_a_pilot_graphed_held_and_not_one_the_user_held / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           FAILED tests/extra/m69b/test_m69b_schedulable.py::test_alive_counts_a_pilot_graphed_held_and_not_one_the_user_held
+KILLED   claim-parent-lost            exit=1 | ================== short test summary info ============================ / FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_running_job_s_claim_leaves_the_slot_it_runs_in / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: assert [{'Name': 'sl...'Disk': 1000}] == [{'Name': 'sl...'Disk': 1000}]
+           /private/tmp/claude-501/-Users-lgray-vibe-coding-graphed-workdir/c445639e-fd6b-4941-b012-0166b71d96e2/scratchpad/mut3-mac/tests/extra/m69b/test_m69b_schedulable.py:544: AssertionError: assert [{'Name': 'sl...'Disk': 1000}] == [{'Name': 'sl.
+KILLED   claim-request-first          exit=1 | ================== short test summary info ============================ / FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_running_job_s_claim_leaves_the_slot_it_runs_in / !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+           E   AssertionError: assert [{'Name': 'sl...'Disk': 1000}] == [{'Name': 'sl...'Disk': 1000}]
+           /private/tmp/claude-501/-Users-lgray-vibe-coding-graphed-workdir/c445639e-fd6b-4941-b012-0166b71d96e2/scratchpad/mut3-mac/tests/extra/m69b/test_m69b_schedulable.py:544: AssertionError: assert [{'Name': 'sl...'Disk': 1000}] == [{'Name': 'sl.
+SURVIVED closing-after-ad-check       exit=0 | .................s.......s.                                              [100%]
+SURVIVED any-wait-is-the-first-need   exit=0 | .................s.......s....                                           [100%]
+SURVIVED no-wait-is-the-first-need    exit=0 | .................s.......s....                                           [100%]
+SURVIVED record-after-submit          exit=0 | .................s.......s....                                           [100%]
+control (unmutated, 11 selections) exit=0 | .................s.......s....                                           [100%]
+SURVIVED no-wait-is-the-first-need-m66 exit=0 | ........................................................................ [ 68%] / .................................                                        [100%]
+control (unmutated, 3 selections) exit=0 | .................................                                        [100%]

@@ -1,0 +1,16 @@
+== frozen at 67ba8f2 vs tags (blank = equal)
+freeze-m69b-fixup -- tests/frozen/m69b: []
+freeze-m68b-fixup4 -- tests/frozen/m68b: []
+freeze-m68a-fixup2 -- tests/frozen/m68a: []
+freeze-m69a-fixup -- tests/frozen/m69a: []
+upstream/main -- tests/frozen/m66 tests/frozen/m67 tests/frozen/m68c: []
+whole tests/frozen, eb8691d..67ba8f2: []
+impl 6811102 -- tests/frozen: []
+impl 04fb8b1 -- tests/frozen: []
+impl 8227fcf -- tests/frozen: []
+impl 67ba8f2 -- tests/frozen: []
+control 84e6fb7..eb8691d -- tests/frozen: [ 8 files changed, 926 insertions(+), 8 deletions(-)]
+refreeze vs previous tags, m68a: [ 2 files changed, 4 insertions(+), 2 deletions(-)] m68b: [ 6 files changed, 39 insertions(+), 9 deletions(-)]
+freeze-m68a-fixup2: tag -> eb8691d on upstream: 6063e4368d9c
+freeze-m68b-fixup4: tag -> eb8691d on upstream: 75031805541c
+freeze-m69b-fixup: tag -> eb8691d on upstream: 8edc10ec9cd5

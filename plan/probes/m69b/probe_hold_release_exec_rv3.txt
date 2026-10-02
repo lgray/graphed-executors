@@ -1,0 +1,10 @@
+    0.00s submit-pilots   7001  
+    0.00s mark             pilots submitted, both queued 
+    0.00s act             7001 Hold ClusterId == 7001 && JobStatus == 1 graphed: a service of this run waits for a slot
+    0.00s submit-service  7002 planB-69009d1a028a7c82 
+    1.06s mark             plan B's server waits; plan A submits a task 
+    1.06s act             7001 Release ClusterId == 7001 && JobStatus == 5 && substr(HoldReason, 0, 47) == "graphed: a service of this run wa 
+    2.07s mark             plan B's server still waiting: True 
+    2.07s act             7002 Remove ClusterId == 7002 graphed: run closed
+   22.23s act             7001 Remove ClusterId == 7001 graphed: run closed
+plan B: ["RuntimeError: service 'web' (planB-69009d1a028a7c82) still waited for a slot when the runner closed: no job ad"]

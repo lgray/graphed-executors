@@ -1,0 +1,15 @@
+RemoteHost         expr="slot1_1@74c41e431382"                   eval='slot1_1@74c41e431382'
+MemoryProvisioned  expr=3072                                     eval=3072
+CpusProvisioned    expr=2                                        eval=2
+GPUsProvisioned    expr=0                                        eval=0
+DiskProvisioned    expr=1048576                                  eval=1048576
+RequestMemory      expr=3000                                     eval=3000
+RequestCpus        expr=2                                        eval=2
+RequestGPUs        absent
+RequestDisk        expr=MAX(
+   {
+      1024,
+      (TransferInputSizeMB + 1) * 1.250000000000000E+00
+   }) * 1024 eval=1048576.0
+slot whole:       [{'Name': 'slot1@74c41e431382', 'Memory': 15973, 'Cpus': 10, 'GPUs': 1, 'Disk': 36033120.0}]
+less the claim:   [{'Name': 'slot1@74c41e431382', 'Memory': 12901, 'Cpus': 8, 'GPUs': 1, 'Disk': 34984544}]
