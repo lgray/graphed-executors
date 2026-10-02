@@ -1169,7 +1169,8 @@ needed.
   thread it reached:
   - `HTCondorBackend` keeps every `ServiceJob` it submitted in `_services` from the moment `schedd.submit` returns
     (popped by its release or its failed `host_service`), and `HTCondorBackend.close()` sets `_closing`, removes each
-    of them by its cluster id in the calling thread (`ServiceJob.stop()`, idempotent across threads), then closes the
+    of them by its cluster id in the calling thread (`ServiceJob.stop()`, serialized: from any thread, a second call returns only after the first call's removal has
+    run, and never raises), then closes the
     task server and removes the pilots. No removal waits on a waiting thread's next poll.
   - `HTCondorRunner.close()` reaches `backend.close()` whether `PlanQueue.close()`'s drain returns or raises
     (`try`/`finally`), so a Ctrl-C landing in the drain of the `with … runner.submit(plan)` form, where CPython 3.12's
@@ -1181,7 +1182,9 @@ needed.
   - df4d059's extra `test_close_ends_a_wait_for_a_slot_removing_the_job` becomes the frozen close row below; an extra
     row (a direct `host_service` wait on a thread whose recorder job stays idle, then `backend.close()`: the Remove of
     its cluster is `act`ed before `close()` returns, and the wait raises naming the key) kills
-    `backend-close-no-remove`.
+    `backend-close-no-remove`; another (two threads stop one job whose removal blocks on an `Event`: the second
+    caller does not return while the removal is blocked, and once it is set both return, one Remove is sent and
+    neither raises) kills an early-return `stop()` (`probes/m69b/probe_stop_threads_order_rv2.txt`).
 - What waits on what: a server waits for its slot (no deadline while idle) and announces to the task server, which
   needs no pilot. The pilots are submitted at the first need after the first plan's servers announced; they wait for
   room beside the running servers, and that need raises after `N_WORKERS_WAIT_S` naming the pilots' log dir, the
