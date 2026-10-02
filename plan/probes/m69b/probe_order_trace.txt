@@ -1,0 +1,43 @@
+== head (m69b df4d059)
+   0.03  htcondor_runner(...) called
+   0.03  schedd.submit pilots count=1
+   0.04  htcondor_runner(...) returned
+   0.04  plan 1: runner.run called
+   0.04  HTCondorRunner.wait_for_pilots
+   0.20  schedd.submit service count=1
+   0.21  announce f1256fcf-751f20044a847dbc posting
+   0.22  announce f1256fcf-751f20044a847dbc -> 200
+   0.25  plan 1 returned 2 parts
+   0.25  plan 2: runner.run called
+   0.25  schedd.submit service count=1
+   0.25  announce 78f55aee-6ef28d8f084cdbbc posting
+   0.25  announce 78f55aee-6ef28d8f084cdbbc -> 200
+   0.27  plan 2 returned 2 parts
+   0.27  plan 3: runner.submit called
+   0.27  schedd.submit service count=1
+   0.27  announce 3d3f8278-af6e79c5a2e507b0 posting
+   0.28  announce 3d3f8278-af6e79c5a2e507b0 -> 200
+   0.29  plan 3 returned 2 parts
+   0.29  HTCondorRunner.close
+exit 0
+== v2 (df4d059 + probe_order_variant_dag.txt)
+   0.03  htcondor_runner(...) called
+   0.03  htcondor_runner(...) returned
+   0.03  plan 1: runner.run called
+   0.03  schedd.submit service count=1
+   0.04  announce f01faea5-bf5e5cbcfc014105 posting
+   0.05  schedd.submit pilots count=1
+   0.05  announce f01faea5-bf5e5cbcfc014105 -> 200
+   0.23  plan 1 returned 2 parts
+   0.23  plan 2: runner.run called
+   0.23  schedd.submit service count=1
+   0.24  announce be9df5c8-995642fe9fc4859d posting
+   0.24  announce be9df5c8-995642fe9fc4859d -> 200
+   0.26  plan 2 returned 2 parts
+   0.26  plan 3: runner.submit called
+   0.26  schedd.submit service count=1
+   0.26  announce eda70454-09283be03d230ee3 posting
+   0.26  announce eda70454-09283be03d230ee3 -> 200
+   0.28  plan 3 returned 2 parts
+   0.28  HTCondorRunner.close
+exit 0

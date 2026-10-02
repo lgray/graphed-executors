@@ -1,0 +1,13 @@
+
+pool: TotalSlotMemory=15973; pilots cluster 111: 3 x 5580 MiB, statuses [1, 2, 2]
+  ad: {'Name': 'slot1_1@97b1f4e61116', 'SlotType': 'Dynamic', 'JobId': '111.0', 'GlobalJobId': '97b1f4e61116#111.0#1790914693', 'RemoteUser': 'submituser@97b1f4e61116', 'Memory': 5632, 'Cpus': 1, 'Disk': 1048576, 'TotalSlotMemory': 5632}
+  ad: {'Name': 'slot1_2@97b1f4e61116', 'SlotType': 'Dynamic', 'JobId': '111.1', 'GlobalJobId': '97b1f4e61116#111.1#1790914693', 'RemoteUser': 'submituser@97b1f4e61116', 'Memory': 5632, 'Cpus': 1, 'Disk': 1048576, 'TotalSlotMemory': 5632}
+  ad: {'Name': 'slot1@97b1f4e61116', 'SlotType': 'Partitionable', 'Memory': 4709, 'Cpus': 8, 'Disk': 33385492, 'TotalSlotMemory': 15973}
+  pslot child lists: {'ChildCpus': [1, 1], 'ChildDisk': [1048576, 1048576], 'ChildGPUs': [0, 0], 'ChildName': ['slot1_1@97b1f4e61116', 'slot1_2@97b1f4e61116'], 'ChildState': ['Claimed', 'Claimed'], 'ChildMemory': [5632, 5632], 'ChildDSlotId': [1, 2], 'ChildActivity': ['Busy', 'Busy'], 'ChildRemoteUser': ['submituser@97b1f4e61116', 'submituser@97b1f4e61116'], 'ChildCurrentRank': [0.0, 0.0], 'ChildRemoteOwner': ['submituser@97b1f4e61116', 'submituser@97b1f4e61116'], 'ChildAccountingGroup': [<Value.Undefined: 2>, <Value.Undefined: 2>], 'ChildEnteredCurrentState': [1790914697, 1790914697], 'ChildRetirementTimeRemaining': [0, 0]}
+1. dynamic slots running cluster 111: 2, holding 11264 MiB; room beside them 4709 MiB
+2. service 5221 MiB (too big beside the pilots): matches whole=True whole-minus-own-pilots=False
+2. service 2354 MiB (control, fits beside them): matches whole=True whole-minus-own-pilots=True
+3. after Hold of the idle pilot: [2, 2, 5] [(2, None), (2, None), (5, 1)]
+   12 s after a running pilot left, still held: [2, 5]
+   after Release: started within 30 s = True; [2, 2]
+4. the schedd's own view of a running job (inline probe: RemoteHost names the dynamic slot), 7.1s after submit: {'JobStatus': 2, 'RemoteHost': 'slot1_1@97b1f4e61116', 'ServerTime': 1790914742, 'RequestMemory': 1000, 'CpusProvisioned': 1, 'DiskProvisioned': 1048576, 'GPUsProvisioned': 0, 'MemoryProvisioned': 1024}

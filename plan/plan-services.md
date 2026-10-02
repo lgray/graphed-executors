@@ -1116,6 +1116,125 @@ narrowed tuple unchanged (~20 src). A driverless run's services stay beside its 
   an ended or held job raises as today. DAG SERVICE nodes (§3.3 B2) are unchanged.
 - dask, parsl and local backends have no `host_service` on `main`: only the driver check applies to them.
 
+**Ordering** (owner ruling 2026-10-01: a run's service jobs are submitted before its pilots, so its own pilots never
+hold the room its servers need; no queue deadline, no new knob; a server still waits while other jobs hold the
+room). The shape, from the module docstrings of `htcondor_backend/{launch,backend}.py` and `submit/{engine,services}.py`
+and traced in `probes/m69b/probe_order_trace.txt` (leg `head`): `htcondor_runner` builds `CondorPilots`, whose
+`start` makes the refusals, `log_dir`, the secret, `pilot.sh`/`env.tgz`, the schedd choice and the pilots'
+`schedd.submit`; then `HTCondorBackend`, whose constructor starts its `TaskServer` and calls `launcher.start`, so the
+pilots are submitted inside `htcondor_runner(…)`, and whose `host_service` submits a `ServiceJob` to the launcher's
+schedd and waits for its announce at the task server, needing no pilot; then `HTCondorRunner`, which waits once for
+`min_pilots` before its first run. Each `run`, and each `submit()`ted plan through `PlanQueue`, enters a fresh
+`ServiceSet` over `plan.services` (`_run_scoped`): it resolves every service's leg (`host_service` for a cluster one),
+then probes them from a worker (`backend.n_workers()`, then `backend.submit`), then the engine submits the plan's
+tasks. The launcher owns how a job is submitted, the backend when, the engine which leg and when a worker is first
+needed.
+- `CondorPilots.prepare(url, secret)` is `start` without the pilots' `schedd.submit`, once; `start` is `prepare`, then
+  the submit. A `ServiceJob` reads only what `prepare` made (`_schedd`, `log_dir`, `env.tgz`).
+- An `HTCondorBackend` whose pilots and services are both jobs, `CondorPilots` with a `host_service` (attached with
+  `"cluster"` among the narrowed hosts, or a driver job's `announced` SERVICE nodes), prepares at construction and
+  submits its pilots at its first need of a worker: the first `n_workers()`, `submit()` or `wait_for_pilots()`. That
+  first need waits once for `min_pilots` within `N_WORKERS_WAIT_S` (`HTCondorRunner` sets its `min_pilots` on its
+  backend; a bare backend waits for 1), and `HTCondorRunner.run` no longer waits before the run. Every other backend
+  submits at construction as on `main`: no service job of its competes with its pilots.
+- So the first plan's servers are running, not only submitted, when its pilots are submitted: each cluster service is
+  submitted, matched (above) and waited for to its announce, and only then does the probe's `n_workers()` submit the
+  pilots. Submit order alone does not suffice: a submitter's jobs are offered by job priority, then submission time
+  ([cm-configuration](https://htcondor.readthedocs.io/en/latest/admin-manual/cm-configuration.html)), but
+  "unmatchable high priority jobs do not block lower priority jobs"
+  ([job-scheduling](https://htcondor.readthedocs.io/en/latest/users-manual/job-scheduling.html)): a server that cannot
+  match while another job holds the room is passed over, pilots submitted behind it take what is left, and it then
+  waits on them after that job leaves (`probes/m69b/probe_order_fifo.txt`, case C; A and B are its controls).
+- Later plans. The pilots are the runner's, submitted once and kept to `close()` (m66), while the engine starts each
+  plan's services in that plan's run (`probe_order_trace.txt`: plans 2 and 3 each submit a service job and no
+  pilot). Once its backend's pilots are submitted, `_host_service` holds the runner's queued pilots
+  (`act(Hold, "ClusterId == <pilots> && JobStatus == 1")`) before it submits, and releases them (`JobStatus == 5 &&
+  HoldReasonCode == 1`) when it returns or raises; and §5.2's match counts each slot whole minus the claims of the
+  runner's running pilots (one schedd query of the pilots' cluster, `JobStatus == 2`: each `RemoteHost`'s parent
+  slot loses that job's `MemoryProvisioned`/`CpusProvisioned`/`GPUsProvisioned`/`DiskProvisioned`, else its
+  `Request*`). Those pilots keep their slots to `close()`, so room only they hold is room the job can never get: it
+  is removed unrun and refused as §5.2, the refusal naming the pilots' cluster and the largest room beside them.
+  Hence in every plan a server waits only on other jobs: no pilot of its runner is matchable while it waits (the
+  first plan's are not yet submitted, a later plan's queued ones are held), and none holds room it was admitted to
+  wait for. `CondorPilots.alive()` counts a pilot under a submitter hold (`HoldReasonCode == 1`) as alive, so a task
+  of a concurrent run is not failed as pilot-less meanwhile. `probes/m69b/probe_order_claims.txt`: dynamic slots name
+  the pilots' jobs; the whole-minus-own match refuses a job the whole-slot match admits and admits a control; a held
+  pilot stays unmatched while room frees and starts once released; the schedd's view names a running job's slot and
+  provisioned sizes. A `ServiceSet` the user starts before the first run (§3.1's warm path) is resolved before any
+  pilot exists.
+- `close()`. `HTCondorRunner.close()` finishes every submitted plan, as `SubmitRunner.close()` documents
+  (`docs/design.rst`), a server's wait for a slot included: it no longer calls `backend.stop_waiting()`, which ended a
+  fresh job's first negotiation too (`probes/m69b/probe_close_pool_exec_rv2.txt`). Ending a wait belongs to the
+  abort path: `HTCondorRunner.__exit__` with an exception propagating (Ctrl-C's `KeyboardInterrupt` included) calls
+  `backend.stop_waiting()`, then `close()`; a direct `run()` interrupted in its own thread already removes its job
+  through `_host_service`'s exit stack (`probes/m69b/probe_sigint_exec_rv2.txt`). `HTCondorBackend.close()` keeps its
+  `stop_waiting()`: once its task server closes no announce can arrive, so a wait still open then (a caller's own run
+  on another thread; submitted plans were drained first) can never be satisfied. df4d059's extra
+  `test_close_ends_a_wait_for_a_slot_removing_the_job` becomes the frozen close row below; an extra row (a direct
+  `host_service` wait on a thread, then `backend.close()`: it raises naming the key, the job removed) kills the
+  `backend-close-no-stop` mutant.
+- What waits on what: a server waits for its slot (no deadline while idle) and announces to the task server, which
+  needs no pilot. The pilots are submitted at the first need after the first plan's servers announced; they wait for
+  room beside the running servers, and that need raises after `N_WORKERS_WAIT_S` naming the pilots' log dir, the
+  run's scope releasing its servers. The plan's tasks wait for pilots; nothing a server waits on waits on the plan.
+  A `wait_for_pilots()` the caller makes before a run is a need of a worker: its pilots go first, and the later-plan
+  rules cover that run's servers.
+- Driverless: servers in the driver's slot (beside `LocalPilots` or its own pilot jobs) are not jobs, so nothing is
+  ordered and nothing changes. A DAG's SERVICE nodes are submitted at the DAG's start
+  ([DAGMan node types](https://htcondor.readthedocs.io/en/23.0/automated-workflows/dagman-node-types.html)), before
+  the driver node can run; with `pilots="condor"` the driver job's backend (`announced`) defers its pilots as above,
+  so they follow the SERVICE nodes' announces. `_host_announced`'s `timeout_s` is unchanged; `driver.py`'s start-up
+  line says the pilots are submitted at the first need of a worker instead of naming a cluster not yet submitted.
+
+Frozen additions, `tests/frozen/m69b/test_service_order.py` (the recorder from m68a's `services_harness`, as
+`test_hgg_local_pilots.py` imports it; pool rows `require_pool()` as `test_histserv_cluster.py`):
+| Property | Witness | Fixture |
+|---|---|---|
+| no `schedd.submit` before a worker is needed; in plan 1 the service job's submit precedes the pilots', and the pilots' submit follows the announce, which the recorder posts 2 s after the service submit; plans 2 (`run`) and 3 (`submit()`) each `act` a Hold of the pilots' queued jobs before their service submit and a Release after its announce, and submit no pilot; each value equals the twin | the recorder's ordered log, with a stamp per submit, `act` and announce post | every OS: `htcondor_runner(n_pilots=1, site="generic", service_hosts=("cluster",))` under `record_bindings`; on the pilots' submit a real pilot process dials its `arguments` url with `initialdir/graphed-secret`; on a service submit a local HTTP server and a signed announce (as `probes/m69b/probe_order_trace.py`) |
+| the first need waits for pilots within `N_WORKERS_WAIT_S`, not the service's `timeout_s` | the run completes | the row above with `timeout_s=5` and the pilot process started 8 s after its submit |
+| a backend whose services are jobs submits no pilot at construction, and `wait_for_pilots(0)` submits them; `announced` (a driver job's DAG) the same, its `host_service` resolving from the announce with nothing submitted; attached over `CondorPilots` with `service_hosts=("driver",)`, and over `LocalPilots`, pilots start at construction | recorder log; `alive()` | every OS, recorder; `HTCondorBackend(…, in_job=SITES["generic"], announced={"web": "svc0"})` over a `CondorPilots` with `schedd_locate` |
+| a spool that fails at the first need raises naming it and removes the cluster; after `close()` the port is free and the pilots' secret gone; a backend that never needed a worker closes with no `act` and its secret gone | recorder `act` entries; `port_free`; the file | every OS, recorder, `generic(spool=True)`, `port_range=(p, p)` |
+| a `submit()`ted plan whose service job the recorder keeps idle: `close()` on a thread has not returned 3 s later and no Remove was `act`ed; the recorder then answers running and the test posts the announce: `close()` returns and the value equals the twin; the same plan with the `with` block left by a raised exception: within `POLL_S` + 2 s the plan raises naming the key, the job is removed and its announce secret forgotten | thread state; recorder `act`; the future | every OS, the first row's fixture, `server.POLL_S = 0.5` |
+| a free slot: `runner.submit(plan)`, then `runner.close()` at once, returns the twin's value; the service job's history `NumJobStarts == 1`; nothing of the run left in the queue | the value; history | minicondor, `server.POLL_S = 2` (its first poll before the pool's ~5 s start), one 256 MiB server |
+| r1's sizes, two pilots that leave the server too little room once both run, `min_pilots=1`, no other job: plan 1 equals the twin and its server's `JobCurrentStartDate` ≤ each pilot's `QDate`; once both pilots run, plan 2 with the same server raises `ServiceUnavailable` naming the pilots' cluster, its job removed unrun (`NumJobStarts == 0`); `close()` returns and nothing of the run is left in the queue | history ads; values; the refusal | minicondor: one 2048 MiB server, `timeout_s=20`; pilot memory one 128 MiB quantum above half of what the largest `TotalSlotMemory` leaves beside the server |
+| Ctrl-C: a child running `with htcondor_runner(...) as runner:` whose server a blocker leaves no room, sent SIGINT after its first "waits for a slot" line, both as `runner.run(plan)` and as `runner.submit(plan).result()`: the child exits within 3 × `POLL_S`; the service job is in history unrun; the child submitted no pilot job; nothing of the child is left in the queue | exit time; history; queue | minicondor, POSIX; the blocker removed by the test |
+
+Fails on: pilots submitted at construction, pilots submitted after a service's submit but before its announce,
+pilots resubmitted per plan, a queued pilot of the runner matchable while a later plan's server waits, a server
+admitted where only its runner's running pilots hold room, `close()` ending a wait a free pool satisfies, an
+exception leaving the `with` block without ending the wait, a first need bounded by a service's `timeout_s`, a
+deferred backend whose failed spool leaves a cluster or whose close leaves the secret, deferral beyond `CondorPilots`
+backends whose services are jobs.
+
+Refreeze ask (owner ruling needed; each test calls `HTCondorBackend`'s constructor or `host_service` directly and
+counts the pilots' construction submit), before the fixup below:
+- m68a `test_services_sites.py::test_a_failed_spool_leaves_no_cluster_and_no_port`: `pytest.raises(RuntimeError,
+  match="spool")` around `HTCondorBackend(pilots, 2, host=…, port_range=(port, port))` raises nothing now (the
+  generic profile offers `"cluster"`). The constructor call gains `service_hosts=("driver",)`, so the row keeps its
+  construction-time failure; the deferred failure is the m69b row above.
+- m68b `test_cluster_service_job.py::test_host_service_forgets_its_announce_secret_when_construction_refuses`:
+  `len(submits(schedd.log)) == 1` (the pilots) becomes "no `schedd.submit` whose `JobBatchName` starts with
+  `graphed-service-`", the property its message names.
+- m68b `test_cluster_service_job.py::test_host_service_returns_the_announced_endpoint_and_releases_in_order` (`http:/`,
+  `tcp`, `grpc:`): `pilot_desc, service_desc = submits(schedd.log)[:2]` becomes `(service_desc,) =
+  submits(schedd.log)`; `cfg["url"] == pilot_desc["arguments"].split()[0]` goes (the 200 announce posted to
+  `cfg["url"]` already shows it is the task server's); the leak check reads `service_desc` against both secrets as
+  before (`prepare` still writes the pilots' secret).
+- One dispute each under `.graphed/m68a/disputes/` and `.graphed/m68b/disputes/` (the test, §5.2 "Ordering", the
+  correction, the owner's ruling) and the m68a/m68b `README.md` rows; `probes/m69b/probe_order_suites.txt` holds the
+  runs that show the deferral fails these five ids and no other frozen test.
+
+Commits: 1. `test(frozen): a run's service jobs are submitted before its pilots` (~450: the file above, m69b
+`README.md` rows, the three edits and their disputes; `python -m graphed_orchestrator.precommit --allow-refreeze
+tests/frozen/m68a --allow-refreeze tests/frozen/m68b --allow-refreeze tests/frozen/m69b`; tagged
+`freeze-m68a-fixup2`, `freeze-m68b-fixup4` and `freeze-m69b-fixup`, annotated); 2. `feat(htcondor): a run's
+service jobs are submitted before its pilots` (`launch.py` ~15, `backend.py` ~45, `driver.py` ~2, `tests/extra/m69b`
+~150; ~230); 3. `fix(htcondor): close() finishes a waiting plan; a later plan's server waits with its runner's
+pilots held` (`backend.py` ~15, `launch.py` ~12, `services.py` ~25, `tests/extra/m69b` ~200 with df4d059's close
+test removed, `docs/htcondor.rst` "Schedulability": the first plan's servers start before its pilots, a later plan's
+wait with the queued pilots held or is refused beside the running ones, `close()` waits, Ctrl-C or any exception
+leaving the `with` block ends a wait, ~40; `.graphed/m69b/attempts.md` entries for 40470e6 and these; ~300).
+
 **Diagnostics.** `examples/hgg/analysis.py` adds seven diagnostic histograms per dataset over the selected diphotons,
 Weight storage, weight = `weight`: `m_gg` Regular(80, 100, 180), `pt_gg` Regular(50, 0, 250),
 `lead_pt`/`sublead_pt` Regular(50, 0, 200), `lead_eta`/`sublead_eta` Regular(50, −2.5, 2.5), `n_jets` Regular(8,
@@ -1267,6 +1386,7 @@ graphed-histogram `design.rst` "Filling on histserv servers" (context, sizing, p
   network namespaces) is met per job or per DAG, never assumed: §3.3 "HTCondor behaviour relied on",
   `probes/m68b/condor_surface/RESULTS.md`; per-job network namespaces (N-02) remain a premise the site checks measure.
 - **Owner:** the m68b refreeze §5.2 "Schedulability" needs (`test_cluster_service_job.py` FAILURES `idle`/`spooling`,
-  `test_cluster_services_live.py`'s `gpus=2` leg; tag the next free `freeze-m68b-fixupN`), not yet authorized; lxplus submissions (m67 site check, m68b's site checks (1)–(3)); re-cut of the seven diagnostic histograms if wanted.
+  `test_cluster_services_live.py`'s `gpus=2` leg; tag the next free `freeze-m68b-fixupN`), not yet authorized; the
+  m68a/m68b refreeze §5.2 "Ordering" asks (three tests, five ids), not yet authorized; lxplus submissions (m67 site check, m68b's site checks (1)–(3)); re-cut of the seven diagnostic histograms if wanted.
   A service that fails mid-run surfaces in plan code (a task, a bind hook, `resolve_services`) and exits 3 (D6):
   retrying it would need task errors to carry their cause, a decision not taken here.

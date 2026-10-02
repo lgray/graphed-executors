@@ -1,0 +1,10 @@
+# probe_order_fifo.py in m68b-minicondor:local (HTCondor 25.13.2, NEGOTIATOR_INTERVAL=2, CLAIM_PARTITIONABLE_LEFTOVERS=true,
+# MODIFY_REQUEST_EXPR_REQUESTMEMORY=quantize(RequestMemory,{128}): C's blocker holds 8064 and each pilot 4096, so one pilot fits beside it)
+pool: one partitionable slot, TotalSlotMemory=15973
+A/B sizes: service=1996 pilot=7052 (2 pilots alone fit: True)
+A service-then-pilots: running=['pilots.0', 'service.0'] idle=['pilots.1']
+B pilots-then-service (control): running=['pilots.0', 'pilots.1'] idle=['service.0']
+C sizes: blocker=7986 service=9982 pilot=3977
+C with the blocker running: running=['blocker.0', 'pilots.0'] idle=['pilots.1', 'service.0']
+C after the blocker left: running=['pilots.0', 'pilots.1'] idle=['service.0']
+exit=0

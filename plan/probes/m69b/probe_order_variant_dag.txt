@@ -1,0 +1,151 @@
+diff --git a/src/graphed_executors/htcondor_backend/backend.py b/src/graphed_executors/htcondor_backend/backend.py
+index 1a2356d..906ea75 100644
+--- a/src/graphed_executors/htcondor_backend/backend.py
++++ b/src/graphed_executors/htcondor_backend/backend.py
+@@ -131,17 +131,27 @@ class HTCondorBackend:
+             raise OSError(
+                 f"no free port for the task server: site={profile.name} ports={low}-{high}"
+             ) from exc
++        self._announced = dict(announced or {})
++        cluster = isinstance(launcher, CondorPilots) and (
++            bool(self._announced) or (in_job is None and "cluster" in self.service_hosts)
++        )
++        self._n_pilots = n_pilots
++        self._pilots_lock = threading.Lock()
++        self._pilots_submitted = not cluster
++        self._waited = False
++        self.min_pilots = 1
+         with ExitStack() as stack:  # a refused start must not leave the server holding its port
+             stack.callback(release_quietly, "the task server's port", self._server.shutdown)
+             stack.callback(release_quietly, "the task server", self._server.close)
+-            launcher.start(self._server.url, self._server.secret, n_pilots)
+-            stack.callback(release_quietly, "the pilots", launcher.stop)
+-            # closed first: pilots see 410 and exit before they are stopped (a second close is a no-op)
+-            stack.callback(release_quietly, "the task server", self._server.close)
++            if cluster:  # ORDER VARIANT: the pilots wait for the first need of a worker
++                assert isinstance(launcher, CondorPilots)
++                launcher.prepare(self._server.url, self._server.secret)
++                stack.callback(release_quietly, "the pilots' secret", launcher._secret.unlink, True)
++            else:
++                self._start_pilots(stack)
+             self._stack = stack.pop_all()
+         self._services: dict[str, ServiceJob] = {}
+         self._closing = threading.Event()  # set: a service job still waiting for a slot ends its wait
+-        self._announced = dict(announced or {})
+         # the capability IS this pair of attributes: absent, the engine refuses naming it
+         if self._announced:
+             self.host_service = self._host_announced
+@@ -150,11 +160,32 @@ class HTCondorBackend:
+             self.host_service = self._host_service
+             self.release_service = self._release_service
+ 
++    def _start_pilots(self, stack: ExitStack) -> None:
++        self.launcher.start(self._server.url, self._server.secret, self._n_pilots)
++        stack.callback(release_quietly, "the pilots", self.launcher.stop)
++        # closed first: pilots see 410 and exit before they are stopped (a second close is a no-op)
++        stack.callback(release_quietly, "the task server", self._server.close)
++
++    def _submit_pilots(self) -> None:
++        with self._pilots_lock:
++            if not self._pilots_submitted:
++                self._pilots_submitted = True
++                self._start_pilots(self._stack)
++
++    def _need_workers(self) -> None:
++        """ORDER VARIANT: the first need of a worker submits deferred pilots and waits for min_pilots."""
++        self._submit_pilots()
++        if not self._waited:
++            self.wait_for_pilots(self.min_pilots)
++            self._waited = True
++
+     def n_workers(self) -> int:
+         """Pilots registered and live right now; never waits."""
++        self._need_workers()
+         return self._server.live_pilots()
+ 
+     def wait_for_pilots(self, n: int, timeout: float = N_WORKERS_WAIT_S) -> int:
++        self._submit_pilots()
+         deadline = time.monotonic() + timeout
+         while (live := self._server.live_pilots()) < n:
+             if time.monotonic() > deadline:
+@@ -178,6 +209,7 @@ class HTCondorBackend:
+     ) -> SubmitFuture:
+         """Never blocks on a future argument: the task queues once its arguments are done. The hints
+         are ignored."""
++        self._need_workers()
+         raw: Future[Any] = Future()
+         self._server.add(key, fn, args, raw)
+         return _ParslFuture(raw, self._handlers)
+@@ -360,13 +392,11 @@ class HTCondorRunner(SubmitRunner):
+             backend, monitor=monitor, retries=retries, max_in_flight=max_in_flight, services=services
+         )
+         self._min_pilots = min_pilots
+-        self._waited = False
++        backend.min_pilots = min_pilots
+ 
+     def wait_for_pilots(self) -> int:
+         """Wait for ``min_pilots`` once; pilots lost afterwards fail the run's tasks as lost workers."""
+-        live = self.backend.wait_for_pilots(self._min_pilots)
+-        self._waited = True
+-        return live
++        return self.backend.wait_for_pilots(self._min_pilots)
+ 
+     @overload
+     def run(self, plan: Plan[R]) -> ExecResult[R]: ...
+@@ -374,8 +404,6 @@ class HTCondorRunner(SubmitRunner):
+     def run(self, plan: DurablePlanV2) -> ExecResult[Any]: ...
+     def run(self, plan: Plan[R] | DurablePlanV2) -> ExecResult[R] | ExecResult[Any]:
+         _require_plan_importable(plan, ("process", "combine"))
+-        if not self._waited:
+-            self.wait_for_pilots()
+         return super().run(plan)
+ 
+     def close(self) -> None:
+diff --git a/src/graphed_executors/htcondor_backend/driver.py b/src/graphed_executors/htcondor_backend/driver.py
+index 9b9eebe..fd0df54 100644
+--- a/src/graphed_executors/htcondor_backend/driver.py
++++ b/src/graphed_executors/htcondor_backend/driver.py
+@@ -102,7 +102,7 @@ def _runner(run: dict[str, Any], job: Path, log: TextIO) -> HTCondorRunner:
+             publish(dag_dir / SECRET_FILE, secret.hex())
+             publish(dag_dir / URL_FILE, backend._server.url)
+         if run["pilots"] == "condor":
+-            where = f"cluster={launcher.cluster}"
++            where = f"cluster={launcher.cluster} (None: submitted at the first need of a worker)"
+         else:
+             where = f"pids={[p.pid for p in launcher._procs]}"
+         print(f"{n} {run['pilots']} pilots on {backend._server.url} {where}", file=log, flush=True)
+diff --git a/src/graphed_executors/htcondor_backend/launch.py b/src/graphed_executors/htcondor_backend/launch.py
+index c093f70..d9091cc 100644
+--- a/src/graphed_executors/htcondor_backend/launch.py
++++ b/src/graphed_executors/htcondor_backend/launch.py
+@@ -237,7 +237,10 @@ class CondorPilots:
+         if profile.ship_env:
+             _check_shippable(self.env)
+ 
+-    def start(self, url: str, secret: bytes, n: int) -> None:
++    def prepare(self, url: str, secret: bytes) -> None:
++        """Everything :meth:`start` does but the pilots' submit; once."""
++        if self._schedd is not None:
++            return
+         self._refuse()
+         # absolute in the cwd the files are written from: stop() and a service job may read it from another
+         self.log_dir = Path(
+@@ -246,11 +249,15 @@ class CondorPilots:
+         self.log_dir.mkdir(parents=True, exist_ok=True)
+         self._secret = self.log_dir / SECRET_FILE
+         write_secret(self._secret, secret)
+-        script = self._stage(self.log_dir, "pilot.sh", PILOT_MODULE)
++        self._script = self._stage(self.log_dir, "pilot.sh", PILOT_MODULE)
++        self._name, self._schedd = self._choose(_htcondor())
++
++    def start(self, url: str, secret: bytes, n: int) -> None:
++        self.prepare(url, secret)
+         # a relative executable resolves against our cwd, not initialdir
+-        desc = self.submit_description(url, n, {"executable": str(script)})
++        desc = self.submit_description(url, n, {"executable": str(self._script)})
+         htc = _htcondor()
+-        name, schedd = self._choose(htc)
++        name, schedd = self._name, self._schedd
+         with ExitStack() as stack:
+             result = self._submit(htc, schedd, desc, n, stack)
+             self.cluster = (name, int(result.cluster()))

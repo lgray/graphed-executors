@@ -1,0 +1,57 @@
+# Frozen suites against the deferred-pilot variants. Trees: head = executors df4d059 (40470e6 differs only in
+# examples/hgg/run_lpc.py, its extra test and docs/htcondor.rst); variant = head + probe_order_variant.txt;
+# v2 = head + probe_order_variant_dag.txt (variant + the announced/DAG term). Each run lists its FAILED/ERROR ids.
+# macOS: .venv-m69b, PYTHONPATH=<tree>/src, pytest tests/frozen/{m66,m67,m68a,m68b,m68c,m69a,m69b} (no htcondor wheel:
+#   pool rows skip). hgg: .venv-m69b-hgg, GRAPHED_HGG_REQUIRED=1, tests/frozen/m69a + m69b test_hgg_*.
+# mac_head/mac_variant ran with -qq (no count line): exit 0 = no failure.
+# pool: m68b-minicondor:local via probe_order_pool.sh (CI's test-htcondor frozen list, no coverage).
+== mac_head
+exit 0
+== mac_variant
+FAILED tests/frozen/m68a/test_services_sites.py::test_a_failed_spool_leaves_no_cluster_and_no_port
+FAILED tests/frozen/m68b/test_cluster_service_job.py::test_host_service_forgets_its_announce_secret_when_construction_refuses
+FAILED tests/frozen/m68b/test_cluster_service_job.py::test_host_service_returns_the_announced_endpoint_and_releases_in_order[http:/-http]
+FAILED tests/frozen/m68b/test_cluster_service_job.py::test_host_service_returns_the_announced_endpoint_and_releases_in_order[tcp-tcp]
+FAILED tests/frozen/m68b/test_cluster_service_job.py::test_host_service_returns_the_announced_endpoint_and_releases_in_order[grpc:-grpc]
+exit 1
+== mac_v2
+FAILED tests/frozen/m68a/test_services_sites.py::test_a_failed_spool_leaves_no_cluster_and_no_port
+FAILED tests/frozen/m68b/test_cluster_service_job.py::test_host_service_forgets_its_announce_secret_when_construction_refuses
+FAILED tests/frozen/m68b/test_cluster_service_job.py::test_host_service_returns_the_announced_endpoint_and_releases_in_order[http:/-http]
+FAILED tests/frozen/m68b/test_cluster_service_job.py::test_host_service_returns_the_announced_endpoint_and_releases_in_order[tcp-tcp]
+FAILED tests/frozen/m68b/test_cluster_service_job.py::test_host_service_returns_the_announced_endpoint_and_releases_in_order[grpc:-grpc]
+5 failed, 338 passed, 27 skipped in 171.96s (0:02:51)
+exit 1
+== hgg_head
+30 passed, 21 warnings in 175.77s (0:02:55)
+exit 0
+== hgg_variant
+FAILED tests/frozen/m69b/test_hgg_local_pilots.py::test_local_pilots_fill_servers_beside_the_driver
+1 failed, 29 passed, 21 warnings in 171.92s (0:02:51)
+exit 1
+== hgg_v2
+30 passed, 21 warnings in 171.59s (0:02:51)
+exit 0
+== order_pool_out/head
+362 passed, 5 skipped in 597.77s (0:09:57)
+pytest-exit=0
+queue after: Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended
+== order_pool_out/variant
+FAILED tests/frozen/m68a/test_services_sites.py::test_a_failed_spool_leaves_no_cluster_and_no_port
+FAILED tests/frozen/m68b/test_cluster_service_job.py::test_host_service_forgets_its_announce_secret_when_construction_refuses
+FAILED tests/frozen/m68b/test_cluster_service_job.py::test_host_service_returns_the_announced_endpoint_and_releases_in_order[http:/-http]
+FAILED tests/frozen/m68b/test_cluster_service_job.py::test_host_service_returns_the_announced_endpoint_and_releases_in_order[tcp-tcp]
+FAILED tests/frozen/m68b/test_cluster_service_job.py::test_host_service_returns_the_announced_endpoint_and_releases_in_order[grpc:-grpc]
+5 failed, 357 passed, 5 skipped in 580.86s (0:09:40)
+pytest-exit=1
+queue after: Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended
+== order_pool_out/v2
+FAILED tests/frozen/m68a/test_services_sites.py::test_a_failed_spool_leaves_no_cluster_and_no_port
+FAILED tests/frozen/m68b/test_cluster_service_job.py::test_host_service_forgets_its_announce_secret_when_construction_refuses
+FAILED tests/frozen/m68b/test_cluster_service_job.py::test_host_service_returns_the_announced_endpoint_and_releases_in_order[http:/-http]
+FAILED tests/frozen/m68b/test_cluster_service_job.py::test_host_service_returns_the_announced_endpoint_and_releases_in_order[tcp-tcp]
+FAILED tests/frozen/m68b/test_cluster_service_job.py::test_host_service_returns_the_announced_endpoint_and_releases_in_order[grpc:-grpc]
+5 failed, 357 passed, 5 skipped in 589.56s (0:09:49)
+pytest-exit=1
+queue after: Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended
+== hgg_variant rerun of its one failure, test_hgg_local_pilots.py alone, twice: passed, passed (port-free timing; v2 passed it in the full run)
