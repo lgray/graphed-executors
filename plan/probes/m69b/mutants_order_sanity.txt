@@ -1,0 +1,19 @@
+hold-per-service: KILLED ['FAILED tests/frozen/m69b/test_service_order.py::test_service_jobs_go_before_the_pilots_and_later_plans_hold_them'] E               AssertionError: plan 3: holds [Event(t=418039.203633875, kind='act', cluster=7002, text='Hold ClusterId == 7002 && JobStatus == 1', reason='grap
+release-at-return: KILLED ['FAILED tests/frozen/m69b/test_service_order.py::test_service_jobs_go_before_the_pilots_and_later_plans_hold_them'] E               AssertionError: plan 3: holds [Event(t=418049.822912666, kind='act', cluster=7002, text='Hold ClusterId == 7002 && JobStatus == 1', reason='grap
+hold-without-reason: KILLED ['FAILED tests/frozen/m69b/test_service_order.py::test_service_jobs_go_before_the_pilots_and_later_plans_hold_them'] E               AssertionError: the pilots were held without a reason: Event(t=418058.313655833, kind='act', cluster=7002, text='Hold ClusterId == 7002 && JobSt
+release-any-user-hold: KILLED ['FAILED tests/frozen/m69b/test_service_order.py::test_service_jobs_go_before_the_pilots_and_later_plans_hold_them'] E               AssertionError: (Event(t=418068.819325958, kind='act', cluster=7002, text='Hold ClusterId == 7002 && JobStatus == 1', reason='graphed:...666, ki
+hold-running-too: KILLED ['FAILED tests/frozen/m69b/test_service_order.py::test_service_jobs_go_before_the_pilots_and_later_plans_hold_them'] E               AssertionError: Event(t=418079.223605125, kind='act', cluster=7002, text='Hold ClusterId == 7002', reason='graphed: a service of this run waits 
+no-hold: KILLED ['FAILED tests/frozen/m69b/test_service_order.py::test_service_jobs_go_before_the_pilots_and_later_plans_hold_them'] E               AssertionError: plan 2: holds [], releases [Event(t=418091.660366833, kind='act', cluster=7002, text='Release ClusterId == 7002 && JobStatus == 
+pilots-after-service-submit: KILLED ['FAILED tests/frozen/m69b/test_service_order.py::test_service_jobs_go_before_the_pilots_and_later_plans_hold_them'] E           AssertionError: [Event(t=418097.870526875, kind='submit-service', cluster=7001, text='d38467d7-ba42669eee2128ec', reason=None), Event(...one), Event
+first-need-no-wait: KILLED ['FAILED tests/frozen/m69b/test_service_order.py::test_the_first_need_waits_for_pilots_past_a_service_s_timeout'] E               graphed_executors.submit.services.ServiceUnreachable: service 'web' at http://127.0.0.1:64305 is unreachable: no worker answered within 5.0s
+defer-driver-hosted: KILLED ['FAILED tests/frozen/m69b/test_service_order.py::test_only_a_backend_whose_services_are_jobs_defers_its_pilots'] E               AssertionError: assert [] == ['graphed-pilots-']
+announced-not-deferred: KILLED ['FAILED tests/frozen/m69b/test_service_order.py::test_only_a_backend_whose_services_are_jobs_defers_its_pilots'] E               AssertionError: a driver job's DAG backend submitted pilots at construction
+close-keeps-secret: KILLED ['FAILED tests/frozen/m69b/test_service_order.py::test_a_deferred_spool_failure_removes_its_cluster_and_close_drops_the_secret'] E       AssertionError: close() left the pilots' secret
+close-ends-wait: KILLED ['FAILED tests/frozen/m69b/test_service_order.py::test_close_waits_for_a_waiting_server_and_an_error_in_the_block_ends_the_wait'] E               AssertionError: close() returned while its plan's server waited for a slot
+exit-no-stop: KILLED ['FAILED tests/frozen/m69b/test_service_order.py::test_close_waits_for_a_waiting_server_and_an_error_in_the_block_ends_the_wait'] E       AssertionError: HARD TIMEOUT: call did not finish within 30.0s
+exit=0
+ src/graphed_executors/htcondor_backend/backend.py  | 92 +++++++++++++++++-----
+ src/graphed_executors/htcondor_backend/driver.py   |  2 +-
+ src/graphed_executors/htcondor_backend/launch.py   | 33 ++++++--
+ src/graphed_executors/htcondor_backend/services.py | 24 +++++-
+ 4 files changed, 123 insertions(+), 28 deletions(-)

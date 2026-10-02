@@ -1,0 +1,55 @@
+== ruff check tests/frozen
+All checks passed!
+exit=0
+== ruff format --check tests/frozen
+exit=0
+== mypy (repo config: strict = true; files src tests examples)
+Success: no issues found in 325 source files
+exit=0
+== mypy on the three new m69b files alone (positive control that they are checked)
+Success: no issues found in 5 source files
+exit=0
+== explicit ruff format --check (the repo's [tool.ruff.format] exclude = tests/frozen/** skips these on a directory run)
+unformatted: File would be reformatted
+   --> tests/frozen/m69b/m69b_order.py:115:16
+    |
+114 |
+    -     def _stamp(self, kind: str, cluster: int | None = None, text: str = "", reason: str | None = None) -> None:
+115 +     def _stamp(
+116 +         self, kind: str, cluster: int | None = None, text: str = "", reason: str | None = None
+117 +     ) -> None:
+118 |         with self._lock:
+--------------------------------------------------------------------------------
+155 |                     return
+    -                 with open(job_dir / f"pilot.{i}.out", "wb") as out, open(job_dir / f"pilot.{i}.err", "wb") as err:
+156 +                 with (
+157 +                     open(job_dir / f"pilot.{i}.out", "wb") as out,
+158 +                     open(job_dir / f"pilot.{i}.err", "wb") as err,
+159 +                 ):
+160 |                     proc = subprocess.Popen(argv, cwd=job_dir, env=env, stdout=out, stderr=err)
+--------------------------------------------------------------------------------
+196 |             elif proc.poll() is None:
+    -                 claim = {"RemoteHost": f"slot1_{i + 1}@{IDENTITY}", "MemoryProvisioned": 128, "CpusProvisioned": 1}
+197 +                 claim = {
+198 +                     "RemoteHost": f"slot1_{i + 1}@{IDENTITY}",
+199 +                     "MemoryProvisioned": 128,
+200 +                     "CpusProvisioned": 1,
+201 +                 }
+202 |                 ads.append({**ad, "JobStatus": 2, **claim})
+    |
+
+unformatted: File would be reformatted
+   --> tests/frozen/m69b/test_service_order.py:493:34
+    |
+492 |         assert submitted == [], "the child submitted a pilot job"
+    -         assert waiting.is_set(), f"the {form} child never waited for a slot ({child.poll()}): {''.join(output)}"
+493 +         assert waiting.is_set(), (
+494 +             f"the {form} child never waited for a slot ({child.poll()}): {''.join(output)}"
+495 +         )
+496 |         assert child.poll() is not None, f"the {form} child still ran {3 * CHILD_POLL_S}s after SIGINT"
+    |
+
+2 files would be reformatted, 2 files already formatted
+exit=1
+== pins (pattern: \.(py|md|rst|txt):[0-9]+|line [0-9]+) in the new/changed frozen files + disputes, with a control file
+/tmp/zz_pinctl.txt:1:see backend.py:123 and line 42

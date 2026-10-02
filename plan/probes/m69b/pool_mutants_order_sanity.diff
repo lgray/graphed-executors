@@ -1,0 +1,48 @@
+--- variant/src/graphed_executors/htcondor_backend/backend.py	2026-10-02 09:14:27
++++ v-exit-no-stop/src/graphed_executors/htcondor_backend/backend.py	2026-10-02 09:16:10
+@@ -428,8 +428,6 @@
+         return super().run(plan)
+ 
+     def __exit__(self, *exc: object) -> None:  # FULL VARIANT
+-        if exc[0] is not None:
+-            self.backend.stop_waiting()
+         self.close()
+ 
+     def close(self) -> None:  # SANITY VARIANT: the backend closes whether the drain returns or raises
+--- variant/src/graphed_executors/htcondor_backend/backend.py	2026-10-02 09:14:27
++++ v-close-no-finally/src/graphed_executors/htcondor_backend/backend.py	2026-10-02 09:16:10
+@@ -433,10 +433,8 @@
+         self.close()
+ 
+     def close(self) -> None:  # SANITY VARIANT: the backend closes whether the drain returns or raises
+-        try:
+-            self._plans.close()
+-        finally:
+-            self.backend.close()
++        self._plans.close()
++        self.backend.close()
+ 
+ 
+ def htcondor_runner(
+--- variant/src/graphed_executors/htcondor_backend/backend.py	2026-10-02 09:14:27
++++ v-close-signals-waiter/src/graphed_executors/htcondor_backend/backend.py	2026-10-02 09:16:10
+@@ -358,9 +358,6 @@
+         """Stop serving (pilots see 410 and exit), stop the pilots, free the port; each step runs even
+         when an earlier one fails, and each failure is logged."""
+         self.stop_waiting()
+-        for key, job in list(self._services.items()):  # SANITY VARIANT: removed in the calling thread
+-            self._server.forget_announce([key])
+-            release_quietly(f"service job {key}", job.stop)
+         self._stack.close()
+ 
+ 
+--- variant/src/graphed_executors/htcondor_backend/backend.py	2026-10-02 09:14:27
++++ v-whole-slot/src/graphed_executors/htcondor_backend/backend.py	2026-10-02 09:16:10
+@@ -261,7 +261,6 @@
+                 if not self._held:
+                     self.launcher.hold_queued()
+                     self._held = True
+-                own = self.launcher.running_claims()
+         return self._host_service_held(spec, scope, machines, key, secret, own)
+ 
+     def _host_service_held(self, spec: ServiceSpec, scope: str, machines: Any, key: str, secret: bytes,

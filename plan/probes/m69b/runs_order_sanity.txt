@@ -1,0 +1,215 @@
+# m69b ordering TEST_SANITY runs of 6225cd5's tests/frozen. stub = 6225cd5 as committed (src == 84e6fb7's);
+# variant = stub + variant_order_sanity.diff (40470e6's probe_variant_full_order_rv1 design + reason-ed hold once per plan,
+# release at the next need, _services removed in backend.close(), try/finally in HTCondorRunner.close(), serialized stop()).
+# mac: .venv-m69b (py3.12.10), no htcondor2 (pool rows skip). pool: m68b-minicondor:local container m69b-sanity-pool,
+# pool_order_sanity.sh + pool_legs_order_sanity.txt, CI pins graphed a51bee4 / graphed-histogram 3830acaa.
+== mac stub_mac_1
+E               AssertionError: a schedd.submit before any worker was needed
+E               AssertionError: a schedd.submit before any worker was needed
+E               AssertionError: a backend whose services are jobs submitted pilots at construction
+E           RuntimeError: spool: connection reset (injected)
+E           Failed: the pilots were submitted at construction, before any worker was needed: spool: connection reset (injected)
+E               AssertionError: close() returned while its plan's server waited for a slot
+SKIPPED [5] tests/frozen/m69b/m69b_order.py:297: the htcondor bindings are not installed (Linux wheels only; the test-htcondor job)
+FAILED tests/frozen/m69b/test_service_order.py::test_service_jobs_go_before_the_pilots_and_later_plans_hold_them
+FAILED tests/frozen/m69b/test_service_order.py::test_the_first_need_waits_for_pilots_past_a_service_s_timeout
+FAILED tests/frozen/m69b/test_service_order.py::test_only_a_backend_whose_services_are_jobs_defers_its_pilots
+FAILED tests/frozen/m69b/test_service_order.py::test_a_deferred_spool_failure_removes_its_cluster_and_close_drops_the_secret
+FAILED tests/frozen/m69b/test_service_order.py::test_close_waits_for_a_waiting_server_and_an_error_in_the_block_ends_the_wait
+5 failed, 5 skipped in 14.39s
+exit=1
+== mac stub_mac_2
+E               AssertionError: a schedd.submit before any worker was needed
+E               AssertionError: a schedd.submit before any worker was needed
+E               AssertionError: a backend whose services are jobs submitted pilots at construction
+E           RuntimeError: spool: connection reset (injected)
+E           Failed: the pilots were submitted at construction, before any worker was needed: spool: connection reset (injected)
+E               AssertionError: close() returned while its plan's server waited for a slot
+SKIPPED [5] tests/frozen/m69b/m69b_order.py:297: the htcondor bindings are not installed (Linux wheels only; the test-htcondor job)
+FAILED tests/frozen/m69b/test_service_order.py::test_service_jobs_go_before_the_pilots_and_later_plans_hold_them
+FAILED tests/frozen/m69b/test_service_order.py::test_the_first_need_waits_for_pilots_past_a_service_s_timeout
+FAILED tests/frozen/m69b/test_service_order.py::test_only_a_backend_whose_services_are_jobs_defers_its_pilots
+FAILED tests/frozen/m69b/test_service_order.py::test_a_deferred_spool_failure_removes_its_cluster_and_close_drops_the_secret
+FAILED tests/frozen/m69b/test_service_order.py::test_close_waits_for_a_waiting_server_and_an_error_in_the_block_ends_the_wait
+5 failed, 5 skipped in 13.91s
+exit=1
+== mac variant_mac_1
+PASSED tests/frozen/m69b/test_service_order.py::test_service_jobs_go_before_the_pilots_and_later_plans_hold_them
+PASSED tests/frozen/m69b/test_service_order.py::test_the_first_need_waits_for_pilots_past_a_service_s_timeout
+PASSED tests/frozen/m69b/test_service_order.py::test_only_a_backend_whose_services_are_jobs_defers_its_pilots
+PASSED tests/frozen/m69b/test_service_order.py::test_a_deferred_spool_failure_removes_its_cluster_and_close_drops_the_secret
+PASSED tests/frozen/m69b/test_service_order.py::test_close_waits_for_a_waiting_server_and_an_error_in_the_block_ends_the_wait
+SKIPPED [5] tests/frozen/m69b/m69b_order.py:297: the htcondor bindings are not installed (Linux wheels only; the test-htcondor job)
+5 passed, 5 skipped in 31.58s
+exit=0
+== mac variant_mac_2
+PASSED tests/frozen/m69b/test_service_order.py::test_service_jobs_go_before_the_pilots_and_later_plans_hold_them
+PASSED tests/frozen/m69b/test_service_order.py::test_the_first_need_waits_for_pilots_past_a_service_s_timeout
+PASSED tests/frozen/m69b/test_service_order.py::test_only_a_backend_whose_services_are_jobs_defers_its_pilots
+PASSED tests/frozen/m69b/test_service_order.py::test_a_deferred_spool_failure_removes_its_cluster_and_close_drops_the_secret
+PASSED tests/frozen/m69b/test_service_order.py::test_close_waits_for_a_waiting_server_and_an_error_in_the_block_ends_the_wait
+SKIPPED [5] tests/frozen/m69b/m69b_order.py:297: the htcondor bindings are not installed (Linux wheels only; the test-htcondor job)
+5 passed, 5 skipped in 31.48s
+exit=0
+== mac stub_mac_frozen
+E               AssertionError: a schedd.submit before any worker was needed
+E               AssertionError: a schedd.submit before any worker was needed
+E               AssertionError: a backend whose services are jobs submitted pilots at construction
+E           RuntimeError: spool: connection reset (injected)
+E           Failed: the pilots were submitted at construction, before any worker was needed: spool: connection reset (injected)
+E               AssertionError: close() returned while its plan's server waited for a slot
+FAILED tests/frozen/m68b/test_cluster_service_job.py::test_host_service_returns_the_announced_endpoint_and_releases_in_order[http:/-http]
+FAILED tests/frozen/m68b/test_cluster_service_job.py::test_host_service_returns_the_announced_endpoint_and_releases_in_order[tcp-tcp]
+FAILED tests/frozen/m68b/test_cluster_service_job.py::test_host_service_returns_the_announced_endpoint_and_releases_in_order[grpc:-grpc]
+FAILED tests/frozen/m69b/test_service_order.py::test_service_jobs_go_before_the_pilots_and_later_plans_hold_them
+FAILED tests/frozen/m69b/test_service_order.py::test_the_first_need_waits_for_pilots_past_a_service_s_timeout
+FAILED tests/frozen/m69b/test_service_order.py::test_only_a_backend_whose_services_are_jobs_defers_its_pilots
+FAILED tests/frozen/m69b/test_service_order.py::test_a_deferred_spool_failure_removes_its_cluster_and_close_drops_the_secret
+FAILED tests/frozen/m69b/test_service_order.py::test_close_waits_for_a_waiting_server_and_an_error_in_the_block_ends_the_wait
+SKIPPED [1] tests/frozen/m66/test_htcondor_live_pool.py:40: the htcondor bindings are not installed (Linux wheels only; the test-htcondor job)
+SKIPPED [1] tests/frozen/m67/test_driverless_live.py:36: the htcondor bindings are not installed (Linux wheels only; the test-htcondor job)
+SKIPPED [1] tests/frozen/m68c/test_m68c_submit_dask.py:11: could not import 'distributed': No module named 'distributed'
+SKIPPED [1] tests/frozen/m68c/test_m68c_submit_parsl.py:14: could not import 'parsl': No module named 'parsl'
+SKIPPED [6] tests/frozen/m69a/hgg_harness.py:24: could not import 'coffea': No module named 'coffea'
+SKIPPED [1] tests/frozen/m68a/test_scope_dask_memory.py:81: could not import 'distributed': No module named 'distributed'
+SKIPPED [1] tests/frozen/m68a/test_services_live.py:62: the htcondor bindings are not installed (Linux wheels only; the test-htcondor job)
+SKIPPED [1] tests/frozen/m68a/test_services_live.py:146: no Triton container (set GRAPHED_TRITON_GRPC=host:port; the test-htcondor job does)
+SKIPPED [1] tests/frozen/m68a/test_services_live.py:164: no Triton container (set GRAPHED_TRITON_GRPC=host:port; the test-htcondor job does)
+SKIPPED [2] tests/frozen/m68b/test_cluster_services_live.py:57: the htcondor bindings are not installed (Linux wheels only; the test-htcondor job)
+SKIPPED [1] tests/frozen/m68b/test_driverless_dag.py:683: Submit.from_dag needs condor_dagman on PATH (test-htcondor)
+SKIPPED [2] tests/frozen/m68b/test_driverless_dag_live.py:42: the htcondor bindings are not installed (Linux wheels only; the test-htcondor job)
+SKIPPED [2] tests/frozen/m68c/test_m68c_htcondor.py:210: the htcondor bindings are not installed (Linux wheels only; the test-htcondor job)
+SKIPPED [6] tests/frozen/m69b/test_histserv_cluster.py:52: the htcondor bindings are not installed (Linux wheels only; the test-htcondor job)
+SKIPPED [5] tests/frozen/m69b/m69b_order.py:297: the htcondor bindings are not installed (Linux wheels only; the test-htcondor job)
+8 failed, 340 passed, 32 skipped in 189.96s (0:03:09)
+exit=1
+== mac variant_mac_frozen
+SKIPPED [1] tests/frozen/m66/test_htcondor_live_pool.py:40: the htcondor bindings are not installed (Linux wheels only; the test-htcondor job)
+SKIPPED [1] tests/frozen/m67/test_driverless_live.py:36: the htcondor bindings are not installed (Linux wheels only; the test-htcondor job)
+SKIPPED [1] tests/frozen/m68c/test_m68c_submit_dask.py:11: could not import 'distributed': No module named 'distributed'
+SKIPPED [1] tests/frozen/m68c/test_m68c_submit_parsl.py:14: could not import 'parsl': No module named 'parsl'
+SKIPPED [6] tests/frozen/m69a/hgg_harness.py:24: could not import 'coffea': No module named 'coffea'
+SKIPPED [1] tests/frozen/m68a/test_scope_dask_memory.py:81: could not import 'distributed': No module named 'distributed'
+SKIPPED [1] tests/frozen/m68a/test_services_live.py:62: the htcondor bindings are not installed (Linux wheels only; the test-htcondor job)
+SKIPPED [1] tests/frozen/m68a/test_services_live.py:146: no Triton container (set GRAPHED_TRITON_GRPC=host:port; the test-htcondor job does)
+SKIPPED [1] tests/frozen/m68a/test_services_live.py:164: no Triton container (set GRAPHED_TRITON_GRPC=host:port; the test-htcondor job does)
+SKIPPED [2] tests/frozen/m68b/test_cluster_services_live.py:57: the htcondor bindings are not installed (Linux wheels only; the test-htcondor job)
+SKIPPED [1] tests/frozen/m68b/test_driverless_dag.py:683: Submit.from_dag needs condor_dagman on PATH (test-htcondor)
+SKIPPED [2] tests/frozen/m68b/test_driverless_dag_live.py:42: the htcondor bindings are not installed (Linux wheels only; the test-htcondor job)
+SKIPPED [2] tests/frozen/m68c/test_m68c_htcondor.py:210: the htcondor bindings are not installed (Linux wheels only; the test-htcondor job)
+SKIPPED [6] tests/frozen/m69b/test_histserv_cluster.py:52: the htcondor bindings are not installed (Linux wheels only; the test-htcondor job)
+SKIPPED [5] tests/frozen/m69b/m69b_order.py:297: the htcondor bindings are not installed (Linux wheels only; the test-htcondor job)
+348 passed, 32 skipped in 208.16s (0:03:28)
+exit=0
+== pool stub-1 (stub|tests/frozen/m69b/test_service_order.py)
+E               AssertionError: a schedd.submit before any worker was needed
+E               AssertionError: a schedd.submit before any worker was needed
+E               AssertionError: a backend whose services are jobs submitted pilots at construction
+E           RuntimeError: spool: connection reset (injected)
+E           Failed: the pilots were submitted at construction, before any worker was needed: spool: connection reset (injected)
+E               AssertionError: close() returned while its plan's server waited for a slot
+E       AssertionError: close() ended the plan: RuntimeError("service 'm69b-order-free-klnicnhm-0' (c516c983-97a0d164862d8181) still waited for a slot when the runner closed: JobStatus=1")
+E           AssertionError: plan 1's server never started: its runner's pilots hold the room
+E           AssertionError: the child submitted a pilot job
+E           AssertionError: the child submitted a pilot job
+E           AssertionError: the child submitted a pilot job
+FAILED tests/frozen/m69b/test_service_order.py::test_service_jobs_go_before_the_pilots_and_later_plans_hold_them
+FAILED tests/frozen/m69b/test_service_order.py::test_the_first_need_waits_for_pilots_past_a_service_s_timeout
+FAILED tests/frozen/m69b/test_service_order.py::test_only_a_backend_whose_services_are_jobs_defers_its_pilots
+FAILED tests/frozen/m69b/test_service_order.py::test_a_deferred_spool_failure_removes_its_cluster_and_close_drops_the_secret
+FAILED tests/frozen/m69b/test_service_order.py::test_close_waits_for_a_waiting_server_and_an_error_in_the_block_ends_the_wait
+FAILED tests/frozen/m69b/test_service_order.py::test_close_at_once_finishes_a_plan_on_a_free_slot
+FAILED tests/frozen/m69b/test_service_order.py::test_a_later_server_is_refused_where_only_its_runner_s_pilots_hold_room
+FAILED tests/frozen/m69b/test_service_order.py::test_ctrl_c_removes_a_waiting_server_and_submits_no_pilot[run]
+FAILED tests/frozen/m69b/test_service_order.py::test_ctrl_c_removes_a_waiting_server_and_submits_no_pilot[result]
+FAILED tests/frozen/m69b/test_service_order.py::test_ctrl_c_removes_a_waiting_server_and_submits_no_pilot[close]
+10 failed in 330.55s (0:05:30)
+pytest-exit=1
+queue after: Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended
+== pool stub-2 (stub|tests/frozen/m69b/test_service_order.py)
+E               AssertionError: a schedd.submit before any worker was needed
+E               AssertionError: a schedd.submit before any worker was needed
+E               AssertionError: a backend whose services are jobs submitted pilots at construction
+E           RuntimeError: spool: connection reset (injected)
+E           Failed: the pilots were submitted at construction, before any worker was needed: spool: connection reset (injected)
+E               AssertionError: close() returned while its plan's server waited for a slot
+E       AssertionError: close() ended the plan: RuntimeError("service 'm69b-order-free-elhcinea-0' (c8f4ca0d-8a882d7b0debc95a) still waited for a slot when the runner closed: JobStatus=1")
+E           AssertionError: plan 1's server never started: its runner's pilots hold the room
+E           AssertionError: the child submitted a pilot job
+E           AssertionError: the child submitted a pilot job
+E           AssertionError: the child submitted a pilot job
+FAILED tests/frozen/m69b/test_service_order.py::test_service_jobs_go_before_the_pilots_and_later_plans_hold_them
+FAILED tests/frozen/m69b/test_service_order.py::test_the_first_need_waits_for_pilots_past_a_service_s_timeout
+FAILED tests/frozen/m69b/test_service_order.py::test_only_a_backend_whose_services_are_jobs_defers_its_pilots
+FAILED tests/frozen/m69b/test_service_order.py::test_a_deferred_spool_failure_removes_its_cluster_and_close_drops_the_secret
+FAILED tests/frozen/m69b/test_service_order.py::test_close_waits_for_a_waiting_server_and_an_error_in_the_block_ends_the_wait
+FAILED tests/frozen/m69b/test_service_order.py::test_close_at_once_finishes_a_plan_on_a_free_slot
+FAILED tests/frozen/m69b/test_service_order.py::test_a_later_server_is_refused_where_only_its_runner_s_pilots_hold_room
+FAILED tests/frozen/m69b/test_service_order.py::test_ctrl_c_removes_a_waiting_server_and_submits_no_pilot[run]
+FAILED tests/frozen/m69b/test_service_order.py::test_ctrl_c_removes_a_waiting_server_and_submits_no_pilot[result]
+FAILED tests/frozen/m69b/test_service_order.py::test_ctrl_c_removes_a_waiting_server_and_submits_no_pilot[close]
+10 failed in 327.80s (0:05:27)
+pytest-exit=1
+queue after: Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended
+== pool variant-1 (variant|tests/frozen/m69b/test_service_order.py)
+PASSED tests/frozen/m69b/test_service_order.py::test_service_jobs_go_before_the_pilots_and_later_plans_hold_them
+PASSED tests/frozen/m69b/test_service_order.py::test_the_first_need_waits_for_pilots_past_a_service_s_timeout
+PASSED tests/frozen/m69b/test_service_order.py::test_only_a_backend_whose_services_are_jobs_defers_its_pilots
+PASSED tests/frozen/m69b/test_service_order.py::test_a_deferred_spool_failure_removes_its_cluster_and_close_drops_the_secret
+PASSED tests/frozen/m69b/test_service_order.py::test_close_waits_for_a_waiting_server_and_an_error_in_the_block_ends_the_wait
+PASSED tests/frozen/m69b/test_service_order.py::test_close_at_once_finishes_a_plan_on_a_free_slot
+PASSED tests/frozen/m69b/test_service_order.py::test_a_later_server_is_refused_where_only_its_runner_s_pilots_hold_room
+PASSED tests/frozen/m69b/test_service_order.py::test_ctrl_c_removes_a_waiting_server_and_submits_no_pilot[run]
+PASSED tests/frozen/m69b/test_service_order.py::test_ctrl_c_removes_a_waiting_server_and_submits_no_pilot[result]
+PASSED tests/frozen/m69b/test_service_order.py::test_ctrl_c_removes_a_waiting_server_and_submits_no_pilot[close]
+10 passed in 107.45s (0:01:47)
+pytest-exit=0
+queue after: Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended
+== pool variant-2 (variant|tests/frozen/m69b/test_service_order.py)
+PASSED tests/frozen/m69b/test_service_order.py::test_service_jobs_go_before_the_pilots_and_later_plans_hold_them
+PASSED tests/frozen/m69b/test_service_order.py::test_the_first_need_waits_for_pilots_past_a_service_s_timeout
+PASSED tests/frozen/m69b/test_service_order.py::test_only_a_backend_whose_services_are_jobs_defers_its_pilots
+PASSED tests/frozen/m69b/test_service_order.py::test_a_deferred_spool_failure_removes_its_cluster_and_close_drops_the_secret
+PASSED tests/frozen/m69b/test_service_order.py::test_close_waits_for_a_waiting_server_and_an_error_in_the_block_ends_the_wait
+PASSED tests/frozen/m69b/test_service_order.py::test_close_at_once_finishes_a_plan_on_a_free_slot
+PASSED tests/frozen/m69b/test_service_order.py::test_a_later_server_is_refused_where_only_its_runner_s_pilots_hold_room
+PASSED tests/frozen/m69b/test_service_order.py::test_ctrl_c_removes_a_waiting_server_and_submits_no_pilot[run]
+PASSED tests/frozen/m69b/test_service_order.py::test_ctrl_c_removes_a_waiting_server_and_submits_no_pilot[result]
+PASSED tests/frozen/m69b/test_service_order.py::test_ctrl_c_removes_a_waiting_server_and_submits_no_pilot[close]
+10 passed in 118.36s (0:01:58)
+pytest-exit=0
+queue after: Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended
+== pool mut-exit-no-stop (v-exit-no-stop|tests/frozen/m69b/test_service_order.py::test_ctrl_c_removes_a_waiting_server_and_submits_no_pilot[result])
+E           AssertionError: the result child still ran 15.0s after SIGINT
+FAILED tests/frozen/m69b/test_service_order.py::test_ctrl_c_removes_a_waiting_server_and_submits_no_pilot[result]
+1 failed in 22.72s
+pytest-exit=1
+queue after: Total for all users: 1 jobs; 0 completed, 0 removed, 0 idle, 1 running, 0 held, 0 suspended
+== pool mut-close-no-finally (v-close-no-finally|tests/frozen/m69b/test_service_order.py::test_ctrl_c_removes_a_waiting_server_and_submits_no_pilot[close])
+E           AssertionError: [[ ClusterId = 52; JobStatus = 1; ServerTime = 1790951585; JobBatchName = "graphed-service-2c30a492-657e4534d0079cdf" ]]
+FAILED tests/frozen/m69b/test_service_order.py::test_ctrl_c_removes_a_waiting_server_and_submits_no_pilot[close]
+1 failed in 69.17s (0:01:09)
+pytest-exit=1
+queue after: Total for all users: 1 jobs; 0 completed, 0 removed, 0 idle, 1 running, 0 held, 0 suspended
+== pool mut-close-signals-waiter (v-close-signals-waiter|tests/frozen/m69b/test_service_order.py::test_ctrl_c_removes_a_waiting_server_and_submits_no_pilot[close])
+E           AssertionError: [[ ClusterId = 54; JobStatus = 1; ServerTime = 1790951655; JobBatchName = "graphed-service-c0407038-6470aa1c6542341e" ]]
+FAILED tests/frozen/m69b/test_service_order.py::test_ctrl_c_removes_a_waiting_server_and_submits_no_pilot[close]
+1 failed in 69.43s (0:01:09)
+pytest-exit=1
+queue after: Total for all users: 1 jobs; 0 completed, 0 removed, 0 idle, 1 running, 0 held, 0 suspended
+== pool mut-whole-slot (v-whole-slot|tests/frozen/m69b/test_service_order.py::test_a_later_server_is_refused_where_only_its_runner_s_pilots_hold_room)
+E       AssertionError: HARD TIMEOUT: call did not finish within 240.0s
+FAILED tests/frozen/m69b/test_service_order.py::test_a_later_server_is_refused_where_only_its_runner_s_pilots_hold_room
+1 failed in 269.46s (0:04:29)
+pytest-exit=1
+queue after: Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended
+== pool variant-ci-htcondor (the test-htcondor frozen list + test_service_order.py)
+SKIPPED [1] tests/frozen/m68c/test_m68c_submit_dask.py:11: could not import 'distributed': No module named 'distributed'
+SKIPPED [1] tests/frozen/m68c/test_m68c_submit_parsl.py:14: could not import 'parsl': No module named 'parsl'
+SKIPPED [1] tests/frozen/m68a/test_scope_dask_memory.py:81: could not import 'distributed': No module named 'distributed'
+SKIPPED [1] tests/frozen/m68a/test_services_live.py:146: no Triton container (set GRAPHED_TRITON_GRPC=host:port; the test-htcondor job does)
+SKIPPED [1] tests/frozen/m68a/test_services_live.py:164: no Triton container (set GRAPHED_TRITON_GRPC=host:port; the test-htcondor job does)
+372 passed, 5 skipped in 677.74s (0:11:17)
+pytest-exit=0
+queue after: Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended
+test_service_order ids PASSED: 10

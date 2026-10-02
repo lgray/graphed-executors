@@ -1,0 +1,319 @@
+diff --git a/src/graphed_executors/htcondor_backend/backend.py b/src/graphed_executors/htcondor_backend/backend.py
+index 1a2356d..673c444 100644
+--- a/src/graphed_executors/htcondor_backend/backend.py
++++ b/src/graphed_executors/htcondor_backend/backend.py
+@@ -131,17 +131,28 @@ class HTCondorBackend:
+             raise OSError(
+                 f"no free port for the task server: site={profile.name} ports={low}-{high}"
+             ) from exc
++        self._announced = dict(announced or {})
++        cluster = isinstance(launcher, CondorPilots) and (
++            bool(self._announced) or (in_job is None and "cluster" in self.service_hosts)
++        )
++        self._n_pilots = n_pilots
++        self._pilots_lock = threading.Lock()
++        self._pilots_submitted = not cluster
++        self._waited = False
++        self._held = False
++        self.min_pilots = 1
+         with ExitStack() as stack:  # a refused start must not leave the server holding its port
+             stack.callback(release_quietly, "the task server's port", self._server.shutdown)
+             stack.callback(release_quietly, "the task server", self._server.close)
+-            launcher.start(self._server.url, self._server.secret, n_pilots)
+-            stack.callback(release_quietly, "the pilots", launcher.stop)
+-            # closed first: pilots see 410 and exit before they are stopped (a second close is a no-op)
+-            stack.callback(release_quietly, "the task server", self._server.close)
++            if cluster:  # ORDER VARIANT: the pilots wait for the first need of a worker
++                assert isinstance(launcher, CondorPilots)
++                launcher.prepare(self._server.url, self._server.secret)
++                stack.callback(release_quietly, "the pilots' secret", launcher._secret.unlink, True)
++            else:
++                self._start_pilots(stack)
+             self._stack = stack.pop_all()
+         self._services: dict[str, ServiceJob] = {}
+         self._closing = threading.Event()  # set: a service job still waiting for a slot ends its wait
+-        self._announced = dict(announced or {})
+         # the capability IS this pair of attributes: absent, the engine refuses naming it
+         if self._announced:
+             self.host_service = self._host_announced
+@@ -150,11 +161,35 @@ class HTCondorBackend:
+             self.host_service = self._host_service
+             self.release_service = self._release_service
+ 
++    def _start_pilots(self, stack: ExitStack) -> None:
++        self.launcher.start(self._server.url, self._server.secret, self._n_pilots)
++        stack.callback(release_quietly, "the pilots", self.launcher.stop)
++        # closed first: pilots see 410 and exit before they are stopped (a second close is a no-op)
++        stack.callback(release_quietly, "the task server", self._server.close)
++
++    def _submit_pilots(self) -> None:
++        with self._pilots_lock:
++            if self._held:  # SANITY VARIANT: a need of a worker releases a later plan's hold
++                self._held = False
++                release_quietly("the held pilots", self.launcher.release_held)  # type: ignore[attr-defined]
++            if not self._pilots_submitted:
++                self._pilots_submitted = True
++                self._start_pilots(self._stack)
++
++    def _need_workers(self) -> None:
++        """ORDER VARIANT: the first need of a worker submits deferred pilots and waits for min_pilots."""
++        self._submit_pilots()
++        if not self._waited:
++            self.wait_for_pilots(self.min_pilots)
++            self._waited = True
++
+     def n_workers(self) -> int:
+         """Pilots registered and live right now; never waits."""
++        self._need_workers()
+         return self._server.live_pilots()
+ 
+     def wait_for_pilots(self, n: int, timeout: float = N_WORKERS_WAIT_S) -> int:
++        self._submit_pilots()
+         deadline = time.monotonic() + timeout
+         while (live := self._server.live_pilots()) < n:
+             if time.monotonic() > deadline:
+@@ -178,6 +213,7 @@ class HTCondorBackend:
+     ) -> SubmitFuture:
+         """Never blocks on a future argument: the task queues once its arguments are done. The hints
+         are ignored."""
++        self._need_workers()
+         raw: Future[Any] = Future()
+         self._server.add(key, fn, args, raw)
+         return _ParslFuture(raw, self._handlers)
+@@ -219,17 +255,31 @@ class HTCondorBackend:
+         machines = machine_ads(self.launcher)
+         key = f"{scope}-{secrets.token_hex(8)}"
+         secret = self._server.announce_secret([key])
++        own: list[Any] = []
++        with self._pilots_lock:  # SANITY VARIANT: held once per plan, released at its next need
++            if self._pilots_submitted and self.launcher.cluster is not None:
++                if not self._held:
++                    self.launcher.hold_queued()
++                    self._held = True
++                own = self.launcher.running_claims()
++        return self._host_service_held(spec, scope, machines, key, secret, own)
++
++    def _host_service_held(self, spec: ServiceSpec, scope: str, machines: Any, key: str, secret: bytes,
++                           own: list[Any]) -> tuple[str, str, str]:
++        assert isinstance(self.launcher, CondorPilots)
+         with ExitStack() as stack:
+             stack.callback(self._server.forget_announce, [key])
+             job = ServiceJob(spec, self.launcher, key=key, url=self._server.url, secret=secret)
+-            job.submit()
++            stack.callback(self._services.pop, key, None)
++            job.submit(on_submit=lambda: self._services.__setitem__(key, job))
+             stack.callback(release_quietly, f"service job {key}", job.stop)
+-            refusal = job.match_refusal(machines)
++            refusal = job.match_refusal(machines, own)
+             if refusal is not None:
++                if own:
++                    refusal += f"; beside the runner's pilots (cluster {self.launcher.cluster[1]})"  # type: ignore[index]
+                 raise ServiceUnavailable(spec.name, {"managed": refusal})
+             hostport, identity = self._await_announce(job, spec)
+             stack.pop_all()
+-        self._services[key] = job
+         host, _, port = hostport.rpartition(":")
+         return minted_endpoint(spec.check, host, int(port)), identity, key
+ 
+@@ -308,6 +358,9 @@ class HTCondorBackend:
+         """Stop serving (pilots see 410 and exit), stop the pilots, free the port; each step runs even
+         when an earlier one fails, and each failure is logged."""
+         self.stop_waiting()
++        for key, job in list(self._services.items()):  # SANITY VARIANT: removed in the calling thread
++            self._server.forget_announce([key])
++            release_quietly(f"service job {key}", job.stop)
+         self._stack.close()
+ 
+ 
+@@ -360,13 +413,11 @@ class HTCondorRunner(SubmitRunner):
+             backend, monitor=monitor, retries=retries, max_in_flight=max_in_flight, services=services
+         )
+         self._min_pilots = min_pilots
+-        self._waited = False
++        backend.min_pilots = min_pilots
+ 
+     def wait_for_pilots(self) -> int:
+         """Wait for ``min_pilots`` once; pilots lost afterwards fail the run's tasks as lost workers."""
+-        live = self.backend.wait_for_pilots(self._min_pilots)
+-        self._waited = True
+-        return live
++        return self.backend.wait_for_pilots(self._min_pilots)
+ 
+     @overload
+     def run(self, plan: Plan[R]) -> ExecResult[R]: ...
+@@ -374,15 +425,18 @@ class HTCondorRunner(SubmitRunner):
+     def run(self, plan: DurablePlanV2) -> ExecResult[Any]: ...
+     def run(self, plan: Plan[R] | DurablePlanV2) -> ExecResult[R] | ExecResult[Any]:
+         _require_plan_importable(plan, ("process", "combine"))
+-        if not self._waited:
+-            self.wait_for_pilots()
+         return super().run(plan)
+ 
+-    def close(self) -> None:
+-        """Finish every submitted plan, then close the backend; a plan whose service job still waits for
+-        a slot does not finish: the job is removed and the plan raises."""
+-        self.backend.stop_waiting()
+-        super().close()
++    def __exit__(self, *exc: object) -> None:  # FULL VARIANT
++        if exc[0] is not None:
++            self.backend.stop_waiting()
++        self.close()
++
++    def close(self) -> None:  # SANITY VARIANT: the backend closes whether the drain returns or raises
++        try:
++            self._plans.close()
++        finally:
++            self.backend.close()
+ 
+ 
+ def htcondor_runner(
+diff --git a/src/graphed_executors/htcondor_backend/driver.py b/src/graphed_executors/htcondor_backend/driver.py
+index 9b9eebe..fd0df54 100644
+--- a/src/graphed_executors/htcondor_backend/driver.py
++++ b/src/graphed_executors/htcondor_backend/driver.py
+@@ -102,7 +102,7 @@ def _runner(run: dict[str, Any], job: Path, log: TextIO) -> HTCondorRunner:
+             publish(dag_dir / SECRET_FILE, secret.hex())
+             publish(dag_dir / URL_FILE, backend._server.url)
+         if run["pilots"] == "condor":
+-            where = f"cluster={launcher.cluster}"
++            where = f"cluster={launcher.cluster} (None: submitted at the first need of a worker)"
+         else:
+             where = f"pids={[p.pid for p in launcher._procs]}"
+         print(f"{n} {run['pilots']} pilots on {backend._server.url} {where}", file=log, flush=True)
+diff --git a/src/graphed_executors/htcondor_backend/launch.py b/src/graphed_executors/htcondor_backend/launch.py
+index c093f70..b91e822 100644
+--- a/src/graphed_executors/htcondor_backend/launch.py
++++ b/src/graphed_executors/htcondor_backend/launch.py
+@@ -237,7 +237,10 @@ class CondorPilots:
+         if profile.ship_env:
+             _check_shippable(self.env)
+ 
+-    def start(self, url: str, secret: bytes, n: int) -> None:
++    def prepare(self, url: str, secret: bytes) -> None:
++        """Everything :meth:`start` does but the pilots' submit; once."""
++        if self._schedd is not None:
++            return
+         self._refuse()
+         # absolute in the cwd the files are written from: stop() and a service job may read it from another
+         self.log_dir = Path(
+@@ -246,11 +249,15 @@ class CondorPilots:
+         self.log_dir.mkdir(parents=True, exist_ok=True)
+         self._secret = self.log_dir / SECRET_FILE
+         write_secret(self._secret, secret)
+-        script = self._stage(self.log_dir, "pilot.sh", PILOT_MODULE)
++        self._script = self._stage(self.log_dir, "pilot.sh", PILOT_MODULE)
++        self._name, self._schedd = self._choose(_htcondor())
++
++    def start(self, url: str, secret: bytes, n: int) -> None:
++        self.prepare(url, secret)
+         # a relative executable resolves against our cwd, not initialdir
+-        desc = self.submit_description(url, n, {"executable": str(script)})
++        desc = self.submit_description(url, n, {"executable": str(self._script)})
+         htc = _htcondor()
+-        name, schedd = self._choose(htc)
++        name, schedd = self._name, self._schedd
+         with ExitStack() as stack:
+             result = self._submit(htc, schedd, desc, n, stack)
+             self.cluster = (name, int(result.cluster()))
+@@ -332,7 +339,23 @@ class CondorPilots:
+ 
+     def alive(self) -> int:
+         ads = self._schedd.query(constraint=self._constraint, projection=["JobStatus", "HoldReasonCode"])
+-        return sum(counts_as_alive(ad) for ad in ads)
++        return sum(counts_as_alive(ad) or (ad.get("JobStatus") == 5 and ad.get("HoldReasonCode") == 1)
++                   for ad in ads)
++
++    HOLD_REASON = "graphed: a service of this run waits for a slot"
++
++    def hold_queued(self) -> None:  # SANITY VARIANT: reason-ed
++        self._schedd.act(_htcondor().JobAction.Hold, f"{self._constraint} && JobStatus == 1",
++                         reason=self.HOLD_REASON)
++
++    def release_held(self) -> None:  # SANITY VARIANT: only our own hold
++        self._schedd.act(_htcondor().JobAction.Release,
++                         f'{self._constraint} && JobStatus == 5 && HoldReasonCode == 1 && HoldReason == "{self.HOLD_REASON}"')
++
++    def running_claims(self) -> list[Any]:  # FULL VARIANT
++        attrs = ["RemoteHost", "MemoryProvisioned", "CpusProvisioned", "GPUsProvisioned", "DiskProvisioned",
++                 "RequestMemory", "RequestCpus", "RequestGPUs", "RequestDisk"]
++        return list(self._schedd.query(constraint=f"{self._constraint} && JobStatus == 2", projection=attrs))
+ 
+     def _drain(self) -> None:
+         deadline = time.monotonic() + CLOSE_WAIT_S
+diff --git a/src/graphed_executors/htcondor_backend/services.py b/src/graphed_executors/htcondor_backend/services.py
+index 10c6ecb..80be0ac 100644
+--- a/src/graphed_executors/htcondor_backend/services.py
++++ b/src/graphed_executors/htcondor_backend/services.py
+@@ -16,6 +16,7 @@ import json
+ import os
+ import shlex
+ import shutil
++import threading
+ from contextlib import ExitStack
+ from pathlib import Path
+ from typing import Any
+@@ -68,6 +69,7 @@ class ServiceJob:
+         self.dir: Path | None = None
+         self.cluster: int | None = None
+         self._stack = ExitStack()
++        self._stop_lock = threading.Lock()
+ 
+     def files(self, dir: Path) -> dict[str, str]:
+         """Write the job's files into ``dir`` and return its submit keys; submits nothing."""
+@@ -130,7 +132,7 @@ class ServiceJob:
+         desc.update(launcher.extra_submit)  # the user's keys still have the last word
+         return desc
+ 
+-    def submit(self) -> None:
++    def submit(self, on_submit: Any = None) -> None:
+         """Write the files into a new ``service-<key>/`` under the launcher's ``log_dir`` and submit one
+         job; its removal is registered the moment ``schedd.submit`` returns, so a failed spool leaves
+         none."""
+@@ -146,6 +148,8 @@ class ServiceJob:
+             result = launcher._submit(htc, launcher._schedd, desc, 1, stack)
+             self.cluster = int(result.cluster())
+             self._stack = stack.pop_all()
++        if on_submit is not None:  # SANITY VARIANT (registered after the spool; good enough for the rows)
++            on_submit()
+ 
+     def ad(self) -> Any:
+         """The job's queue ad, else its history ad once it left the queue, else ``{}``."""
+@@ -155,7 +159,7 @@ class ServiceJob:
+             ads = list(schedd.history(constraint, AD_ATTRS, match=1))
+         return ads[0] if ads else {}
+ 
+-    def match_refusal(self, machines: list[Any]) -> str | None:
++    def match_refusal(self, machines: list[Any], own: list[Any] | None = None) -> str | None:
+         """Why no slot of ``machines`` could ever run this queued job, else ``None``: its whole ad (the
+         request, the site's and the user's submit keys) must ``symmetricMatch`` a slot's ad whose free
+         ``Memory``/``Cpus``/``GPUs``/``Disk`` are a partitionable slot's totals, so a busy pool still
+@@ -168,6 +172,19 @@ class ServiceJob:
+         import classad2  # noqa: PLC0415  (ships with the htcondor2 bindings)
+ 
+         slots = [_as_whole(classad2.ClassAd(str(machine))) for machine in machines]
++        for claim in own or ():  # FULL VARIANT: the room the runner's running pilots hold is never free
++            name = str(claim.get("RemoteHost", ""))
++            slot_part, _, host = name.partition("@")
++            parent = f"{slot_part.split('_')[0]}@{host}"
++            for slot in slots:
++                if slot.get("Name") in (name, parent):
++                    for free, prov, req in (("Memory", "MemoryProvisioned", "RequestMemory"),
++                                            ("Cpus", "CpusProvisioned", "RequestCpus"),
++                                            ("GPUs", "GPUsProvisioned", "RequestGPUs"),
++                                            ("Disk", "DiskProvisioned", "RequestDisk")):
++                        if free in slot:
++                            used = claim.get(prov, claim.get(req, 0))
++                            slot[free] = int(slot[free]) - int(used if isinstance(used, (int, float)) else 0)
+         if any(ads[0].symmetricMatch(slot) for slot in slots):
+             return None
+         asked = ", ".join(f"{a}={ads[0].eval(a) if a in ads[0] else 0}" for a in _REQUESTS)
+@@ -180,7 +197,8 @@ class ServiceJob:
+     def stop(self) -> None:
+         """Remove the job at once (a service never exits by itself; a spooled job that completed is
+         retrieved first, so its ``service.out``/``.err`` come back), then drop its secret file."""
+-        self._stack.close()
++        with self._stop_lock:  # SANITY VARIANT: serialized across threads
++            self._stack.close()
+         if self.dir is not None:
+             (self.dir / SECRET_FILE).unlink(missing_ok=True)
+ 

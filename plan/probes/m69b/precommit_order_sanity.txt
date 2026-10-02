@@ -1,0 +1,26 @@
+  toml-valid       ok   
+  workflows-valid  ok   
+  integrity-scan   ok   
+  prek             ok   ruff check...............................................................Passed
+ruff format..............................................................Passed
+
+PRECOMMIT-GATE: ok (stub)
+exit=0
+== staged 84e6fb7..6225cd5, with the three --allow-refreeze
+  toml-valid       ok   
+  workflows-valid  ok   
+  integrity-scan   ok   REFREEZE:tests/frozen/m68a/README.md; REFREEZE:tests/frozen/m68a/test_services_sites.py; REFREEZE:tests/frozen/m68b/README.md; REFREEZE:tests/frozen/m68b/test_c
+  prek             ok   ruff check...............................................................Passed
+ruff format..............................................................Passed
+
+PRECOMMIT-GATE: ok (staged)
+exit=0
+== control: same staged tree, no --allow-refreeze
+  toml-valid       ok   
+  workflows-valid  ok   
+  integrity-scan   FAIL  frozen-modified:tests/frozen/m68a/README.md; frozen-modified:tests/frozen/m68a/test_services_sites.py; frozen-modified:tests/frozen/m68b/README.md; frozen-modif
+  prek             ok   ruff check...............................................................Passed
+ruff format..............................................................Passed
+
+PRECOMMIT-GATE: FAIL (staged)
+exit=1

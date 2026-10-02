@@ -1,0 +1,9 @@
+stub-1|stub|tests/frozen/m69b/test_service_order.py
+variant-1|variant|tests/frozen/m69b/test_service_order.py
+variant-2|variant|tests/frozen/m69b/test_service_order.py
+stub-2|stub|tests/frozen/m69b/test_service_order.py
+mut-exit-no-stop|v-exit-no-stop|tests/frozen/m69b/test_service_order.py::test_ctrl_c_removes_a_waiting_server_and_submits_no_pilot[result]
+mut-close-no-finally|v-close-no-finally|tests/frozen/m69b/test_service_order.py::test_ctrl_c_removes_a_waiting_server_and_submits_no_pilot[close]
+mut-close-signals-waiter|v-close-signals-waiter|tests/frozen/m69b/test_service_order.py::test_ctrl_c_removes_a_waiting_server_and_submits_no_pilot[close]
+mut-whole-slot|v-whole-slot|tests/frozen/m69b/test_service_order.py::test_a_later_server_is_refused_where_only_its_runner_s_pilots_hold_room
+variant-ci-htcondor|variant|tests/frozen/m66 tests/frozen/m67 tests/frozen/m68a tests/frozen/m68b tests/frozen/m68c tests/frozen/m69b/test_histserv_cluster.py tests/frozen/m69b/test_histserv_managed.py tests/frozen/m69b/test_service_order.py
