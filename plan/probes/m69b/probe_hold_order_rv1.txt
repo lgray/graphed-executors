@@ -1,0 +1,8 @@
+1. Hold matching no job: returned {'TotalError': 0, 'TotalJobAds': 0, 'TotalSuccess': 0, 'TotalNotFound': 0, 'TotalBadStatus': 0, 'TotalChangedAds': 0, 'TotalAlreadyDone': 0, 'TotalPermissionDenied': 0}
+2. hold=True spool=False: 15 s after submit (slot free): [(5, 15, 0)]
+   after Release of HoldReasonCode == 15: running within 30 s = True; [(2, <Value.Undefined: 2>, 0)]
+3. hold=True spool=True: submit raised HTCondorException: Failed to create job ad, errmsg=Submit:-1:Cannot set hold to 'true' when using -remote or -spool
+
+4. spooled job behind the blocker: [(1, <Value.Undefined: 2>, 0)]
+   held, 15 s after the blocker left: [(5, 1, 0)]
+   after Release of HoldReasonCode == 1: running within 30 s = True; [(2, <Value.Undefined: 2>, 0)]

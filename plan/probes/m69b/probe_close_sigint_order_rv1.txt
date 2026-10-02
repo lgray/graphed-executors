@@ -1,0 +1,8 @@
+leg=plan POLL_S=0.5: exited -2 0.1 s after SIGINT; Remove acts=[]
+    ['KeyboardInterrupt']
+leg=fix POLL_S=0.5: exited -2 0.6 s after SIGINT; Remove acts=['Remove ClusterId == 70', 'Remove ClusterId == 71']
+    ['KeyboardInterrupt']
+leg=plan POLL_S=5: exited -2 0.1 s after SIGINT; Remove acts=[]
+    ['KeyboardInterrupt']
+leg=fix POLL_S=5: exited -2 0.1 s after SIGINT; Remove acts=['Remove ClusterId == 70']
+    ['KeyboardInterrupt']

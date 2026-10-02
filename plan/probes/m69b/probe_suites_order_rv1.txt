@@ -1,0 +1,20 @@
+# Frozen suites against the full-design variant (probe_variant_full_order_rv1.txt on executors 40470e6).
+# macOS: .venv-m69b, PYTHONPATH=<tree>/src, pytest -q tests/frozen/{m66,m67,m68a,m68b,m68c,m69a,m69b} (no htcondor wheel: pool rows skip).
+# pool: m68b-minicondor:local via probe_order_pool.sh (CI's test-htcondor frozen list), container m69b-order-rv1-suites.
+== mac_full
+FAILED tests/frozen/m68a/test_services_sites.py::test_a_failed_spool_leaves_no_cluster_and_no_port
+FAILED tests/frozen/m68b/test_cluster_service_job.py::test_host_service_forgets_its_announce_secret_when_construction_refuses
+FAILED tests/frozen/m68b/test_cluster_service_job.py::test_host_service_returns_the_announced_endpoint_and_releases_in_order[http:/-http]
+FAILED tests/frozen/m68b/test_cluster_service_job.py::test_host_service_returns_the_announced_endpoint_and_releases_in_order[tcp-tcp]
+FAILED tests/frozen/m68b/test_cluster_service_job.py::test_host_service_returns_the_announced_endpoint_and_releases_in_order[grpc:-grpc]
+progress-line outcomes: 338 .    5 F   17 s 
+exit=1
+== pool_full
+FAILED tests/frozen/m68a/test_services_sites.py::test_a_failed_spool_leaves_no_cluster_and_no_port
+FAILED tests/frozen/m68b/test_cluster_service_job.py::test_host_service_forgets_its_announce_secret_when_construction_refuses
+FAILED tests/frozen/m68b/test_cluster_service_job.py::test_host_service_returns_the_announced_endpoint_and_releases_in_order[http:/-http]
+FAILED tests/frozen/m68b/test_cluster_service_job.py::test_host_service_returns_the_announced_endpoint_and_releases_in_order[tcp-tcp]
+FAILED tests/frozen/m68b/test_cluster_service_job.py::test_host_service_returns_the_announced_endpoint_and_releases_in_order[grpc:-grpc]
+5 failed, 357 passed, 5 skipped in 583.39s (0:09:43)
+pytest-exit=1
+queue after: Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended
