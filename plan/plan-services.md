@@ -1164,15 +1164,24 @@ needed.
   pilot exists.
 - `close()`. `HTCondorRunner.close()` finishes every submitted plan, as `SubmitRunner.close()` documents
   (`docs/design.rst`), a server's wait for a slot included: it no longer calls `backend.stop_waiting()`, which ended a
-  fresh job's first negotiation too (`probes/m69b/probe_close_pool_exec_rv2.txt`). Ending a wait belongs to the
-  abort path: `HTCondorRunner.__exit__` with an exception propagating (Ctrl-C's `KeyboardInterrupt` included) calls
-  `backend.stop_waiting()`, then `close()`; a direct `run()` interrupted in its own thread already removes its job
-  through `_host_service`'s exit stack (`probes/m69b/probe_sigint_exec_rv2.txt`). `HTCondorBackend.close()` keeps its
-  `stop_waiting()`: once its task server closes no announce can arrive, so a wait still open then (a caller's own run
-  on another thread; submitted plans were drained first) can never be satisfied. df4d059's extra
-  `test_close_ends_a_wait_for_a_slot_removing_the_job` becomes the frozen close row below; an extra row (a direct
-  `host_service` wait on a thread, then `backend.close()`: it raises naming the key, the job removed) kills the
-  `backend-close-no-stop` mutant.
+  fresh job's first negotiation too (`probes/m69b/probe_close_pool_exec_rv2.txt`). An exception anywhere (Ctrl-C's
+  `KeyboardInterrupt`, any `BaseException`) removes every job the runner submitted before it leaves `close()`, in the
+  thread it reached:
+  - `HTCondorBackend` keeps every `ServiceJob` it submitted in `_services` from the moment `schedd.submit` returns
+    (popped by its release or its failed `host_service`), and `HTCondorBackend.close()` sets `_closing`, removes each
+    of them by its cluster id in the calling thread (`ServiceJob.stop()`, idempotent across threads), then closes the
+    task server and removes the pilots. No removal waits on a waiting thread's next poll.
+  - `HTCondorRunner.close()` reaches `backend.close()` whether `PlanQueue.close()`'s drain returns or raises
+    (`try`/`finally`), so a Ctrl-C landing in the drain of the `with … runner.submit(plan)` form, where CPython 3.12's
+    interrupted join lets the process exit without the plan's thread (`probes/m69b/probe_close_sigint_order_rv1.txt`),
+    leaves nothing queued.
+  - `HTCondorRunner.__exit__` with an exception propagating calls `backend.stop_waiting()`, then `close()`: a waiting
+    plan raises within one `POLL_S`, so the drain does not wait on its slot; a direct `run()` interrupted in its own
+    thread removes its job through `_host_service`'s exit stack (`probes/m69b/probe_sigint_exec_rv2.txt`).
+  - df4d059's extra `test_close_ends_a_wait_for_a_slot_removing_the_job` becomes the frozen close row below; an extra
+    row (a direct `host_service` wait on a thread whose recorder job stays idle, then `backend.close()`: the Remove of
+    its cluster is `act`ed before `close()` returns, and the wait raises naming the key) kills
+    `backend-close-no-remove`.
 - What waits on what: a server waits for its slot (no deadline while idle) and announces to the task server, which
   needs no pilot. The pilots are submitted at the first need after the first plan's servers announced; they wait for
   room beside the running servers, and that need raises after `N_WORKERS_WAIT_S` naming the pilots' log dir, the
@@ -1197,14 +1206,14 @@ Frozen additions, `tests/frozen/m69b/test_service_order.py` (the recorder from m
 | a `submit()`ted plan whose service job the recorder keeps idle: `close()` on a thread has not returned 3 s later and no Remove was `act`ed; the recorder then answers running and the test posts the announce: `close()` returns and the value equals the twin; the same plan with the `with` block left by a raised exception: within `POLL_S` + 2 s the plan raises naming the key, the job is removed and its announce secret forgotten | thread state; recorder `act`; the future | every OS, the first row's fixture, `server.POLL_S = 0.5` |
 | a free slot: `runner.submit(plan)`, then `runner.close()` at once, returns the twin's value; the service job's history `NumJobStarts == 1`; nothing of the run left in the queue | the value; history | minicondor, `server.POLL_S = 2` (its first poll before the pool's ~5 s start), one 256 MiB server |
 | r1's sizes, two pilots that leave the server too little room once both run, `min_pilots=1`, no other job: plan 1 equals the twin and its server's `JobCurrentStartDate` ≤ each pilot's `QDate`; once both pilots run, plan 2 with the same server raises `ServiceUnavailable` naming the pilots' cluster, its job removed unrun (`NumJobStarts == 0`); `close()` returns and nothing of the run is left in the queue | history ads; values; the refusal | minicondor: one 2048 MiB server, `timeout_s=20`; pilot memory one 128 MiB quantum above half of what the largest `TotalSlotMemory` leaves beside the server |
-| Ctrl-C: a child running `with htcondor_runner(...) as runner:` whose server a blocker leaves no room, sent SIGINT after its first "waits for a slot" line, both as `runner.run(plan)` and as `runner.submit(plan).result()`: the child exits within 3 × `POLL_S`; the service job is in history unrun; the child submitted no pilot job; nothing of the child is left in the queue | exit time; history; queue | minicondor, POSIX; the blocker removed by the test |
+| Ctrl-C: a child running `with htcondor_runner(...) as runner:` whose server a blocker leaves no room, sent SIGINT after its first "waits for a slot" line, in three forms: `runner.run(plan)`; `runner.submit(plan).result()`; `runner.submit(plan)` then leaving the block normally, so the SIGINT lands in `close()`'s drain: each child exits within 3 × `POLL_S`; the service job is in history unrun (`NumJobStarts == 0`); the child submitted no pilot job; nothing of the child is left in the queue. Killed by `exit-no-stop` (the second form hangs), `close-no-finally` (the third leaves the service job and pilots queued) and `close-signals-waiter` (`backend.close()` reached but leaving the service job to the waiter's next poll) | exit time; history; queue | minicondor, POSIX, the child at `POLL_S` ≥ 5 s (the third form at 0.5 s lets the waiter's poll win the exit); the blocker removed by the test |
 
 Fails on: pilots submitted at construction, pilots submitted after a service's submit but before its announce,
 pilots resubmitted per plan, a queued pilot of the runner matchable while a later plan's server waits, a server
 admitted where only its runner's running pilots hold room, `close()` ending a wait a free pool satisfies, an
-exception leaving the `with` block without ending the wait, a first need bounded by a service's `timeout_s`, a
-deferred backend whose failed spool leaves a cluster or whose close leaves the secret, deferral beyond `CondorPilots`
-backends whose services are jobs.
+exception leaving the `with` block without ending the wait, an interrupt in `close()`'s drain leaving a waiting job
+or the pilots queued, a first need bounded by a service's `timeout_s`, a deferred backend whose failed spool
+leaves a cluster or whose close leaves the secret, deferral beyond `CondorPilots` backends whose services are jobs.
 
 Refreeze ask (owner ruling needed; each test calls `HTCondorBackend`'s constructor or `host_service` directly and
 counts the pilots' construction submit), before the fixup below:
@@ -1230,10 +1239,11 @@ tests/frozen/m68a --allow-refreeze tests/frozen/m68b --allow-refreeze tests/froz
 `freeze-m68a-fixup2`, `freeze-m68b-fixup4` and `freeze-m69b-fixup`, annotated); 2. `feat(htcondor): a run's
 service jobs are submitted before its pilots` (`launch.py` ~15, `backend.py` ~45, `driver.py` ~2, `tests/extra/m69b`
 ~150; ~230); 3. `fix(htcondor): close() finishes a waiting plan; a later plan's server waits with its runner's
-pilots held` (`backend.py` ~15, `launch.py` ~12, `services.py` ~25, `tests/extra/m69b` ~200 with df4d059's close
+pilots held` (`backend.py` ~30, `launch.py` ~12, `services.py` ~25, `tests/extra/m69b` ~200 with df4d059's close
 test removed, `docs/htcondor.rst` "Schedulability": the first plan's servers start before its pilots, a later plan's
-wait with the queued pilots held or is refused beside the running ones, `close()` waits, Ctrl-C or any exception
-leaving the `with` block ends a wait, ~40; `.graphed/m69b/attempts.md` entries for 40470e6 and these; ~300).
+wait with the queued pilots held or is refused beside the running ones, `close()` waits, Ctrl-C anywhere (the
+`with` block or `close()` itself) ends a wait and removes the run's jobs, ~40; `.graphed/m69b/attempts.md` entries
+for 40470e6 and these; ~310).
 
 **Diagnostics.** `examples/hgg/analysis.py` adds seven diagnostic histograms per dataset over the selected diphotons,
 Weight storage, weight = `weight`: `m_gg` Regular(80, 100, 180), `pt_gg` Regular(50, 0, 250),
