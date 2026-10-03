@@ -1,0 +1,15 @@
+== one-run cut (cut_one_run_exec_rv7.py) on macOS, a full copy of 7e6e9c5's tree: tests/extra/m69b + frozen test_service_order.py + frozen/extra m68a/m68b
+.....sss..........................s................ssss.....sssss....... [ 18%]
+.............s.........................sss.......F...................... [ 37%]
+........................................................................ [ 56%]
+.........................................................ss............. [ 75%]
+....................sss................................................. [ 94%]
+.....................s                                                   [100%]
+E               configparser.NoSectionError: No section: 'run'
+FAILED tests/frozen/m68a/test_services_packaging.py::test_the_htcondor_coverage_sources_include_the_service_set
+pytest-exit=1
+-- my copy had dropped .coveragerc-* (rsync --exclude '.coverage*'); restored, the one row re-run:
+E               configparser.NoSectionError: No section: 'run'
+FAILED tests/frozen/m68a/test_services_packaging.py::test_the_htcondor_coverage_sources_include_the_service_set
+pytest-exit=1
+pytest-exit=0

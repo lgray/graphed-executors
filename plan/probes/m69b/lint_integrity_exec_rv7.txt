@@ -1,0 +1,20 @@
+== 7e6e9c5: ruff check
+All checks passed!
+== ruff format --check
+111 files already formatted
+== mypy
+Success: no issues found in 323 source files
+== mypy win32
+Success: no issues found in 323 source files
+== sphinx -W
+exit=0
+== integrity
+-- upstream/main...7e6e9c5
+range 19 [('ci_config_modified', '.github/workflows/ci.yml'), ('frozen_test_modified', 'tests/frozen/m68a/README.md'), ('frozen_test_modified', 'tests/frozen/m68a/test_services_sites.py'), ('frozen_test_modified', 'tests/frozen/m68b/README.md'), ('frozen_test_modified', 'tests/frozen/m68b/test_cluster_service_job.py'), ('frozen_test_modified', 'tests/frozen/m68b/test_cluster_services_live.py'), ('frozen_test_modified', 'tests/frozen/m69a/README.md'), ('frozen_test_modified', 'tests/frozen/m69a/test_hgg_conversion.py'), ('frozen_test_modified', 'tests/frozen/m69b/README.md'), ('frozen_test_modified', 'tests/frozen/m69b/conftest.py'), ('frozen_test_modified', 'tests/frozen/m69b/m69b_harness.py'), ('frozen_test_modified', 'tests/frozen/m69b/m69b_hgg.py'), ('frozen_test_modified', 'tests/frozen/m69b/m69b_order.py'), ('frozen_test_modified', 'tests/frozen/m69b/m69b_order_child.py'), ('frozen_test_modified', 'tests/frozen/m69b/test_hgg_diagnostics.py'), ('frozen_test_modified', 'tests/frozen/m69b/test_hgg_local_pilots.py'), ('frozen_test_modified', 'tests/frozen/m69b/test_histserv_cluster.py'), ('frozen_test_modified', 'tests/frozen/m69b/test_histserv_managed.py'), ('frozen_test_modified', 'tests/frozen/m69b/test_service_order.py')]
+control 2 [('skip_or_xfail_added', 'x.py'), ('target_stubbed', 'x.py')]
+-- 245d0c6..7e6e9c5
+range 0 []
+control 2 [('skip_or_xfail_added', 'x.py'), ('target_stubbed', 'x.py')]
+-- protected_prefixes=() (the frozen paths are covered by frozen_exec_rv7.txt's tag equality)
+upstream/main...245d0c6 default 19 | protected_prefixes=() [('ci_config_modified', '.github/workflows/ci.yml')]
+upstream/main...7e6e9c5 default 19 | protected_prefixes=() [('ci_config_modified', '.github/workflows/ci.yml')]

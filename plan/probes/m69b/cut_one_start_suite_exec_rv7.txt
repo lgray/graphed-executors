@@ -1,0 +1,2 @@
+.....sss..........................s................ssss.....sssss        [100%]
+/private/tmp/claude-501/-Users-lgray-vibe-coding-graphed-workdir/c445639e-fd6b-4941-b012-0166b71d96e2/scratchpad/cut-rv7/src/graphed_executors/htcondor_backend/backend.py

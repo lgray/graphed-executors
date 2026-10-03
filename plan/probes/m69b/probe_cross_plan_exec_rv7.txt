@@ -1,0 +1,66 @@
+== leg serial (control)
+   28.5s plan x ended: value ('mem://rv7-serial-x/0',)
+   44.0s plan y ended: value ('mem://rv7-serial-y/0',)
+   48.0s closed; results {'x': "value ('mem://rv7-serial-x/0',)", 'y': "value ('mem://rv7-serial-y/0',)"}
+   48.0s queue: no server left
+exit=0
+queue after: Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended
+== leg concurrent
+   10.0s servers: 21: JobStatus=1, 22: JobStatus=1
+   20.0s servers: 21: JobStatus=2, 22: JobStatus=2, 23: JobStatus=1, 24: JobStatus=1
+   30.1s servers: 21: JobStatus=2, 22: JobStatus=2, 23: JobStatus=1, 24: JobStatus=1
+   40.1s servers: 21: JobStatus=2, 22: JobStatus=2, 23: JobStatus=1, 24: JobStatus=1
+   50.1s servers: 21: JobStatus=2, 22: JobStatus=2, 23: JobStatus=1, 24: JobStatus=1
+   60.1s servers: 21: JobStatus=2, 22: JobStatus=2, 23: JobStatus=1, 24: JobStatus=1
+   70.1s servers: 21: JobStatus=2, 22: JobStatus=2, 23: JobStatus=1, 24: JobStatus=1
+   80.1s servers: 21: JobStatus=2, 22: JobStatus=2, 23: JobStatus=1, 24: JobStatus=1
+   90.1s servers: 21: JobStatus=2, 22: JobStatus=2, 23: JobStatus=1, 24: JobStatus=1
+  100.1s servers: 21: JobStatus=2, 22: JobStatus=2, 23: JobStatus=1, 24: JobStatus=1
+  110.1s servers: 21: JobStatus=2, 22: JobStatus=2, 23: JobStatus=1, 24: JobStatus=1
+  120.2s servers: 21: JobStatus=2, 22: JobStatus=2, 23: JobStatus=1, 24: JobStatus=1
+  130.2s servers: 21: JobStatus=2, 22: JobStatus=2, 23: JobStatus=1, 24: JobStatus=1
+  140.2s servers: 21: JobStatus=2, 22: JobStatus=2, 23: JobStatus=1, 24: JobStatus=1
+  150.2s servers: 21: JobStatus=2, 22: JobStatus=2, 23: JobStatus=1, 24: JobStatus=1
+  150.2s after 150s: plans ended []
+  150.4s plan x ended: RuntimeError: service 'x2' (c628d76b-9b09851e434e1550) still waited for a slot when the runner closed: JobStatus=3
+  150.9s plan y ended: RuntimeError: service 'y2' (cf8cfa04-8f00abcf2b57ac08) still waited for a slot when the runner closed: JobStatus=3
+  153.4s closed; results {'x': "RuntimeError: service 'x2' (c628d76b-9b09851e434e1550) still waited for a slot when the runner closed: JobStatus=3", 'y': "RuntimeError: service 'y2' (cf8cfa04-8f00abcf2b57ac08) still waited for a slot when the runner closed: JobStatus=3"}
+  153.4s queue: no server left
+exit=0
+queue after: Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended
+== leg concurrent, cut_one_start_exec_rv7.py applied in the container's /work (then restored)
+   10.0s servers: 25: JobStatus=2
+   20.0s servers: 25: JobStatus=2, 26: JobStatus=1
+   30.0s servers: 25: JobStatus=2, 26: JobStatus=2, 28: JobStatus=1
+   40.0s servers: 25: JobStatus=2, 26: JobStatus=2, 28: JobStatus=1
+   50.1s servers: 25: JobStatus=2, 26: JobStatus=2, 28: JobStatus=1
+   60.1s servers: 25: JobStatus=2, 26: JobStatus=2, 28: JobStatus=1
+   70.1s servers: 25: JobStatus=2, 26: JobStatus=2, 28: JobStatus=1
+   80.1s servers: 25: JobStatus=2, 26: JobStatus=2, 28: JobStatus=1
+   90.1s servers: 25: JobStatus=2, 26: JobStatus=2, 28: JobStatus=1
+  100.1s servers: 25: JobStatus=2, 26: JobStatus=2, 28: JobStatus=1
+  110.1s servers: 25: JobStatus=2, 26: JobStatus=2, 28: JobStatus=1
+  120.2s servers: 25: JobStatus=2, 26: JobStatus=2, 28: JobStatus=1
+  130.2s servers: 25: JobStatus=2, 26: JobStatus=2, 28: JobStatus=1
+  140.2s servers: 25: JobStatus=2, 26: JobStatus=2, 28: JobStatus=1
+  150.2s servers: 25: JobStatus=2, 26: JobStatus=2, 28: JobStatus=1
+  150.2s after 150s: plans ended []
+  150.2s plan x ended: RuntimeError: 0 of 1 pilots connected when the runner closed
+  150.5s plan y ended: RuntimeError: service 'y1' (dc373c12-d1be3bafea632312) still waited for a slot when the runner closed: JobStatus=3
+  159.5s closed; results {'x': 'RuntimeError: 0 of 1 pilots connected when the runner closed', 'y': "RuntimeError: service 'y1' (dc373c12-d1be3bafea632312) still waited for a slot when the runner closed: JobStatus=3"}
+  159.5s queue: no server left
+exit=0
+queue after: Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended
+== leg concurrent, cut_one_run_exec_rv7.py applied in the container's /work (then restored)
+   10.0s servers: 29: JobStatus=2
+   20.0s servers: 29: JobStatus=2, 30: JobStatus=2
+   30.0s servers: 29: JobStatus=2, 30: JobStatus=2
+   31.8s plan x ended: value ('mem://rv7-concurrent-x/0',)
+   40.0s servers: 32: JobStatus=2, 33: JobStatus=1
+   47.3s plan y ended: value ('mem://rv7-concurrent-y/0',)
+   50.1s servers: 
+   50.1s after 150s: plans ended ['x', 'y']
+   54.4s closed; results {'x': "value ('mem://rv7-concurrent-x/0',)", 'y': "value ('mem://rv7-concurrent-y/0',)"}
+   54.4s queue: no server left
+exit=0
+queue after: Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended

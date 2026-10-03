@@ -1,0 +1,9 @@
+== match_refusal's added assert at 7e6e9c5: mypy without it, then a control that needs narrowing in the same spot
+removed lines: 1 -> 0
+Success: no issues found in 1 source file
+-- control:
+src/graphed_executors/htcondor_backend/services.py:175: error: Value of type "tuple[str, int] | None" is not indexable  [index]
+Found 1 error in 1 file (checked 1 source file)
+== integrity scan_diff of 245d0c6..7e6e9c5, as is and with the added assert line dropped
+rv7.diff 0 []
+rv7-noassert.diff 1 [Finding(code='assertion_removed', path='src/graphed_executors/htcondor_backend/services.py', detail='assert self.launcher.cluster is not None, "claims are the submitted pilots\'"')]

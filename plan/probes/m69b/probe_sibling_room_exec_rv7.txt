@@ -1,0 +1,43 @@
+== leg fit (one 15973 MiB partitionable slot)
+    0.0s slots: [('Partitionable', 15973)]
+   10.0s done=False; servers: 12: JobStatus=1 RequestMemory=6000 RemoteHost=None, 11: JobStatus=2 RequestMemory=6000 RemoteHost=slot1_1@74fd794410fd
+   20.0s done=False; servers: 12: JobStatus=2 RequestMemory=6000 RemoteHost=slot1_2@74fd794410fd, 11: JobStatus=2 RequestMemory=6000 RemoteHost=slot1_1@74fd794410fd
+   30.0s done=False; servers: 12: JobStatus=2 RequestMemory=6000 RemoteHost=slot1_2@74fd794410fd, 11: JobStatus=2 RequestMemory=6000 RemoteHost=slot1_1@74fd794410fd
+   40.0s done=True; servers: 
+   40.0s after 120s: done=True
+   40.0s result: ('mem://rv7-fit/0',)
+   41.1s closed; future exception: None
+   41.1s queue: no server left
+   41.2s history: 11 RequestMemory=6000 NumJobStarts=1 JobStatus=3 LastRemoteHost=slot1_1@74fd794410fd
+   41.2s history: 12 RequestMemory=6000 NumJobStarts=1 JobStatus=3 LastRemoteHost=slot1_2@74fd794410fd
+   41.2s history: 10 RequestMemory=10000000 NumJobStarts=0 JobStatus=3 LastRemoteHost=None
+   41.2s history: 4 RequestMemory=9000 NumJobStarts=1 JobStatus=3 LastRemoteHost=slot1_1@74fd794410fd
+exit=0
+queue after: Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended
+== leg sum-over (one 15973 MiB partitionable slot)
+    0.0s slots: [('Partitionable', 15973)]
+   10.0s done=False; servers: 14: JobStatus=2 RequestMemory=9000 RemoteHost=slot1_1@74fd794410fd
+   20.0s done=True; servers: 
+   20.0s after 120s: done=True
+   20.0s result: service 'web2' is unavailable: user: no endpoint given; site: the site has no endpoint for kind 'http'; managed: service job 921e613c-0300900ed0adc466 matches no slot of the pool beside its server 'web1' (cluster 14), which keep their slots until the run ends: RequestMemory=9000, RequestCpus=1, RequestGPUs=0; the largest slot memory beside them is 6885 MiB
+   20.3s closed; future exception: service 'web2' is unavailable: user: no endpoint given; site: the site has no endpoint for kind 'http'; managed: service job 921e613c-0300900ed0adc466 matches no slot of the pool beside its server 'web1' (cluster 14), which keep their slots until the run ends: RequestMemory=9000, RequestCpus=1, RequestGPUs=0; the largest slot memory beside them is 6885 MiB
+   20.3s queue: no server left
+   20.4s history: 14 RequestMemory=9000 NumJobStarts=1 JobStatus=3 LastRemoteHost=slot1_1@74fd794410fd
+   20.4s history: 15 RequestMemory=9000 NumJobStarts=0 JobStatus=3 LastRemoteHost=None
+   20.4s history: 11 RequestMemory=6000 NumJobStarts=1 JobStatus=3 LastRemoteHost=slot1_1@74fd794410fd
+   20.4s history: 12 RequestMemory=6000 NumJobStarts=1 JobStatus=3 LastRemoteHost=slot1_2@74fd794410fd
+exit=0
+queue after: Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended
+== leg other-slot (two 7986 MiB partitionable slots, 99-two-slots config)
+    0.0s slots: [('Partitionable', 7986), ('Partitionable', 7986)]
+   10.0s done=False; servers: 1: JobStatus=2 RequestMemory=6000 RemoteHost=slot1_1@cd770568cc85
+   20.0s done=False; servers: 2: JobStatus=2 RequestMemory=6000 RemoteHost=slot2_1@cd770568cc85, 1: JobStatus=2 RequestMemory=6000 RemoteHost=slot1_1@cd770568cc85
+   30.0s done=True; servers: 
+   30.0s after 120s: done=True
+   30.0s result: ('mem://rv7-other-slot/0',)
+   31.5s closed; future exception: None
+   31.5s queue: no server left
+   31.5s history: 2 RequestMemory=6000 NumJobStarts=1 JobStatus=3 LastRemoteHost=slot2_1@cd770568cc85
+   31.5s history: 1 RequestMemory=6000 NumJobStarts=1 JobStatus=3 LastRemoteHost=slot1_1@cd770568cc85
+exit=0
+queue after: Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended

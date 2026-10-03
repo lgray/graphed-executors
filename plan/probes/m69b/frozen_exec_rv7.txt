@@ -1,0 +1,7 @@
+== tags: freeze-m69b-fixup2=22df587 freeze-m68a-fixup2=eb8691d freeze-m68b-fixup4=eb8691d
+freeze-m69b-fixup2 vs 7e6e9c5 -- tests/frozen/m69b: 0 files differ (of 11)
+freeze-m68a-fixup2 vs 7e6e9c5 -- tests/frozen/m68a: 0 files differ (of 15)
+freeze-m68b-fixup4 vs 7e6e9c5 -- tests/frozen/m68b: 0 files differ (of 11)
+freeze-m69b-fixup2 vs 7e6e9c5 -- tests/frozen: 0 files differ (of 256)
+control: 67ba8f2 vs freeze-m69b-fixup2 -- tests/frozen: tests/frozen/m69b/test_service_order.py 
+commits in 245d0c6..7e6e9c5 touching tests/frozen: []
