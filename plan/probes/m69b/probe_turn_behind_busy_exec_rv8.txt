@@ -1,0 +1,12 @@
+    4.0s blocker 17 runs (14773 of 15973 MiB): 1200 MiB free
+    8.1s plan b calls run
+   18.1s servers: 18(2000 MiB): JobStatus=1
+   28.1s servers: 18(2000 MiB): JobStatus=1
+   38.1s servers: 18(2000 MiB): JobStatus=1
+   48.1s servers: 18(2000 MiB): JobStatus=1
+   48.1s blocker removed
+   68.9s plan b ended: value ('mem://rv8-turn-b/0',)
+   70.1s plan a: ('mem://rv8-turn-a/0',); ended at {'a': 63.117689195000025, 'b': 68.86773032299999}
+   71.4s closed; servers: none
+exit=0
+queue after: Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended

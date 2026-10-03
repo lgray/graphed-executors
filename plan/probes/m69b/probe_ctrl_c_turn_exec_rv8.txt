@@ -1,0 +1,33 @@
+== form run
+    4.0s blocker 11 runs (15717 of 15973 MiB)
+   14.6s A waits for a slot=True, B called run=True; SIGINT
+   14.9s child exit=-2 0.3s after SIGINT
+   15.9s child: B calls run
+   15.9s child: B ended: RuntimeError: service 'b1' (6afc57e1-81cf95571b0b6fd1) not submitted: the runner is closing
+   15.9s child: KeyboardInterrupt
+   15.9s job 12 graphed-service-f61decbf-a7ae46308c672ebb JobStatus=3 NumJobStarts=0
+   15.9s queued now: 0
+exit=0
+queue after: Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended
+== form result
+    3.0s blocker 13 runs (15717 of 15973 MiB)
+   13.6s A waits for a slot=True, B called run=True; SIGINT
+   15.3s child exit=-2 1.8s after SIGINT
+   16.3s child: B calls run
+   16.3s child: B ended: RuntimeError: a plan's services still waited for another plan's to start when the runner closed
+   16.3s child: KeyboardInterrupt
+   16.4s job 14 graphed-service-14d48692-a9051c27d12d36dd JobStatus=3 NumJobStarts=0
+   16.4s queued now: 0
+exit=0
+queue after: Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended
+== form close
+    6.1s blocker 15 runs (15717 of 15973 MiB)
+   16.6s A waits for a slot=True, B called run=True; SIGINT
+   18.3s child exit=-2 1.8s after SIGINT
+   19.3s child: B calls run
+   19.3s child: KeyboardInterrupt
+   19.3s child: B ended: RuntimeError: a plan's services still waited for another plan's to start when the runner closed
+   19.4s job 16 graphed-service-86269d6a-4a723d0814062849 JobStatus=3 NumJobStarts=0
+   19.4s queued now: 0
+exit=0
+queue after: Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended

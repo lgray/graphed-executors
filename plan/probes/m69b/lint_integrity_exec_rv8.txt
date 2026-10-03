@@ -1,0 +1,15 @@
+== ce39e42: ruff check
+All checks passed!
+== ruff format --check
+111 files already formatted
+== mypy
+Success: no issues found in 323 source files
+== mypy win32
+Success: no issues found in 323 source files
+== sphinx -W
+exit=0
+== integrity
+7e6e9c5..ce39e42 default [] | protected_prefixes=() []
+control 2
+upstream/main...ce39e42 default 19 | protected_prefixes=() [('ci_config_modified', '.github/workflows/ci.yml')]
+control 2

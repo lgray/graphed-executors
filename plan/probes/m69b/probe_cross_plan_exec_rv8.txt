@@ -1,0 +1,20 @@
+== leg concurrent (r7's probe at ce39e42)
+   10.0s servers: 1: JobStatus=2
+   20.0s servers: 1: JobStatus=2, 2: JobStatus=2
+   30.0s servers: 1: JobStatus=2, 2: JobStatus=2
+   31.1s plan x ended: value ('mem://rv7-concurrent-x/0',)
+   40.0s servers: 4: JobStatus=2, 5: JobStatus=1
+   46.5s plan y ended: value ('mem://rv7-concurrent-y/0',)
+   50.0s servers: 
+   50.0s after 150s: plans ended ['x', 'y']
+   54.5s closed; results {'x': "value ('mem://rv7-concurrent-x/0',)", 'y': "value ('mem://rv7-concurrent-y/0',)"}
+   54.5s queue: no server left
+exit=0
+queue after: Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended
+== leg serial (control)
+   26.0s plan x ended: value ('mem://rv7-serial-x/0',)
+   36.5s plan y ended: value ('mem://rv7-serial-y/0',)
+   41.0s closed; results {'x': "value ('mem://rv7-serial-x/0',)", 'y': "value ('mem://rv7-serial-y/0',)"}
+   41.0s queue: no server left
+exit=0
+queue after: Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended

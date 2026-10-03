@@ -1,0 +1,11 @@
+== probe_failed_set_hold_exec_rv6.py failed-set leg at ce39e42
+    7.1s blocker 21 runs (15717 of 15973 MiB): a 512 MiB pilot stays idle
+   12.1s plan A in flight, done=False; pilots 22: JobStatus=1 
+   12.1s plan B refused: service 'web' is unavailable: user: no endpoint given; site: the site has no endpoint for kind 'http'; managed: service 
+   12.1s pilots 22: JobStatus=1 
+   12.1s blocker removed: room for the pilot
+   18.2s 90 s later: plan A done=True; pilots 22: JobStatus=2 
+   18.2s plan A value: ('mem://rv6-failed-set-A/0',)
+   19.4s runner closed
+exit=0
+queue after: Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended
