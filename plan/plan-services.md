@@ -1161,6 +1161,8 @@ needed.
   slot loses that job's `MemoryProvisioned`/`CpusProvisioned`/`GPUsProvisioned`/`DiskProvisioned`, else its
   `Request*`). Those pilots keep their slots to `close()`, so room only they hold is room the job can never get: it
   is removed unrun and refused as §5.2, the refusal naming the pilots' cluster and the largest room beside them.
+  An `HTCondorRunner` runs one plan at a time (`run`, which `submit`'s driver thread also calls, takes a runner
+  lock, as `docs/design.rst` states for an executor), so no other plan's set is starting beside a set's match.
   The same holds for the set's own earlier servers, which keep their slots to the run's end: in every plan the
   match also subtracts the running claims of that set's earlier service jobs (its scope's, never another plan's),
   so a set whose servers each fit a slot but not together is refused naming them, never left waiting.
