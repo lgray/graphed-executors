@@ -1,0 +1,19 @@
+== 'held until' in src+tests/extra: 61034b3, then 5fdb3c0 (control)
+src/graphed_executors/htcondor_backend/driver.py:93:    with ExitStack() as on_error:  # held until the runner exists: a
+tests/extra/m65/test_a2_peer_control.py:59:    # Leaf 19 (w0's last, which forms the root) is held until the cancel has 
+-- 5fdb3c0:
+5fdb3c0:src/graphed_executors/htcondor_backend/backend.py:2
+5fdb3c0:src/graphed_executors/htcondor_backend/driver.py:1
+5fdb3c0:tests/extra/m65/test_a2_peer_control.py:1
+5fdb3c0:tests/extra/m69b/test_m69b_schedulable.py:2
+5fdb3c0:tests/extra/m69b/test_m69b_sibling_room.py:1
+== ruff / format / mypy (strict, also win32) at 61034b3
+All checks passed!
+111 files already formatted
+Success: no issues found in 327 source files
+Success: no issues found in 327 source files
+== frozen: git diff --name-only 3b02317 61034b3 -- tests/frozen
+files=0 (control tests/extra: 2)
+== integrity scan_diff
+5fdb3c0..61034b3 66 diff lines -> []
+3b02317..61034b3 134 diff lines -> [Finding(code='assertion_removed', path='src/graphed_executors/htcondor_backend/services.py', detail='assert self.cluster is not None, "matched only once submitted"')]

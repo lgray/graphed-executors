@@ -1,0 +1,41 @@
+slot1@3ded88b1e20d Unclaimed 10 15973
+ + numcodecs==0.17.0
+ + setuptools==84.0.0
+ + graphed-executors==0.0.4 (from file:///work)
+== main-rows: exit=1
+imports /workmain/src/graphed_executors/__init__.py
+E           AssertionError: service job later-95d4c32b0ab79ced matches no slot of the pool beside the runner's running pilots (cluster 70), which keep their slots until the run ends: RequestMemory=600, RequestCpus=0, RequestGPUs=0; the largest slot memory beside them is 500 MiB
+E           assert 'pilots (cluster 70, whose slots stay taken until it closes)' in "service job later-95d4c32b0ab79ced matches no slot of the pool beside the runner's running pilots (cluster 70), which...ts until the run ends: RequestMemory=600, RequestCpus=0, RequestGPUs=0; the largest slot memory beside them is 500 MiB"
+E           AssertionError: service job s-1c6041786ee12f39 matches no slot of the pool beside its server 'web1' (cluster 71), which keep their slots until the run ends: RequestMemory=600, RequestCpus=0, RequestGPUs=0; the largest slot memory beside them is 400 MiB
+E           assert "'web1' (cluster 71, whose slot stays taken until the run ends)" in "service job s-1c6041786ee12f39 matches no slot of the pool beside its server 'web1' (cluster 71), which keep their slots until the run ends: RequestMemory=600, RequestCpus=0, RequestGPUs=0; the largest slot memory beside them is 400 MiB"
+E       AssertionError: service job 8f9f7c08-1565232b34c0f91a matches no slot of the pool beside its server 'web1' (cluster 1), which keep their slots until the run ends: RequestMemory=8984, RequestCpus=1, RequestGPUs=0; the largest slot memory beside them is 6885 MiB
+E       assert "'web1' (cluster 1, whose slot stays taken until the run ends)" in "service job 8f9f7c08-1565232b34c0f91a matches no slot of the pool beside its server 'web1' (cluster 1), which keep th... until the run ends: RequestMemory=8984, RequestCpus=1, RequestGPUs=0; the largest slot memory beside them is 6885 MiB"
+FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_later_plan_s_refusal_says_the_runner_s_pilots_keep_their_slots_until_it_closes
+FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_first_plan_s_server_is_refused_where_only_its_set_s_earlier_server_holds_room
+FAILED tests/extra/m69b/test_m69b_sibling_room.py::test_a_server_that_fits_only_where_its_set_s_earlier_one_runs_is_refused_naming_it
+== old-rows: exit=1
+imports /workold/src/graphed_executors/__init__.py
+E           AssertionError: service job later-01999bc931a6353f matches no slot of the pool beside the runner's running pilots (cluster 70, held until it closes): RequestMemory=600, RequestCpus=0, RequestGPUs=0; the largest slot memory beside them is 500 MiB
+E           assert 'pilots (cluster 70, whose slots stay taken until it closes)' in "service job later-01999bc931a6353f matches no slot of the pool beside the runner's running pilots (cluster 70, held until it closes): RequestMemory=600, RequestCpus=0, RequestGPUs=0; the largest slot memory beside them is 500 MiB"
+E           AssertionError: service job s-65a7d2429a1f1b9a matches no slot of the pool beside its server 'web1' (cluster 71, held until the run ends): RequestMemory=600, RequestCpus=0, RequestGPUs=0; the largest slot memory beside them is 400 MiB
+E           assert "'web1' (cluster 71, whose slot stays taken until the run ends)" in "service job s-65a7d2429a1f1b9a matches no slot of the pool beside its server 'web1' (cluster 71, held until the run ends): RequestMemory=600, RequestCpus=0, RequestGPUs=0; the largest slot memory beside them is 400 MiB"
+E       AssertionError: service job 8e0de3ae-afc80a40b41b68db matches no slot of the pool beside its server 'web1' (cluster 3, held until the run ends): RequestMemory=8984, RequestCpus=1, RequestGPUs=0; the largest slot memory beside them is 6885 MiB
+E       assert "'web1' (cluster 3, whose slot stays taken until the run ends)" in "service job 8e0de3ae-afc80a40b41b68db matches no slot of the pool beside its server 'web1' (cluster 3, held until the run ends): RequestMemory=8984, RequestCpus=1, RequestGPUs=0; the largest slot memory beside them is 6885 MiB"
+FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_later_plan_s_refusal_says_the_runner_s_pilots_keep_their_slots_until_it_closes
+FAILED tests/extra/m69b/test_m69b_schedulable.py::test_a_first_plan_s_server_is_refused_where_only_its_set_s_earlier_server_holds_room
+FAILED tests/extra/m69b/test_m69b_sibling_room.py::test_a_server_that_fits_only_where_its_set_s_earlier_one_runs_is_refused_naming_it
+(cluster 3, held until the run ends)
+(cluster 70, held until it closes)
+(cluster 71, held until the run ends)
+beside its server 'web1' (cluster 1), which keep th... until the run ends: RequestMemory=8984, RequestCpus=1, RequestGPUs=0; the largest slot memory beside them is 6885 MiB"
+beside its server 'web1' (cluster 1), which keep their slots until the run ends: RequestMemory=8984, RequestCpus=1, RequestGPUs=0; the largest slot memory beside them is 6885 MiB
+beside its server 'web1' (cluster 71), which keep their slots until the run ends: RequestMemory=600, RequestCpus=0, RequestGPUs=0; the largest slot memory beside them is 400 MiB
+beside its server 'web1' (cluster 71), which keep their slots until the run ends: RequestMemory=600, RequestCpus=0, RequestGPUs=0; the largest slot memory beside them is 400 MiB"
+== pr-rows: exit=0
+imports /work/src/graphed_executors/__init__.py
+== pr-frozen7: exit=0
+imports /work/src/graphed_executors/__init__.py
+queue after: Total for all users: 0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended
+== pr legs progress lines (-qq: one dot per pass)
+pr-rows: ...                                                                      [100%]
+pr-frozen7: .                                                                        [100%]
