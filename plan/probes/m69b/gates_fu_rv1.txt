@@ -1,0 +1,21 @@
+== head 5fdb3c0
+== ruff check
+All checks passed!
+exit=0
+== ruff format --check
+111 files already formatted
+exit=0
+== mypy (pyproject strict, files=src tests examples)
+Success: no issues found in 327 source files
+exit=0
+== mypy --platform win32
+Success: no issues found in 327 source files
+exit=0
+== sphinx -W
+exit=0
+== pytest extra + frozen m68a/m68b/m69b
+exit=0
+........................................................................ [ 83%]
+......................ss.................................sssss.ssss..... [ 97%]
+.......sssss                                                             [100%]
+== pytest progress tally (-qq: no summary line): passed=485 skipped=31 failed=0 error=0

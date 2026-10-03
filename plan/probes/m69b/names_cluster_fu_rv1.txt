@@ -1,0 +1,3 @@
+message: service job later-c4e17d909ed3b1b7 matches no slot of the pool beside the runner's running pilots (cluster 70, held until it closes): RequestMemory=600, RequestCpus=0, RequestGPUs=0; the largest slot memory beside them is 500 MiB
+names_cluster(msg, 70): True
+control names_cluster(msg, 7): False | control on main's text form: True

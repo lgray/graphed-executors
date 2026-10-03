@@ -1,0 +1,12 @@
+== git diff --name-only 3b02317 5fdb3c0 -- tests/frozen (expect 0 files)
+files=0
+== control, same command over tests/extra
+tests/extra/m69b/test_m69b_schedulable.py
+tests/extra/m69b/test_m69b_sibling_room.py
+== control, the last commit touching tests/frozen (3b02317)
+ 18 files changed, 2297 insertions(+), 26 deletions(-)
+== CI integrity scan: grep integrity over .github/workflows (+ pyproject as live control)
+.github/workflows/ci.yml:0
+.github/workflows/release.yml:0
+pyproject.toml:3
+.github/workflows/wheels.yml:0

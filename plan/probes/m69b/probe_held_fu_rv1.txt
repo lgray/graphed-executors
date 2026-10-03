@@ -1,0 +1,5 @@
+PILOTS CLUSTER: 70
+MESSAGE: service job later-c4e17d909ed3b1b7 matches no slot of the pool beside the runner's running pilots (cluster 70, held until it closes): RequestMemory=600, RequestCpus=0, RequestGPUs=0; the largest slot memory beside them is 500 MiB
+SCHEDD ACT: ('act', 'Hold ClusterId == 70 && JobStatus == 1')
+SCHEDD ACT: ('act', 'Remove ClusterId == 71')
+SCHEDD ACT: ('act', 'Release ClusterId == 70 && JobStatus == 5 && substr(HoldReason, 0, 47) == "graphed: a service of this run waits for a slot"')

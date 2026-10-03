@@ -1,0 +1,3 @@
+check_integrity: CheckResult(name='integrity-scan', status='FAIL', detail='assertion_removed:src/graphed_executors/htcondor_backend/services.py')
+scan, as is:       [Finding(code='assertion_removed', path='src/graphed_executors/htcondor_backend/services.py', detail='assert self.cluster is not None, "matched only once submitted"')]
+scan, assert kept: [] (control: the line was in the diff) True

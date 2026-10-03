@@ -1,0 +1,16 @@
+== --platform darwin, as is
+Success: no issues found in 1 source file
+-- control (added: _next = self.cluster + 1): 1 line
+src/graphed_executors/htcondor_backend/services.py:176: error: Unsupported operand types for + ("None" and "int")  [operator]
+Found 1 error in 1 file (checked 1 source file)
+== --platform linux, as is
+Success: no issues found in 1 source file
+-- control (added: _next = self.cluster + 1): 1 line
+src/graphed_executors/htcondor_backend/services.py:176: error: Unsupported operand types for + ("None" and "int")  [operator]
+Found 1 error in 1 file (checked 1 source file)
+== --platform win32, as is
+Success: no issues found in 1 source file
+-- control (added: _next = self.cluster + 1): 1 line
+src/graphed_executors/htcondor_backend/services.py:176: error: Unsupported operand types for + ("None" and "int")  [operator]
+Found 1 error in 1 file (checked 1 source file)
+restored == 5fdb3c0
